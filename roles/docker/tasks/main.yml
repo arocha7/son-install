@@ -9,19 +9,21 @@
 
 #- include_vars: "{{ lookup('env','PWD') }}/roles/{{ plat }}/defaults/main.yml"
 
-- group:
+- name: create Docker group
+  group:
     name: docker
     state: present
-
-- user:
-    name: sonata
-    shell: /bin/bash
-    groups: docker
-    append: yes
 
 - set_fact:
     vm_user: "{{ lookup('env','USER') }}"    
     when: target == 'localhost'
+
+- name: add Docker group to default user
+  user:
+    name: "{{ vm_user }}"
+    shell: /bin/bash
+    groups: docker
+    append: yes
 
 - name: create a directory for Docker logging
   file:
@@ -33,8 +35,6 @@
   become: true
 
 - include_tasks: "{{ ansible_distribution_release }}.yml"
-
-#- include_tasks: "{{ lookup('env','PWD') }}/roles/docker/tasks/networks.yml"
 
 - name: restart docker on Systemd (Ubuntu 16 and CentOS 7)
   systemd: name=docker state=reloaded daemon_reload=yes
