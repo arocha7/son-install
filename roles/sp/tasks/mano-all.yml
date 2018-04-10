@@ -8,4 +8,4 @@
 - include: mano/flm.yml
 - include: mano/smr.yml
 - include: mano/placement.yml
-- include: mano/placementplugin.yml
+- include: mano/placementplg.yml
