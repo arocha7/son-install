@@ -1,0 +1,15 @@
+---
+# tasks file for quagga
+
+- include_tasks: "{{ ansible_distribution_release }}.yml"
+
+- name: download Quagga tarball
+  unarchive:
+    src: http://download.savannah.gnu.org/releases/quagga/quagga-1.2.4.tar.gz
+    dest: /tmp
+    remote_src: true
+
+- name: install Quagga
+  shell: cd /tmp/quagga-1.2.4 && ./configure && make && make install
+  become: true
+
