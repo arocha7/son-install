@@ -8,4 +8,4 @@
   with_items: 
     - libreadline-dev
     - libc-ares-dev
-
+    - pkg-config
