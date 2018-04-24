@@ -5,11 +5,11 @@
 
 - name: download Quagga tarball
   unarchive:
-    src: http://download.savannah.gnu.org/releases/quagga/quagga-1.2.4.tar.gz
+    src: "http://download.savannah.gnu.org/releases/quagga/quagga-{{ tarball_ver }}.tar.gz"
     dest: /tmp
     remote_src: true
 
 - name: install Quagga
-  shell: cd /tmp/quagga-1.2.4 && ./configure && make && make install
+  shell: "cd /tmp/quagga-{{ tarball_ver }} && ./configure && make && make install"
   become: true
 

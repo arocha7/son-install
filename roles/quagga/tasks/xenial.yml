@@ -1,5 +1,11 @@
 ---
 
-- name: install development libraries and tools
+- name: install development libraries
   apt: name=build-essential state=latest
+
+- name: install required libraries
+  apt: name="{{ item }}" state=present
+  with_items: 
+    - libreadline-dev
+    - libc-ares-dev
 

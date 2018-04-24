@@ -6,5 +6,4 @@
   yum: name="{{ item }}" state=present 
   with_items:
     - readline-devel
-    - c-ares
     - c-ares-devel
