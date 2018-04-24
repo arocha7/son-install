@@ -1,1 +1,5 @@
 ---
+
+- name: install development libraries and tools
+  apt: name=build-essential state=latest
+
