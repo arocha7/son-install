@@ -6,6 +6,15 @@
 - name: DevTools group install
   yum: name="@Development tools" state=present
 
+# INSTALL VIA PIP because the packaged version might install older clients
+# NOTE: If you want to make sure the latest clients are installed, you might need to install the clients with PIP.
+- name: Upgrade PIP
+  pip:
+    name: pip
+    extra_args: --upgrade
+    state: present
+    version: 9.0.3
+
 - name: install required libraries and tools for PIP
   yum: name={{ item }} state=latest
   with_items:
@@ -14,33 +23,23 @@
     - openssl-devel
     - libffi-devel
 
-# INSTALL VIA PIP - The packaged version might install older clients.
-# NOTE: If you want to make sure the latest clients are installed, you might need to install the clients with PIP.
-#- command: pip install --upgrade pip
-- name: Upgrade PIP
-  pip:
-    name: pip
-    extra_args: --upgrade
-    state: latest
-
 - name: install required libraries for Shade (https://pypi.python.org/pypi/shade/)
   pip: name={{ item }} state=latest
   with_items:
-    - requestsexceptions>=1.1.1
-    - pbr>=0.11
-    - netifaces>=0.10.4
+    - requestsexceptions
+    - pbr
+    - netifaces
     - munch
-    - keystoneauth1>=2.11.0
+    - keystoneauth1
     - jsonpatch
     - jmespath
     - ipaddress
-    - dogpile.cache>=0.5.3
+    - dogpile.cache
     - six
 
 - name: install Openstack command line clients
   pip: name={{ item }} state=latest
   with_items:
-#    - openstack-nova-common
     - python-openstackclient
     - python-keystoneclient
     - python-heatclient
