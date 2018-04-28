@@ -1,13 +1,42 @@
 ---
 # tasks file for openstackclients
 
-- debug: msg="##### OPENSTACK-CLI {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
-
 - include_tasks: "{{ ansible_distribution_release }}.yml"
 
-- name: update 'os-client-config'
-  pip: name='os-client-config' state=present
+- name: install dependency libraries on the remote server
+  pip: name={{ item }} state=present
+  with_items:
+    - pyopenssl
+    - os-client-config
+    - shade
 
-- name: install 'shade'
-  pip: name='shade' state=present
+#- name: install required libraries for Shade (https://pypi.python.org/pypi/shade/)
+#  pip: name={{ item }} state=latest
+#  with_items:
+#    - requestsexceptions
+#    - pbr
+#    - netifaces
+#    - munch
+#    - keystoneauth1
+#    - jsonpatch
+#    - jmespath
+#    - ipaddress
+#    - dogpile.cache
+#    - six
+
+#- name: install Openstack command line clients
+#  pip: name={{ item }} state=latest
+#  with_items:
+#    - python-openstackclient
+#    - python-keystoneclient
+#    - python-heatclient
+#    - python-glanceclient
+#    - python-cinderclient
+#    - python-swiftclient
+#    - python-novaclient
+#    - python-neutronclient
+#    - python-designateclient
+    #- python-ironicclient
+    #- python-troveclient
+    #- python-magnumclient
 

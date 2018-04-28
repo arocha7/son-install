@@ -8,48 +8,20 @@
 
 # INSTALL VIA PIP because the packaged version might install older clients
 # NOTE: If you want to make sure the latest clients are installed, you might need to install the clients with PIP.
-- name: Upgrade PIP
-  pip:
-    name: pip
-    extra_args: --upgrade
-    state: present
-    version: 9.0.3
+#- name: Upgrade PIP
+#  pip:
+#    name: pip
+#    extra_args: --upgrade
+#    state: present
+#    version: 9.0.3
 
 - name: install required libraries and tools for PIP
   yum: name={{ item }} state=latest
   with_items:
     - python-devel
-    - python-pip
     - openssl-devel
     - libffi-devel
 
-- name: install required libraries for Shade (https://pypi.python.org/pypi/shade/)
-  pip: name={{ item }} state=latest
-  with_items:
-    - requestsexceptions
-    - pbr
-    - netifaces
-    - munch
-    - keystoneauth1
-    - jsonpatch
-    - jmespath
-    - ipaddress
-    - dogpile.cache
-    - six
-
-- name: install Openstack command line clients
-  pip: name={{ item }} state=latest
-  with_items:
-    - python-openstackclient
-    - python-keystoneclient
-    - python-heatclient
-    - python-glanceclient
-    - python-cinderclient
-    - python-swiftclient
-    - python-novaclient
-    - python-neutronclient
-    - python-designateclient
-    #- python-ironicclient
-    #- python-troveclient
-    #- python-magnumclient
+- name: install PIP
+  yum: name=python-pip state=present
 

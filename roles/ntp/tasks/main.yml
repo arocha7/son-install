@@ -1,7 +1,5 @@
 ---
 
-- debug: msg="##### INSTALLING NTP {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
-
 - name: Include OS-specific variables.
   include_vars: "{{ ansible_os_family }}.yml"
 
@@ -20,13 +18,8 @@
     force: yes
   when: ansible_os_family == 'Debian'
 
-- name: Install NTP
-  yum: name=ntp state=installed
-  when: ansible_os_family == 'RedHat'
-
-- name: Install NTP (Debian).
-  apt: name=ntp state=installed
-  when: ansible_os_family == 'Debian'
+- name: Install NTP (on Redhat distros)
+  package: name=ntp state=present
 
 - name: Ensure NTP is running and enabled as configured.
   service:
