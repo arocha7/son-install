@@ -2,32 +2,31 @@
   shell: docker network inspect {{ docker_network_name }} 
   become: true
   ignore_errors: true
-  no_log: true
   register: dockernet
 
 - name: list running Docker containers
   shell: docker ps
   become: true
-  #ignore_errors: true
-  #no_log: true
+  ignore_errors: true
   when: dockernet is succeeded
   register: dockerps
 
 - name: stop all the running Docker containers 
   shell: "docker stop $(sudo docker ps -a -q)"
   become: true
-  when: dockerps is succeeded
+  ignore_errors: true
+  when: dockerps is succeeded and dockernet is succeeded
 
 - name: remove Docker network
   shell: "docker network rm {{ docker_network_name }}"
   become: true
+  ignore_errors: true
   when: dockernet is succeeded
-  register: dockernetcreate
+  register: dockernetremoved
 
 - name: Docker creating network
   shell: 'docker network create --driver=bridge --subnet={{ docker_addr_space }} --gateway={{ docker_gateway }} --ip-range={{ docker_ip_range }} "{{ docker_network_name }}"'
   become: true
   notify:
     - restart docker
-  when: dockernetcreate is succeeded
-
+  when: dockernetremoved is succeeded
