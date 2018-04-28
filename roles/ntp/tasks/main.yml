@@ -18,7 +18,7 @@
     force: yes
   when: ansible_os_family == 'Debian'
 
-- name: Install NTP (on Redhat distros)
+- name: Install NTP
   package: name=ntp state=present
 
 - name: Ensure NTP is running and enabled as configured.
