@@ -4,22 +4,27 @@
   ignore_errors: true
   no_log: true
   register: dockernet
-- debug:
+
+- name: 2BEREMOVED
+  debug:
     var: dockernet
 
 - name: list running Docker containers
   shell: docker ps
   become: true
-  ignore_errors: true
-  no_log: true
+  #ignore_errors: true
+  #no_log: true
+  when: dockernet is succeeded
   register: dockerps
-- debug:
+
+- name: 2BEREMOVED
+  debug:
     var: dockerps
 
-#- name: stop all the running Docker containers 
-#  shell: "docker stop $(sudo docker ps -a -q)"
-#  become: true
-#  when: dockernet|succeeded
+- name: stop all the running Docker containers 
+  shell: "docker stop $(sudo docker ps -a -q)"
+  become: true
+  when: dockernet is succeeded
 
 - name: remove Docker network
   shell: "docker network rm {{ docker_network_name }}"
