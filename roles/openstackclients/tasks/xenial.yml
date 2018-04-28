@@ -16,6 +16,6 @@
   #- nova-common
   #- python-shade
 
-- name: install PIP (for both CentOS 7 and Ubuntu 16.04)
+- name: install PIP
   apt: name=python-pip state=present
 

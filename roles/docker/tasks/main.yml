@@ -36,6 +36,6 @@
 
 - include_tasks: "{{ ansible_distribution_release }}.yml"
 
-- name: restart docker on Systemd (Ubuntu 16 and CentOS 7)
+- name: restart docker on 'systemd' systems
   systemd: name=docker state=reloaded daemon_reload=yes
 
