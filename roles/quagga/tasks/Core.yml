@@ -1,0 +1,10 @@
+---
+- name: DevTools group install
+  yum: name="@Development tools" state=present
+
+- name: install required libraries
+  yum: name="{{ item }}" state=present 
+  with_items:
+    - readline-devel
+    - c-ares-devel
+    - pkgconfig

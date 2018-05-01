@@ -1,5 +1,5 @@
 ---
-- name: ensure that APT works with the HTTPS method, and that CA certificates are installed
+- name: to ensure that APT works with the HTTPS method and that CA certificates are installed
   apt: name={{ item }} state=present update_cache=yes
   with_items:
   - apt-transport-https
@@ -20,10 +20,10 @@
   - python-pkg-resources
   - git
 
-- name: "Install PIP"
-  easy_install: name=pip
+- name: install PIP
+  apt: name=python-pip state=present
 
-- name: "Install docker-py library on the remote server"
+- name: install docker-py library on the remote server
   pip: name={{ item }} state=present
   with_items:
   - jinja2
@@ -33,9 +33,6 @@
   - six
   - requests
   - docker-py
-
-#- name: on Trusty it is recommended to install the linux-image-extra kernel package
-#  apt: name=linux-image-extra-$(uname -r) state=present update_cache=yes
 
 - name: "Remove deprecated Docker package"
   apt: name=lxc-docker state=absent
