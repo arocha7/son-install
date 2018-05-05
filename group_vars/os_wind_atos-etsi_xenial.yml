@@ -1,0 +1,15 @@
+# DEFAULT VM CONFIG
+vm_user: "ubuntu"
+nbofvms: 1
+image: "ubuntu16.04"
+flavor: "F-2CPU-8G-40G"
+os_security_groups: "{{ plat }}-secgrp"
+fip: "ext_net_id"
+availability_zone: "nova"
+region_name: "RegionOne"
+key_name: "tng-infra"
+#port_security_enabled: false
+# DEMO-NET
+int_net_id: "633d1027-fc0b-4c39-9d3c-78aee28245a4" # INTERNAL (172.22.100.0/24)
+ext_net_id: "13065909-d302-46a5-bddb-f16b39c3b0f4" # EXTERNAL (172.22.25.0/24)
+
