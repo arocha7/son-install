@@ -3,13 +3,6 @@
 
 - include_tasks: "{{ ansible_distribution_release }}.yml"
 
-- name: download Quagga tarball
-  unarchive:
-    src: "http://download.savannah.gnu.org/releases/quagga/quagga-{{ tarball_ver }}.tar.gz"
-    dest: /tmp
-    remote_src: true
-
 - name: install Quagga
-  shell: "cd /tmp/quagga-{{ tarball_ver }} && ./configure && make && make install"
-  become: true
+  package: name="quagga" state=present
 
