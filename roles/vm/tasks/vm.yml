@@ -30,8 +30,7 @@
     key_name: "{{ key_name }}"
     flavor: "{{ flavor }}"
     availability_zone: "{{ availability_zone }}"
-    security_groups: "{{ availability_zone }}"
-#      - "{{ os_security_groups }}"
+    security_groups: "{{ os_security_groups }}"
     floating_ip_pools: "{{ ext_net_id }}"
     #auto_ip: yes
     nics:
