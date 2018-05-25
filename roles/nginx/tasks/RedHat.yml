@@ -24,7 +24,7 @@
 - name: install EPEL repository
   yum: name=epel-release state=present
 
-- yum: name=* state=latest
+#- yum: name=* state=latest
 
 - name: install NGINX 
   yum: name=nginx state=present
