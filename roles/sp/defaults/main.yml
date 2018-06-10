@@ -7,9 +7,12 @@ nbofvms: 1
 docker_network_name: sp-docker-net
 
 # SONATA 5G NFV SP development/latest version
-sp_ver: 3.1
+sp_ver: latest
 domain_name: sonata-nfv.eu
 #fqdn: "{{ plat }}.{{ pop }}.{{ domain_name }}"
+
+public_ip: localhost
+plat_hostname: "{{ lookup('env','HOSTNAME') }}"
 
 # set the passwd at "~/.ssh/.vault_pass
 sp_user: sonata

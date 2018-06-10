@@ -3,18 +3,10 @@
 - hosts: "{{ target | default ('localhost')  }}"
   become: true
   connection: ssh
-  vars:
-    target: localhost
-    plat: sp
-    pop: alabs
-    domain_name: sonata-nfv.eu
-    public_ip: localhost
-    plat_hostname: "{{ lookup('env','HOSTNAME') }}"
 
   pre_tasks:
-
     - file:
-        path: /var/log/ansible.log
+        path: "{{ lookup('env','HOME') }}/ansible.log"
         state: touch
         owner: "{{ lookup('env','USER') }}"
         group: "{{ lookup('env','USER') }}"
@@ -22,4 +14,4 @@
 
   roles:
     - docker
-    - { role: sp, ver: '{{ ver }}' }
+    - { role: sp, sp_ver: '{{ sp_ver | default ('latest') }}' }
