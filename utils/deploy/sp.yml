@@ -10,14 +10,16 @@
     domain_name: sonata-nfv.eu
     public_ip: localhost
     plat_hostname: "{{ lookup('env','HOSTNAME') }}"
+
   pre_tasks:
-    - debug: msg="##### START-SP-DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d%H%M') }}"
+
     - file:
         path: /var/log/ansible.log
         state: touch
         owner: "{{ lookup('env','USER') }}"
         group: "{{ lookup('env','USER') }}"
         mode: "u=rw,g=r,o=r"
-  roles:
-    - { role: sp, ver: '{{ ver }}' }
 
+  roles:
+    - docker
+    - { role: sp, ver: '{{ ver }}' }

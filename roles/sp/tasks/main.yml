@@ -19,6 +19,9 @@
     state: present
   become: true
 
+- set_fact:
+    fqdn: "{{ public_ip | default ('localhost')}}"
+
 - name: add user 'sonata' with superuser priviledges on Debian machines
   user:
     name: "{{ sp_user }}"
