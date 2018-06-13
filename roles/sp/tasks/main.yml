@@ -1,115 +1,141 @@
 ---
 
-- include_vars: "{{ item }}"
-  with_first_found:
-    - files:
-        - "{{ lookup('env','PWD') }}/group_vars/os_{{ pop }}_{{ proj }}_{{ distro }}.yml"
-        - "{{ lookup('env','PWD') }}/roles/{{ plat }}/defaults/main.yml"
-      skip: true
+- import_tasks: pre-config.yml
 
-- include_vars: "{{ lookup('env','PWD') }}/roles/{{ plat }}/vars/main.yml"
+#- name: log into private Registry
+#  docker_login:
+#    registry: "registry.sonata-nfv.eu"
+#    username: "sonata-nfv"
+#    password: "s0n@t@"
+#    reauthorize: yes
 
-- include_vars: "{{ lookup('env','PWD') }}/group_vars/{{ plat }}/vault.yml"
-  no_log: true
-
-- lineinfile:
-    path: "/etc/hosts"
-    line: "{{ public_ip }} {{ plat_hostname }}"
-    create: yes
-    state: present
-  become: true
-
-- set_fact:
-    fqdn: "{{ public_ip | default ('localhost')}}"
-
-- name: add user 'sonata' with superuser priviledges on Debian machines
-  user:
-    name: "{{ sp_user }}"
-    comment: "SONATA admin user"
-    shell: /bin/bash
-    group: sudo
-    groups: docker
-    password: "{{ sp_pass }}"
-  when: ansible_os_family == "Debian"
-
-- name: remove password prompt for sudo
-  shell: "echo '%sudo ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers"
-  when: ansible_os_family == "Debian"
-
-- name: add user 'sonata' with superuser priviledges on CentOS 7 machines
-  user:
-    name: "{{ sp_user }}"
-    comment: "SONATA admin user"
-    shell: /bin/bash
-    group: wheel
-    groups: docker
-    password: "{{ sp_pass }}"
-  when: ansible_os_family == "RedHat"
-
-- name: remove password prompt for sudo
-  shell: "echo 'sonata ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers.d/90-cloud-init-users"
-  when: ansible_os_family == "RedHat"
-
-- include_tasks: "{{ lookup('env','PWD') }}/roles/docker/tasks/networks.yml"
-
-- pause:
-    seconds: 10
-
-- name: restart docker on Upstart (Ubuntu 14)
-  service: name=docker state=restarted
-  when: ansible_distribution_release == "trusty"
-
-- name: restart docker on Systemd (Ubuntu 16 and CentOS 7)
-  systemd: name=docker state=restarted daemon_reload=yes
-  when: ansible_distribution_release == "xenial" or ansible_distribution_release == "Core"
-
-- name: force all notified handlers to run at this point, not waiting for normal sync points
-  meta: flush_handlers
-
+## Deploying databases
 # deploy postgreSQL database engine
-- include_tasks: pgsql.yml
+- import_tasks: pgsql.yml
 
 # deploy MongoDB (NoSQL) database engine
-- include_tasks: mongo.yml
+- import_tasks: mongo.yml
 
 # deploy Redis database engine
-- include_tasks: redis.yml
+- import_tasks: redis.yml
 
 # deploy postgreSQL database engine for monitoring
-- include_tasks: pgsql-monitoring.yml
+- import_tasks: pgsql-monitoring.yml
 
 # deploy RabbitMQ message bus
-- include_tasks: broker.yml
+- import_tasks: rabbitmq.yml
 
 # deploy Influxdb
-- include_tasks: influxdb.yml
+- import_tasks: influxdb.yml
 
+## Deploying Gatekeeper components
 # deploy Keycloak
-- include_tasks: keycloak.yml
+- import_tasks: keycloak.yml
 
 # deploy GUI
-- include_tasks: gui.yml
+#- import_tasks: gui.yml
+
+# deploy GUI
+#- import_tasks: portal.yml
 
 # deploy BSS
-- include_tasks: bss.yml
+- import_tasks: bss.yml
 
-# deploy Gatekepper module
-- include_tasks: gtk-all.yml
+# deploy SDK packager
+- import_tasks: tng-sdk-pkg.yml
+
+# deploy Gatekepper Validator module
+- import_tasks: val.yml
+
+# deploy Gatekepper Package module
+- import_tasks: pkg.yml
+
+# deploy Gatekepper Server module
+- import_tasks: srv.yml
+
+# deploy Gatekepper Function module
+- import_tasks: fnct.yml
+
+# deploy Gatekepper Records module
+- import_tasks: gtkrec.yml
+
+# deploy Gatekepper VIM module
+- import_tasks: vim.yml
+
+# deploy Gatekepper Lisense module
+- import_tasks: lic.yml
+
+# deploy Gatekepper KPIs module
+- import_tasks: kpi.yml
+
+# deploy Gatekepper User Management module
+- import_tasks: usr.yml
+
+# deploy Gatekepper Rate Limit module
+- import_tasks: rlt.yml
+
+# deploy Gatekepper API module
+- import_tasks: gtkapi.yml
+
+# deploy Gatekepper API module
+- import_tasks: api-gtw.yml
+
+# deploy Gatekepper Common module
+- import_tasks: gtk-common.yml
+
+# deploy Gatekepper SP module
+#- import_tasks: gtk-sp.yml
 
 # deploy Repositories
-- include_tasks: repos.yml
+- import_tasks: rep.yml
 
-# deploy MANO framework
-- include_tasks: mano-all.yml
+# deploy Catalogues
+- import_tasks: cat.yml
 
-# deploy Infastructure Adaptor
-- include_tasks: ifta-all.yml
+# deploy Catalogues
+- import_tasks: slice-mngr.yml
 
-# deploy Monitoring
-- include_tasks: monit-all.yml
+# deploy Policy Manager
+- import_tasks: tng-policy-mngr.yml
+
+# deploy SLA Management Framework
+- import_tasks: sla-mgmt.yml
+
+## Deploying Mano Components
+# deploy PluginManager of MANO framework
+- import_tasks: pluginmgr.yml
+
+# deploy Service Lifecycle Manager of MANO framework
+- import_tasks: slm.yml
+
+# deploy Function Lifecycle Manager of MANO framework
+- import_tasks: flm.yml
+
+# deploy Specific Manager Registry of MANO framework
+- import_tasks: smr.yml
+
+# deploy Placement of MANO framework
+- import_tasks: placement.yml
+
+# deploy Placement Plugin of MANO framework
+- import_tasks: placementplugin.yml
+
+## Deploying Monitoring Components
+# deploy Monitoring Pushgateway
+- import_tasks: pushgw.yml
+
+# deploy Monitoring Prometheus
+- import_tasks: prometheus.yml
+
+# deploy Monitoring Manager
+- import_tasks: monitmgr.yml
+
+# deploy Monitoring Probe
+- import_tasks: probe.yml
 
 # deploy Security Gateway
-- include_tasks: sec-gw.yml
+- import_tasks: sec-gtw.yml
 
-# deploy Google cAdvisor
-#- include_tasks: cadvisor.yml
+#- name: log out of private Registry
+#  docker_login:
+#    state: absent

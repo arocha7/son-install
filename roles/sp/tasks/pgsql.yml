@@ -1,16 +1,18 @@
 ---
-- debug: msg="##### SP PGSQL DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
-
+# Running the Sonata PGSQL (Docker container)
+- debug: msg="##### SP PGSQL DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H%M') }}"
 - name: deploy a PostgreSQL database server as a Container
   docker_container:
     name: son-postgres
-    #image: sonatanfv/son-postgres
+    #image: {{ repository }}/son-postgres
     image: ntboes/postgres-uuid
     env:
       POSTGRES_DB: "{{ gtk_db_name }}"
       POSTGRES_USER: "{{ gtk_db_user }}"
       POSTGRES_PASSWORD: "{{ gtk_db_pass }}"
     state: started
+    recreate: yes
+    pull: true
     restart_policy: "always"
     network_mode: bridge
     networks:
@@ -19,4 +21,5 @@
           - son-postgres
     published_ports: 5432:5432
 
-- wait_for: host=0.0.0.0 port=5432 timeout=30 delay=10 state=started
+- name: Wait until the string "Postgres" is UP
+  wait_for: host=0.0.0.0 port=5432 timeout=30 delay=10 state=started

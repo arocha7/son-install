@@ -1,23 +1,19 @@
 ---
-
-- debug: msg="##### SP GUI DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
-
 # Running the Sonata GK GUI (Docker container)
-
-- name: GATEKEEPER GUI - running Docker containers
+- debug: msg="##### SP GUI DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H%M') }}"
+- name: GATEKEEPER GUI
   docker_container:
     name: son-gui
-    image: "sonatanfv/son-gui:{{ sp_ver }}"
+    image: "{{ repository }}/son-gui:{{ version }}"
     env:
-      MON_URL: "http://{{ public_ip }}/monitoring"
-      GK_URL: "http://{{ public_ip }}/api/v2"
-
+      MON_URL: "http://{{ target }}/monitoring"
+      GK_URL: "http://{{ target }}/api/v2"
     state: started
+    recreate: yes
+    pull: true
     network_mode: bridge
     networks:
       - name: "{{ docker_network_name }}"
         aliases:
           - son-gui
-    restart_policy: "unless-stopped"
-
-- wait_for: host=0.0.0.0 port=80 timeout=30 delay=10 state=started
+    restart_policy: "always"

@@ -1,11 +1,22 @@
 ---
-- debug: msg="##### SP INFLUXDB DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
+# Running the Sonata INFLUXDB (Docker container)
+- debug: msg="##### SP INFLUXDB DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
 
-- name: MONIT InfluxDB  - running Docker containers
+- name: log into private Registry
+  docker_login:
+    registry: "registry.sonata-nfv.eu:5000"
+    username: "sonata-nfv"
+    password: "s0n@t@"
+    reauthorize: yes
+
+- name: MONIT InfluxDB 
   docker_container:
     name: son-monitor-influxdb
-    image: sonatanfv/son-monitor-influxdb:{{ sp_ver }}
+    image: "{{ repository }}/son-monitor-influxdb:{{ version }}"
     state: started
+    recreate: yes
+    pull: true
+    restart_policy: "always"
     network_mode: bridge
     networks:
     - name: "{{ docker_network_name }}"
