@@ -14,4 +14,4 @@
 
   roles:
     - docker
-    - { role: sp, sp_ver: '{{ sp_ver | default ('latest') }}' }
+    - sp
