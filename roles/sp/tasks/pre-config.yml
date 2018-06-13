@@ -12,13 +12,13 @@
 
 - lineinfile:
     path: "/etc/hosts"
-    line: "{{ public_ip }} {{ plat_hostname }}"
+    line: "{{ target }} {{ plat_hostname }}"
     create: yes
     state: present
   become: true
 
 - set_fact:
-    fqdn: "{{ public_ip | default ('localhost')}}"
+    fqdn: "{{ target | default ('localhost')}}"
 
 - name: add user 'sonata' with superuser priviledges on Debian machines
   user:

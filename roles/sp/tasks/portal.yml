@@ -4,7 +4,8 @@
 - name: 5GTANGO PORTAL
   docker_container:
     name: tng-portal
-    image: "{{ repository }}/tng-portal:{{ version }}"
+    #image: "{{ repository }}/tng-portal:{{ version }}"
+    image: "{{ repository }}/tng-portal"
     state: started
     recreate: yes
     pull: true

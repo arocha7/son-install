@@ -33,10 +33,10 @@
 - import_tasks: keycloak.yml
 
 # deploy GUI
-#- import_tasks: gui.yml
+- import_tasks: gui.yml
 
 # deploy GUI
-#- import_tasks: portal.yml
+- import_tasks: portal.yml
 
 # deploy BSS
 - import_tasks: bss.yml

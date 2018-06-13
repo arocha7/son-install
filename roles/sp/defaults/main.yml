@@ -12,7 +12,7 @@ version: v3.1
 domain_name: sonata-nfv.eu
 #fqdn: "{{ plat }}.{{ pop }}.{{ domain_name }}"
 
-public_ip: 127.0.0.1
+target: 127.0.0.1
 plat_hostname: "{{ lookup('env','HOSTNAME') }}"
 
 # set the passwd at "~/.ssh/.vault_pass
