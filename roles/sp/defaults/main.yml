@@ -4,14 +4,15 @@
 nbofvms: 1
 
 # Docker network segment
-docker_network_name: sp-docker-net
+docker_network_name: tango
 
 # SONATA 5G NFV SP development/latest version
-sp_ver: latest
+sp_ver: dev
+version: v3.1
 domain_name: sonata-nfv.eu
 #fqdn: "{{ plat }}.{{ pop }}.{{ domain_name }}"
 
-public_ip: localhost
+public_ip: 127.0.0.1
 plat_hostname: "{{ lookup('env','HOSTNAME') }}"
 
 # set the passwd at "~/.ssh/.vault_pass
