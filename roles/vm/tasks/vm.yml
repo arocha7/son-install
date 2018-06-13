@@ -8,10 +8,10 @@
     flavor: "m1.micro2"
   when: plat == "squid" and pop == "alabs"
 
-- name: set the appropriate FLAVOR to run the SP on a VM at Alabs PoP
-  set_fact:
-    flavor: "m1.sp"
-  when: plat == "sp" and pop == "alabs"
+#- name: set the appropriate FLAVOR to run the SP on a VM at Alabs PoP
+#  set_fact:
+#    flavor: "m1.sp"
+#  when: plat == "sp" and pop == "alabs"
 
 - name: set the appropriate FLAVOR to run the SP on a VM at NCSRD PoP
   set_fact:

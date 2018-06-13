@@ -10,7 +10,7 @@ os_security_groups: "{{ plat }}-secgrp"
 fip: ext_net_id
 availability_zone: nova
 region_name: RegionOne
-key_name: son-install
+key_name: tng-infra
 
 # DEMO-NET
 #int_net_id: "83468d84-9ed3-4b83-a2b1-ca589b927ac1" # sonata.dem-net

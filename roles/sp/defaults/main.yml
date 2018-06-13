@@ -1,13 +1,14 @@
 ---
 # defaults file for sp
-
 nbofvms: 1
+plat: sp
 
 # Docker network segment
-docker_network_name: sp-docker-net
+docker_network_name: tango
 
 # SONATA 5G NFV SP development/latest version
-sp_ver: latest
+sp_ver: v3.1
+version: v3.1
 domain_name: sonata-nfv.eu
 #fqdn: "{{ plat }}.{{ pop }}.{{ domain_name }}"
 

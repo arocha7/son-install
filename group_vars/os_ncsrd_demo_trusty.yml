@@ -7,7 +7,7 @@ os_security_groups: "{{ plat }}-secgrp"
 fip: "53d43a3e-8c86-48e6-b1cb-f1f2c48833de" # PROVIDER
 availability_zone: nova
 region_name: RegionOne
-key_name: son-install
+key_name: tng-infra
 
 # DEMO-Netw
 #int_net_id: "e25c4920-65b4-4308-a405-e64ad2770cc2" # son-demo.mgmt-netw (172.22.1.0/24)

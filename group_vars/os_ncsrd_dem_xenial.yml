@@ -8,7 +8,7 @@ os_security_groups: "{{ plat }}-secgrp"
 fip: "ext_net_id"
 availability_zone: "nova"
 region_name: "RegionOne"
-key_name: "son-install"
+key_name: "tng-infra"
 
 # DEMO-NET
 int_net_id: "95cf5fd4-b86f-43bb-a291-d3569cf07522" # INTERNAL (192.168.10.0/24)

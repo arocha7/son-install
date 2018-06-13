@@ -1,13 +1,13 @@
 # DEFAULT VM CONFIG
 nbofvms: 1
 vm_user: ubuntu
-image: xenial
-flavor: m1.medium
+image: xenial64
+flavor: m1.sp
 os_security_groups: "{{ plat }}-secgrp"
 fip: admin_floating_net
 availability_zone: nova
-region_name: regionOne
+region_name: RegionOne
 key_name: tng-infra
-int_net_id: "2f15917d-57f1-402b-a503-c64fa8025eba" # DEMO
-ext_net_id: "60f1b402-516e-4635-bbf8-3227a4029859" # FIP
+int_net_id: "5788d300-92c1-4efa-8f4f-5b0830638c9f" # DEMO
+ext_net_id: "83d48c16-8461-4939-9cb3-e7e240ec9538" # FIP
 
