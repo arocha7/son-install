@@ -1,4 +1,4 @@
-- name: MONIT PROMETHEUS - running Docker containers
+- name: deploying MONIT PROMETHEUS container
   docker_container:
     name: son-monitor-prometheus
     image: "sonatanfv/son-monitor-prometheus:{{ sp_ver }}"

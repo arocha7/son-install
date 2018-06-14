@@ -1,4 +1,4 @@
-- name: MONIT MANAGER - running Docker containers
+- name: deploying MONIT MANAGER container
   docker_container:
     name: son-monitor-manager
     image: "sonatanfv/son-monitor-manager:{{ sp_ver }}"

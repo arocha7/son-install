@@ -1,6 +1,6 @@
 ---
 
-- name: MANO Service Life-cycle Management (SLM) (Docker container)
+- name: MANO Service Life-cycle Management container (SLM)
   docker_container:
     name: servicelifecyclemanagement
     image: "sonatanfv/servicelifecyclemanagement:{{ sp_ver }}"

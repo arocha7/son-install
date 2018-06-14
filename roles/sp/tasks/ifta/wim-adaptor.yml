@@ -1,6 +1,6 @@
 ---
 
-- name: deploying Infrastructure Abstractor WIM Adaptor (Docker container)
+- name: deploying Infrastructure Abstractor container (WIM Adaptor)
   docker_container:
     name: wim-adaptor
     image: "sonatanfv/wim-adaptor:{{ sp_ver }}"

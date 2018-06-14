@@ -1,6 +1,6 @@
 ---
 
-- name: MANO Placement Executive Plugin (Docker container)
+- name: MANO Placement Executive Plugin container
   docker_container:
     name: placementexecutive
     image: "sonatanfv/placementexecutive:{{ sp_ver }}"

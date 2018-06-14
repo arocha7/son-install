@@ -1,6 +1,6 @@
 ---
 
-- name: MANO Placement Plugin (Docker container)
+- name: MANO Placement Plugin container
   docker_container:
     name: placementplugin
     image: "sonatanfv/placementplugin:{{ sp_ver }}"

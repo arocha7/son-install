@@ -1,4 +1,4 @@
-- name: MONIT VM Probe
+- name: deploying MONIT VM Probe container
   docker_container:
     name: son-mon-vmprobe
     image: "sonatanfv/son-monitor-vmprobe:{{ sp_ver }}"

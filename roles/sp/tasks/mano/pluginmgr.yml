@@ -1,6 +1,6 @@
 ---
 
-- name: MANO Plug-in Manager (Docker container)
+- name: MANO Plug-in Manager container
   docker_container:
     name: pluginmanager
     image: "sonatanfv/pluginmanager:{{ sp_ver }}"

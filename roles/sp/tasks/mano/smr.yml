@@ -1,4 +1,4 @@
-- name: MANO Specific Manager Registry (SMR) (Docker container)
+- name: MANO Specific Manager Registry container (SMR)
   docker_container:
     name: specificmanagerregistry
     image: "sonatanfv/specificmanagerregistry:{{ sp_ver }}"

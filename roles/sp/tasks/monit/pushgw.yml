@@ -1,4 +1,4 @@
-- name: MONIT Push Gateway - running Docker containers
+- name: deploying MONIT Push Gateway container
   docker_container:
     name: son-monitor-pushgateway
     image: "sonatanfv/son-monitor-pushgateway:{{ sp_ver }}"

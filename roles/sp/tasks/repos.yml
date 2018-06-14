@@ -1,7 +1,7 @@
 ---
 - debug: msg="##### SP REPOs DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
 
-- name: deploy REPOSITORIES as a Docker container (from the Registry to the SP VM appliance)
+- name: deploy REPOSITORIES container 
   docker_container:
     name: son-catalogue-repos
     image: "sonatanfv/son-catalogue-repos:{{ sp_ver }}"
