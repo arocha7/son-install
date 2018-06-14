@@ -11,7 +11,7 @@
       repo_port: "5432"
       repo_user: "{{ ia_repo_user }}"
       repo_pass: "{{ ia_repo_pass }}"
-      SONATA_SP_ADDRESS: "{{ ansible_host }}"
+      SONATA_SP_ADDRESS: "{{ public_ip }}"
     network_mode: bridge
     networks:
       - name: "{{ docker_network_name }}"

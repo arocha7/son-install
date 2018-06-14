@@ -12,7 +12,7 @@ version: v3.1
 
 # SONATA FQDN
 domain_name: sonata-nfv.eu
-#fqdn: "{{ plat }}.{{ pop }}.{{ domain_name }}"
+fqdn: "{{ plat }}.{{ pop }}.{{ domain_name }}"
 
 # set the passwd at "~/.ssh/.vault_pass
 sp_user: sonata
