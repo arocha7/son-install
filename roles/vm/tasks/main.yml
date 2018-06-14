@@ -82,6 +82,6 @@
   when: distro == "xenial"
 
 - pause:
-    minutes: 2
+    seconds: 30
   when: distro == "xenial"
 

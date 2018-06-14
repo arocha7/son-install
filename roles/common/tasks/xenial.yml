@@ -18,33 +18,6 @@
 - name: install development libraries and tools
   apt: name=build-essential state=latest
 
-#- name: install required libraries and tools for PIP
-#  apt: name={{ item }} state=latest
-#  with_items:
-#  - python-dev
-#  - python-pip
-#  - libssl-dev
-#  - libffi-dev
-
-#- name: install Python 2.7
-#  apt: name=python state=present
-
-#- name: install Python tools to get 'easy_install'
-#  apt: name=python-setuptools state=present
-
-#- name: install Python libraries
-#  easy_install: name=pip state=present
-
-#- name: install Python packages
-#  pip: name={{ item }} state=present
-#  with_items:
-#    - urllib3
-#    - pyopenssl
-#    - pyasn1
-
-#NOTE: from Ansible 2.4, the python pyOpenSSL module is required on the ACC even if its already installed
-#-  command: /usr/bin/easy_install pyOpenSSL
-
 - name: install useful operating system tools
   apt: name={{ item }} state=latest
   with_items:
