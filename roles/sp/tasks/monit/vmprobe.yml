@@ -6,7 +6,7 @@
     network_mode: host
     privileged: yes
     env:
-      NODE_NAME: "{{ public_ip }}" # TEST VNF
+      NODE_NAME: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}" # TEST VNF
       PROM_SRV: "http://son-monitor-pushgateway:9091/metrics"
     volumes:
       - "/:/rootfs:ro"
