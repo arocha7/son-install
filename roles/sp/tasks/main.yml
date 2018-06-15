@@ -13,7 +13,7 @@
 
 - lineinfile:
     path: "/etc/hosts"
-    line: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }} {{ plat_hostname }}"
+    line: "{{ public_ip }} {{ plat_hostname }}"
     create: yes
     state: present
   become: true
