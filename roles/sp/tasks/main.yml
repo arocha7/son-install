@@ -13,7 +13,7 @@
 
 - lineinfile:
     path: "/etc/hosts"
-    line: "{{ public_ip }} {{ plat_hostname }}"
+    line: "{{ ansible_default_ipv4.address }} {{ lookup('env','HOSTNAME') }}"
     create: yes
     state: present
   become: true

@@ -3,10 +3,6 @@
 - hosts: "{{ target | default ('localhost')  }}"
   become: true
   connection: ssh
-  vars:
-    public_ip: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] | default('localhost') }}"
-    plat_hostname: "{{ lookup('env','HOSTNAME') }}"
-
   pre_tasks:
     - file:
         path: /var/log/ansible.log
@@ -14,7 +10,6 @@
         owner: "{{ lookup('env','USER') }}"
         group: "{{ lookup('env','USER') }}"
         mode: "u=rw,g=r,o=r"
-
   roles:
     - docker
     - sp

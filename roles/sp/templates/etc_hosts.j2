@@ -1,1 +1,1 @@
-{{ public_ip }} {{ plat_hostname }} {{ plat }}.{{ pop }}.{{ domain_name }}
+{{ ansible_default_ipv4.address }} {{ lookup('env','HOSTNAME') }} {{ plat }}.{{ proj ]].{{ pop }}.{{ domain_name }}

@@ -9,8 +9,8 @@
     name: son-gui
     image: "sonatanfv/son-gui:{{ sp_ver }}"
     env:
-      MON_URL: "http://{{ plat_hostname }}/monitoring"
-      GK_URL: "http://{{ plat_hostname }}/api/v2"
+      MON_URL: "http://{{ ansible_host | default (lookup('env','HOSTNAME')) }}/monitoring"
+      GK_URL: "http://{{ ansible_host | default (lookup('env','HOSTNAME')) }}/api/v2"
     state: started
     network_mode: bridge
     networks:
