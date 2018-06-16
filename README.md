@@ -11,6 +11,8 @@
 
 All you need is a 'bash' shell with Ansible installed to run 'son-cmud.yml', ie, all the SONATA CMUD operations can be executed in a single line command
 
+## What's new in Release 3.1
+* new SON features
 
 
 ## What's new in Release 2.1
@@ -49,23 +51,45 @@ The structure of 'son-install' is flexible enough to:
 
 ### Deploying to LOCAL machine
 
-#### Deployment
-
-A quick way to deploy SONATA 5G NFV SP to the local machine is:
-On a fresh ubuntu xenial installation
+* 1st - install Ansible 
 ```
+ // Ubuntu
  sudo apt-get install -y software-properties-common
  sudo apt-add-repository -y ppa:ansible/ansible
  sudo apt-get update
  sudo apt-get install -y ansible
  sudo apt-get install -y git
+```
+
+```
+ // CentOS
+ sudo yum update
+ sudo yum install epel-release -y
+ sudo yum install ansible -y
+ sudo yum install git -y
+
+```
+
+* 2nd - get the 'son-install repo
+```
  git clone https://github.com/sonata-nfv/son-install.git
  cd son-install
  echo sonata | tee ~/.ssh/.vault_pass
- ansible-playbook utils/deploy/sp.yml -e "target=localhost public_ip=<your_ip4_address>" -v
+```
+
+* 3rd - create the inventory file (ex, for an 'ubuntu' username)
+```
+; inventory/sp/hosts
+[sp-son-alabs]
+172.31.8.116 ansible_connection=ssh ansible_user=ubuntu ansible_ssh_private_key_file=/home/ubuntu/.ssh/tng-infra.pem ansible_host=u16acc-2
+```
+
+* 4rd - deploy the SP to the local machine
+```
+$ ansible-playbook utils/deploy/sp.yml -i inventory/sp/hosts -e "target=<your_ip4_address>" -v
 ```
 where:
-* public_ip: is the IP address of the (local) guest machine, ie, the Floating IP in Openstack lingo
+* target: is the IP address of the (local) guest machine, ie, the Floating IP in Openstack lingo
 
 [![asciicast](https://asciinema.org/a/44MwPYliuOxxYBFkkm7M8eqM4.png)](https://asciinema.org/a/44MwPYliuOxxYBFkkm7M8eqM4)
 
