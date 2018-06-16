@@ -4,15 +4,10 @@
   become: true
   connection: ssh
   vars:
-    target: localhost
-    plat: sp
-    pop: alabs
-    domain_name: sonata-nfv.eu
-    public_ip: localhost
+    public_ip: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] | default('localhost') }}"
     plat_hostname: "{{ lookup('env','HOSTNAME') }}"
 
   pre_tasks:
-
     - file:
         path: /var/log/ansible.log
         state: touch
@@ -22,4 +17,4 @@
 
   roles:
     - docker
-    - { role: sp, ver: '{{ ver }}' }
+    - sp
