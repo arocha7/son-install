@@ -80,13 +80,13 @@ The structure of 'son-install' is flexible enough to:
 * 3rd - create the inventory file (ex, for an 'ubuntu' username)
 ```
 ; inventory/sp/hosts
-[sp-son-alabs]
-172.31.8.116 ansible_connection=ssh ansible_user=ubuntu ansible_ssh_private_key_file=/home/ubuntu/.ssh/tng-infra.pem ansible_host=u16acc-2
+[target]
+YOUR_HOSTNAME ansible_connection=ssh ansible_user=ubuntu ansible_ssh_private_key_file=/home/ubuntu/.ssh/tng-infra.pem ansible_host='YOUR_PUBLIC_IPADDR'
 ```
 
 * 4rd - deploy the SP to the local machine
 ```
-$ ansible-playbook utils/deploy/sp.yml -i inventory/sp/hosts -e "target=<your_ip4_address>" -v
+$ ansible-playbook utils/deploy/sp.yml -i inventory/sp/hosts -e "target=<YOUR_PUBLIC_IPADDR>" [-v]
 ```
 where:
 * target: is the IP address of the (local) guest machine, ie, the Floating IP in Openstack lingo
