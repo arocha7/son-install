@@ -3,9 +3,11 @@
 - hosts: "{{ target | default ('localhost')  }}"
   become: true
   connection: ssh
+  vars:
+    plat_hostname: "{{ lookup('env','HOSTNAME') }}"
   pre_tasks:
     - file:
-        path: /var/log/ansible.log
+        path: "{{ lookup('env','PWD') }}/ansible.log"
         state: touch
         owner: "{{ lookup('env','USER') }}"
         group: "{{ lookup('env','USER') }}"

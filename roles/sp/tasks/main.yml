@@ -13,7 +13,7 @@
 
 - lineinfile:
     path: "/etc/hosts"
-    line: "{{ ansible_default_ipv4.address }} {{ lookup('env','HOSTNAME') }}"
+    line: "{{ ansible_default_ipv4.address }} {{ plat_hostname }}"
     create: yes
     state: present
   become: true
@@ -53,8 +53,6 @@
 - name: restart docker on Systemd (Ubuntu 16 and CentOS 7)
   systemd: name=docker state=restarted daemon_reload=yes
   when: ansible_os_family == "RedHat"
-
-- include: "{{ lookup('env','PWD') }}/roles/{{ plat }}/tasks/docker-networks.yml"
 
 - name: force all notified handlers to run at this point, not waiting for normal sync points
   meta: flush_handlers
