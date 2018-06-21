@@ -1,2 +1,3 @@
 ---
 # defaults file for quagga
+plat: quagga
