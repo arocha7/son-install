@@ -26,7 +26,7 @@
     - debug: msg="##### REBOOTING {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
 
     - pause:
-        minutes: 1
+        minutes: 2
 
     - name: WAITING for server to come back
       local_action: wait_for host="{{ ansible_host | default(inventory_hostname) }} port=22 state=started delay=10 timeout=120"
