@@ -2,7 +2,7 @@
 vm_user: centos
 nbofvms: 1
 image: CentOS-7-x86_64-GenericCloud
-flavor: F-2CPU-8G-40G
+#flavor: F-2CPU-8G-40G
 #os_security_groups: "{{ plat }}-secgrp"
 fip: ext_net_id
 availability_zone: nova

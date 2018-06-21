@@ -2,7 +2,7 @@
 vm_user: ubuntu
 image: u16-cldimg
 
-flavor: "m1.small"
+#flavor: "m1.small"
 os_security_groups: "{{ plat }}-secgrp"
 fip: external
 availability_zone: nova
