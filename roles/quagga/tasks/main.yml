@@ -1,8 +1,16 @@
 ---
 # tasks file for quagga
 
+# Set ip forwarding on in /proc and in the sysctl file and reload if necessary
+- sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+    sysctl_set: yes
+    state: present
+    reload: yes
+
 - include_tasks: "{{ ansible_distribution_release }}.yml"
 
 - name: install Quagga
   package: name="quagga" state=present
-
+  notify: restart quagga
