@@ -17,6 +17,8 @@
         state: present
 
   roles:
+    - openjdk
+    - nginx
     - jenkins
 
   post_tasks:
