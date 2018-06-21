@@ -1,0 +1,110 @@
+- name: use Openstack command line clients to check if Security Group exists
+  shell: openstack --os-cloud "os_{{ pop }}_{{ proj }}" security group list
+  register: os_secgrp
+
+- name: create a new security group for QUAGGA connections
+  os_security_group:
+    cloud: "os_{{ pop }}_{{ proj }}"
+    state: present
+    name: "{{ plat }}-secgrp"
+    description: 5GTANGO Quagga VNF ports
+
+- name: create a security rule on that group to allow any SSH connection
+  os_security_group_rule:
+    cloud: "os_{{ pop }}_{{ proj }}"
+    security_group: "{{ plat }}-secgrp"
+    protocol: tcp
+    port_range_min: 22
+    port_range_max: 22
+    remote_ip_prefix: 0.0.0.0/0
+
+- name: create a security rule on that group to allow any HTTP connection
+  os_security_group_rule:
+    cloud: "os_{{ pop }}_{{ proj }}"
+    security_group: "{{ plat }}-secgrp"
+    protocol: tcp
+    port_range_min: 80
+    port_range_max: 80
+    remote_ip_prefix: 0.0.0.0/0
+
+- name: create a security rule on that group to allow any HTTPS connection
+  os_security_group_rule:
+    cloud: "os_{{ pop }}_{{ proj }}"
+    security_group: "{{ plat }}-secgrp"
+    protocol: tcp
+    port_range_min: 443
+    port_range_max: 443
+    remote_ip_prefix: 0.0.0.0/0
+
+- name: create a security rule to allow ZEBRA connections
+  os_security_group_rule:
+    cloud: "os_{{ pop }}_{{ proj }}"
+    security_group: "{{ plat }}-secgrp"
+    protocol: tcp
+    port_range_min: 2601
+    port_range_max: 2601
+    remote_ip_prefix: 0.0.0.0/0
+
+- name: create a security rule to allow RIPd connections
+  os_security_group_rule:
+    cloud: "os_{{ pop }}_{{ proj }}"
+    security_group: "{{ plat }}-secgrp"
+    protocol: tcp
+    port_range_min: 2602
+    port_range_max: 2602
+    remote_ip_prefix: 0.0.0.0/0
+
+- name: create a security rule to allow RIPNGd connections
+  os_security_group_rule:
+    cloud: "os_{{ pop }}_{{ proj }}"
+    security_group: "{{ plat }}-secgrp"
+    protocol: tcp
+    port_range_min: 2603
+    port_range_max: 2603
+    remote_ip_prefix: 0.0.0.0/0
+
+- name: create a security rule to allow OSPFd connections
+  os_security_group_rule:
+    cloud: "os_{{ pop }}_{{ proj }}"
+    security_group: "{{ plat }}-secgrp"
+    protocol: tcp
+    port_range_min: 2604
+    port_range_max: 2604
+    remote_ip_prefix: 0.0.0.0/0
+
+- name: create a security rule to allow BGPd connections
+  os_security_group_rule:
+    cloud: "os_{{ pop }}_{{ proj }}"
+    security_group: "{{ plat }}-secgrp"
+    protocol: tcp
+    port_range_min: 2605
+    port_range_max: 2605
+    remote_ip_prefix: 0.0.0.0/0
+
+- name: create a security rule to allow OSPF6d connections
+  os_security_group_rule:
+    cloud: "os_{{ pop }}_{{ proj }}"
+    security_group: "{{ plat }}-secgrp"
+    protocol: tcp
+    port_range_min: 2606
+    port_range_max: 2606
+    remote_ip_prefix: 0.0.0.0/0
+
+- name: create a security rule to allow ISISd connections
+  os_security_group_rule:
+    cloud: "os_{{ pop }}_{{ proj }}"
+    security_group: "{{ plat }}-secgrp"
+    protocol: tcp
+    port_range_min: 2608
+    port_range_max: 2608
+    remote_ip_prefix: 0.0.0.0/0
+
+- name: create a security rule to allow BABELd connections
+  os_security_group_rule:
+    cloud: "os_{{ pop }}_{{ proj }}"
+    security_group: "{{ plat }}-secgrp"
+    protocol: tcp
+    port_range_min: 2609
+    port_range_max: 2609
+    remote_ip_prefix: 0.0.0.0/0
+
