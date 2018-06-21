@@ -13,4 +13,8 @@
 
 - name: install Quagga
   package: name="quagga" state=present
-  notify: restart quagga
+  notify:
+    - stop firewall
+    - stop iptables
+    - restart quagga
+
