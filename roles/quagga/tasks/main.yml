@@ -20,7 +20,7 @@
 
 - name: copy sample config files
   copy:
-    src: "{{ items }}"
+    src: "{{ item }}"
     dest: /etc/quagga
   with_items:
     - zebra.conf
@@ -29,7 +29,7 @@
     - isisd.conf
 
 - name: start Quagga routing suite
-  systemd: state=started name="{{ items }}"
+  systemd: state=started name="{{ item }}"
   with_items:
     - zebra
     - bgpd
