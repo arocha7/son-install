@@ -21,3 +21,16 @@
     enabled: no
   when: pkg.results|selectattr("yumstate", "match", "installed")|list|length != 0
 
+- name: install Quagga
+  yum: name="quagga" state=present
+
+- name: copy sample config files
+  copy:
+    src: "{{ item }}"
+    dest: /etc/quagga
+  with_items:
+    - zebra.conf
+    - bgpd.conf
+    - ospfd.conf
+    - isisd.conf
+

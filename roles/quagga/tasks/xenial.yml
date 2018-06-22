@@ -29,3 +29,21 @@
     enabled: no
   when: not pkg.stat.exists
 
+- name: install Quagga
+  apt: name="quagga" state=present
+
+- name: copy sample config files
+  copy:
+    src: "{{ item }}"
+    dest: /etc/quagga
+    owner: quagga
+    group: quagga
+    mode: 0644
+  with_items:
+    - zebra.conf
+    - bgpd.conf
+    - ospfd.conf
+    - isisd.conf
+    - debian.conf
+    - daemons
+

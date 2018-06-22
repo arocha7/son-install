@@ -15,19 +15,6 @@
 
 - include_tasks: "{{ ansible_distribution_release }}.yml"
 
-- name: install Quagga
-  package: name="quagga" state=present
-
-- name: copy sample config files
-  copy:
-    src: "{{ item }}"
-    dest: /etc/quagga
-  with_items:
-    - zebra.conf
-    - bgpd.conf
-    - ospfd.conf
-    - isisd.conf
-
 - name: start Quagga routing suite
   systemd: state=started name="{{ item }}"
   with_items:
