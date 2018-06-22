@@ -17,5 +17,23 @@
 
 - name: install Quagga
   package: name="quagga" state=present
-  notify: restart quagga
+
+- name: copy sample config files
+  copy:
+    src: "{{ items }}"
+    dest: /etc/quagga
+  with_items:
+    - zebra.conf
+    - bgpd.conf
+    - ospfd.conf
+    - isisd.conf
+
+- name: start Quagga routing suite
+  systemd: state=started name="{{ items }}"
+  with_items:
+    - zebra
+    - bgpd
+    - ospfd
+    - isisd
+  #notify: restart quagga
 

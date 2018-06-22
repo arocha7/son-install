@@ -20,3 +20,4 @@
     state: stopped
     enabled: no
   when: pkg.results|selectattr("yumstate", "match", "installed")|list|length != 0
+
