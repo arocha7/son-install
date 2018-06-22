@@ -4,7 +4,7 @@
 - name: installing JENKINS pacakge
   include_tasks: "{{ ansible_distribution_release }}.yml"
 
-- start JENKINS service
+- name: start JENKINS service
   systemd:
     state: started
     name: jenkins
