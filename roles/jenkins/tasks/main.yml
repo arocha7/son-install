@@ -1,6 +1,12 @@
 ---
 # tasks file for JENKINS
 
-- name: installing JENKINS 
+- name: installing JENKINS pacakge
   include_tasks: "{{ ansible_distribution_release }}.yml"
 
+- start JENKINS service
+  systemd:
+    state: started
+    name: jenkins
+    enabled: yes
+    daemon_reload: yes
