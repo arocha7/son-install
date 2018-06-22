@@ -19,3 +19,13 @@
     - libc-ares-dev
     - pkg-config
 
+- stat: path=/etc/ufw/ufw
+  register: pkg
+
+- name: stop and disable 'UFW' service
+  systemd:
+    name: ufw
+    state: stopped
+    enabled: no
+  when: not pkg.stat.exists
+

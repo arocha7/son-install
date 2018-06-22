@@ -8,16 +8,15 @@
     state: stopped
     enabled: no
 
-- name: stop firewalld
+- name: stop iptables
   systemd:
-    name: selinux
+    name: iptables
     state: stopped
     enabled: no
-  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
 
 - name: stop ufw
   systemd:
-    name: selinux
+    name: ufw
     state: stopped
     enabled: no
   when: ansible_os_family == "Debian" and ansible_distribution_major_version == "16"

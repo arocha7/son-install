@@ -8,3 +8,15 @@
     - readline-devel
     - c-ares-devel
     - pkgconfig
+
+- name: check if 'firewalld' package is installed
+  yum:
+    list: firewalld
+  register: pkg
+
+- name: disable 'firewalld' service
+  systemd:
+    name: firewalld
+    state: stopped
+    enabled: no
+  when: pkg.results|selectattr("yumstate", "match", "installed")|list|length != 0

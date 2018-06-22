@@ -3,11 +3,6 @@
 
 - include_vars: "{{ lookup('env','PWD') }}/group_vars/os_{{ pop }}_{{ proj }}_{{ distro }}.yml"
 
-- name: set the appropriate FLAVOR to run the APP on a VM at Alabs PoP
-  set_fact:
-    flavor: "m1.micro2"
-  when: plat == "squid" and pop == "alabs"
-
 - name: launch new Instance(s)
   vars:
     local_home: "{{ lookup('env','PWD') }}"
@@ -36,20 +31,6 @@
     wait: yes
   with_sequence: "start=1 end={{ nbofvms | default(1) }} format=%02x"
   register: "newvm"
-
-
-#- os_floating_ip:
-#     cloud: "os_{{ pop }}_{{ proj }}"
-#     state: present
-#     reuse: yes
-#     server: "{{ plat }}-{{ pop }}-{{ proj }}-{{ distro }}-{{ item }}-{{ ansible_date_time.epoch }}"
-#     network: "{{ fip }"
-#     #fixed_address: 172.31.6.66
-#     nat_destination: "{{ mgmt_net_id|default([]) }}"
-#     wait: true
-#     timeout: 180
-#  with_sequence: "start=1 end={{ nbofvms | default(1) }} format=%02x"
-
 
 - lineinfile:
     path: "{{ lookup('env','PWD') }}/roles/{{ plat }}/vars/main.yml"

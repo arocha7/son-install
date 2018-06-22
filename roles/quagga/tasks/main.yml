@@ -9,12 +9,13 @@
     state: present
     reload: yes
 
+- name: Disable SELinux
+  selinux:
+    state: disabled
+
 - include_tasks: "{{ ansible_distribution_release }}.yml"
 
 - name: install Quagga
   package: name="quagga" state=present
-  notify:
-    - stop firewall
-    - stop iptables
-    - restart quagga
+  notify: restart quagga
 
