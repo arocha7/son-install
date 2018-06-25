@@ -4,11 +4,13 @@
   hosts: "{{ plat | default('localhost') }}"
   become: true
   connection: ssh
+  vars_files:
+    - "{{ lookup('env','PWD') }}/group_vars/os_{{ pop }}_{{ proj }}_{{ distro }}.yml"
+#    - "{{ lookup('env','PWD') }}/roles/{{ plat }}/vars/main.yml"
   remote_user: "{{ vm_user }}"
   roles:
     - common
   tasks:
-    - include_vars: "{{ lookup('env','PWD') }}/group_vars/os_{{ pop }}_{{ proj }}_{{ distro }}.yml"
 
     - name: Wait 300 seconds for port 22 to become open and contain "OpenSSH"
       wait_for:

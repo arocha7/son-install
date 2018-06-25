@@ -1,4 +1,4 @@
----
+
 # tasks file for vm
 
 - debug: msg="##### CREATE-VM {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
@@ -79,7 +79,11 @@
   with_items: "{{ newvm.results }}"
   when: distro == "xenial"
 
+- name: Display all variables/facts known for a host
+  debug:
+    var: hostvars[inventory_hostname]
+
 - pause:
-    seconds: 30
+    seconds: 10
   when: distro == "xenial"
 
