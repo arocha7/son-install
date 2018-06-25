@@ -6,11 +6,11 @@
   - build-essential 
   - software-properties-common 
 
-- name: Installing Jenkins APT GPG key
+- name: install Jenkins APT GPG key
   apt_key: state=present url=https://pkg.jenkins.io/debian/jenkins.io.key
 
 - name: install Jenkins repo
-  shell: sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+  shell: sh -c "'echo deb http://pkg.jenkins.io/debian-stable binary/' > /etc/apt/sources.list.d/jenkins.list"
 
 - apt: update_cache=yes
 

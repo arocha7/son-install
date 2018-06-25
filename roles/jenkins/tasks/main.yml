@@ -4,6 +4,9 @@
 - name: installing JENKINS pacakge
   include_tasks: "{{ ansible_distribution_release }}.yml"
 
+- name: installing Jenkins package
+  package: name=jenkins state=latest update_cache=yes
+
 - name: start JENKINS service
   systemd:
     state: started

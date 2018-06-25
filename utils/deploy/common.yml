@@ -4,13 +4,11 @@
   hosts: "{{ plat | default('localhost') }}"
   become: true
   connection: ssh
-  remote_user: "{{ vm_user | default('sonata') }}"
-  vars:
-    localhome: "{{ lookup('env','PWD') }}"
-    distro: '{{ ansible_distribution_release }}'
+  remote_user: "{{ vm_user }}"
   roles:
     - common
   tasks:
+    - include_vars: "{{ lookup('env','PWD') }}/group_vars/os_{{ pop }}_{{ proj }}_{{ distro }}.yml"
 
     - name: Wait 300 seconds for port 22 to become open and contain "OpenSSH"
       wait_for:

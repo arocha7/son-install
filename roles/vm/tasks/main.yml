@@ -60,8 +60,6 @@
     group: "{{ lookup('env','USER') }}"
     mode: 0644
 
-- debug: msg="##### REBOOT-WAITING {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
-
 - name: WAIT the SSH port listening at the new deployed instance
   command: >
     ssh -oControlMaster=auto -oControlPersist=60s -oUserKnownHostsFile=/dev/null -oBatchMode=yes -oStrictHostKeyChecking=no -i {{ localhome }}/.ssh/{{ item.openstack.key_name }}.pem -l {{ vm_user }} {{ item.openstack.accessIPv4 }} true
