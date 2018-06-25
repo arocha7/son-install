@@ -6,7 +6,7 @@
   roles:
   - ntp
   - common
-  - jdk
+  - openjdk
   - firewall
   - nginx
   - jenkins

@@ -34,13 +34,6 @@
 - name: start NGINX !!!
   service: name=nginx state=started enabled=yes
 
-# Upload content
-
-- name: copy www content
-  include_tasks: copy-www-content.yml
-  notify:
-    - restart nginx
-
 # Open FW ports
 - yum: name=python-firewall state=present
 - name: open NGINX ports
