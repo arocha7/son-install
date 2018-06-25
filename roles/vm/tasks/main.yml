@@ -83,7 +83,3 @@
   debug:
     var: hostvars[inventory_hostname]
 
-- pause:
-    seconds: 10
-  when: distro == "xenial"
-

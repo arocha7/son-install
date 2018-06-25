@@ -1,7 +1,9 @@
 ---
 
 - name: add OpenJDK repo from PPA
-  add-apt-repository: 'ppa:openjdk-r/ppa'
+  apt_repository:
+    repo: 'ppa:openjdk-r/ppa'
+    state: present
 
 - apt: update_cache=yes
 
