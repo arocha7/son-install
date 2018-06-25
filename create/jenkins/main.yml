@@ -9,11 +9,6 @@
 
   pre_tasks:
     - debug: msg="##### START-DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
-    - lineinfile:
-        path: "/etc/hosts"
-        line: "{{ public_ip }} {{ plat_hostname }}"
-        create: yes
-        state: present
 
   roles:
     - openjdk
