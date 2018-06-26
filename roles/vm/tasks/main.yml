@@ -79,7 +79,6 @@
   with_items: "{{ newvm.results }}"
   when: distro == "xenial"
 
-- name: Display all variables/facts known for a host
-  debug:
-    var: hostvars[inventory_hostname]
+- name: WAIT for remote package manager
+  pause: seconds=30
 
