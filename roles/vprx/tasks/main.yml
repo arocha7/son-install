@@ -14,7 +14,7 @@
     name: "{{ pop }}-{{ proj }}-vprx-{{ item }}-{{ ansible_date_time.epoch }}"
     image: "{{ image }}"
     key_name: "{{ key_name }}"
-    flavor: "{{ flavor }}"
+    flavor: "{{ flv }}"
     availability_zone: "{{ availability_zone }}"
     security_groups: "{{ security_groups }}"
     meta:

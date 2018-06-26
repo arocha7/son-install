@@ -19,20 +19,10 @@
   yum: name=httpd state=absent
   when: service_exists.rc != 0
 
-# Install NGINX 
-
 - name: install EPEL repository
   yum: name=epel-release state=present
 
 #- yum: name=* state=latest
-
-- name: install NGINX 
-  yum: name=nginx state=present
-
-# Starting NGINX
-
-- name: start NGINX !!!
-  service: name=nginx state=started enabled=yes
 
 # Open FW ports
 - yum: name=python-firewall state=present

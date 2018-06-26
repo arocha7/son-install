@@ -2,4 +2,4 @@
 # defaults file for Jenkins
 plat: jenkins
 svc_port: 8080
-flavor: m1.medium
+flv: m1.medium

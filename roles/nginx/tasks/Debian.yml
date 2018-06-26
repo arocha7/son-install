@@ -25,23 +25,6 @@
   when: service_status.stat.exists
   register: service_stopped
 
-- name: now, install NGINX on Ubuntu
-  apt: name=nginx state=present update_cache=yes
-
-# Starting NGINX
-
-- name: start NGINX !!!
-  service: name=nginx state=started enabled=yes
-
-# Upload content
-
-- name: copy www content
-  include_tasks: copy-www-content.yml
-  notify:
-    - restart nginx
-
-# Open FW ports
-
 - name: open NGINX port at FW
   ufw:
     state: enabled

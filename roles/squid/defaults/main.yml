@@ -6,7 +6,7 @@ sp_user: sonata
 sp_pass: "$1$SRc2ws2Z$rSdCC/UKiatagNdfsTVuf0"
 
 nbofvms: 1
-flavor: m1.micro2
+flv: m1.micro2
 
 # SONATA 5G NFV SP development/latest version
 domain_name: sonata-nfv.eu
