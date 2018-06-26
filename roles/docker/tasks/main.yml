@@ -14,9 +14,9 @@
     name: docker
     state: present
 
-- set_fact:
-    vm_user: "{{ lookup('env','USER') }}"    
-    when: target == 'localhost'
+#- set_fact:
+#    vm_user: "{{ lookup('env','USER') }}"    
+#    when: target == 'localhost'
 
 - name: add Docker group to default user
   user:
@@ -32,7 +32,7 @@
     owner: '{{ vm_user }}'
     group: docker
     mode: 0775
-  become: true
+#  become: true
 
 - include_tasks: "{{ ansible_distribution_release }}.yml"
 
