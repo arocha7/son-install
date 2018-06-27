@@ -7,7 +7,7 @@
   docker_container:
     name: son-bss
     image: "sonatanfv/son-yo-gen-bss:{{ sp_ver }}"
-    command: "grunt serve:integration --gkApiUrl=http://{{ target | default (lookup('env','HOSTNAME')) }}/api/v2 --hostname=0.0.0.0 --userManagementEnabled=true --licenseManagementEnabled=true --debug"
+    command: "grunt serve:integration --gkApiUrl=http://{{ target }}/api/v2 --hostname=0.0.0.0 --userManagementEnabled=true --licenseManagementEnabled=true --debug"
     state: started
     network_mode: bridge
     networks:

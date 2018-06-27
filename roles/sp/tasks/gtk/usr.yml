@@ -3,8 +3,10 @@
 - name: GATEKEEPER USER MANAGEMENT (GTKUSR) (Docker container)
   docker_container:
     name: son-gtkusr
-    image: "sonatanfv/son-gtkusr:{{ sp_ver }}"
+    image: "{{ repository }}/son-gtkusr:{{ sp_ver }}"
     state: started
+    recreate: yes
+    pull: true
     env:
       KEYCLOAK_ADDRESS: son-keycloak
       KEYCLOAK_PORT: 5601

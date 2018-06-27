@@ -16,7 +16,7 @@
     name: "{{ plat }}-{{ pop }}-{{ proj }}-{{ distro }}-{{ item }}-{{ ansible_date_time.epoch }}"
     image: "{{ image }}"
     key_name: "{{ key_name }}"
-    flavor: "{{ flv }}"
+    flavor: "{{ flv | default ('m1.small') }}"
     availability_zone: "{{ availability_zone }}"
     security_groups: "{{ os_security_groups }}"
     floating_ip_pools: "{{ ext_net_id }}"

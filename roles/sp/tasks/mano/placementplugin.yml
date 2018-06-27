@@ -13,3 +13,5 @@
         aliases:
           - placementplugin
     state: started
+    recreate: yes
+    pull: true

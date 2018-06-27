@@ -4,8 +4,10 @@
 - name: deploy REPOSITORIES container 
   docker_container:
     name: son-catalogue-repos
-    image: "sonatanfv/son-catalogue-repos:{{ sp_ver }}"
+    image: "{{ repository }}/son-catalogue-repos:{{ sp_ver }}"
     state: started
+    recreate: yes
+    pull: true
     restart_policy: "always"
     network_mode: bridge
     networks:

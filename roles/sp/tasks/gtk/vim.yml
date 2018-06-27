@@ -16,7 +16,7 @@
 - name: GATEKEEPER VIM
   docker_container:
     name: son-gtkvim
-    image: "sonatanfv/son-gtkvim:{{ sp_ver }}"
+    image: "{{ repository }}/son-gtkvim:{{ sp_ver }}"
     env:
       RACK_ENV: integration
       MQSERVER: amqp://guest:guest@son-broker:5672
@@ -31,5 +31,7 @@
         aliases:
           - son-gtkvim
     state: started
+    recreate: yes
+    pull: true
     restart_policy: "always"
     published_ports: "5700:5700"

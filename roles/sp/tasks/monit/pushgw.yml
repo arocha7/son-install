@@ -4,6 +4,8 @@
     image: "sonatanfv/son-monitor-pushgateway:{{ sp_ver }}"
     restart_policy: "always"
     state: started
+    recreate: yes
+    pull: true
     network_mode: bridge
     networks:
       - name: "{{ docker_network_name }}"

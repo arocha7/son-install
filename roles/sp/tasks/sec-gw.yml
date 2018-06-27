@@ -4,8 +4,10 @@
 - name: run the SP Security Gateway
   docker_container:
     name: "son-sec-gw"
-    image: "sonatanfv/son-sec-gw:{{ sp_ver }}"
+    image: "{{ repository }}/son-sec-gw:{{ sp_ver }}"
     state: started
+    recreate: yes
+    pull: true
     restart_policy: "always"
     network_mode: bridge
     networks:

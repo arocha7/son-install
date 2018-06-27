@@ -5,10 +5,12 @@
     name: son-monitor-probe
     image: "sonatanfv/son-monitor-probe:{{ sp_ver }}"
     state: started
+    recreate: yes
+    pull: true
     restart_policy: "always"
     privileged: yes
     env:
-      NODE_NAME: "{{ ansible_host | default (lookup('env','HOSTNAME')) }}"
+      NODE_NAME: "{{ target }}"
       PROM_SRV: "http://son-monitor-pushgateway:9091/metrics"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"

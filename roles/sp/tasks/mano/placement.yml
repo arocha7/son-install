@@ -13,3 +13,5 @@
         aliases:
           - placementexecutive
     state: started
+    recreate: yes
+    pull: true
