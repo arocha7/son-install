@@ -13,21 +13,43 @@
 - name: make sure required PyPi packages are installed
   pip: name=docker-py state=present
 
-- name: add Docker repo to YUM
-  copy: src=docker.repo dest=/etc/yum.repos.d/docker.repo owner=root group=root mode=0644
+- name: install required packages 
+  yum: name="{{ item }}"
+  with_items:
+    - device-mapper-persistent-data
+    - lvm2
+
+#- name: add Docker repo to YUM
+#  copy: src=docker.repo dest=/etc/yum.repos.d/docker.repo owner=root group=root mode=0644
+
+- name: Import Docker CE repository gpg key
+  rpm_key:
+    key: https://download.docker.com/linux/centos/gpg
+    #id: 060A61C51B558A7F742B77AAC52FEB6B621E9F35
+    state: present
+
+- name: set up the stable repository
+  yum_repository:
+    name: docker-ce
+    description: Docker CE repo
+    file: docker-ce
+    baseurl: https://download.docker.com/linux/centos/$releasever/x86_64/stable/
+    enabled: yes
+    gpgcheck: yes
+    state: present
 
 - name: install Docker on CentOS7
-  yum: name=docker-engine state=present update_cache=yes
+  yum: name=docker-ce state=present update_cache=yes
 
-- name: add Docker configuration options
-  copy: src=docker2systemd dest=/etc/sysconfig/docker owner=root group=root mode=0644
+#- name: add Docker configuration options
+#  copy: src=docker2systemd dest=/etc/sysconfig/docker owner=root group=root mode=0644
 
-- name: create a directory if it doesn't exist
-  file: path=/etc/systemd/system/docker.service.d/ state=directory mode=0755
+#- name: create a directory if it doesn't exist
+#  file: path=/etc/systemd/system/docker.service.d/ state=directory mode=0755
 
-- name: configuring Docker options
-  copy: src=docker.conf dest=/etc/systemd/system/docker.service.d/docker.conf owner=root group=root mode=0644
-  register: result
+#- name: configuring Docker options
+#  copy: src=docker.conf dest=/etc/systemd/system/docker.service.d/docker.conf owner=root group=root mode=0644
+#  register: result
 
 - name: start Docker engine
   systemd: name=docker state=started daemon_reload=yes
