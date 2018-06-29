@@ -50,11 +50,3 @@
 #- name: configuring Docker options
 #  copy: src=docker.conf dest=/etc/systemd/system/docker.service.d/docker.conf owner=root group=root mode=0644
 #  register: result
-
-- name: start Docker engine
-  systemd: name=docker state=started daemon_reload=yes
-
-- include_tasks: "{{ lookup('env','PWD') }}/roles/docker/tasks/networks.yml"
-
-- pause: seconds=2
-

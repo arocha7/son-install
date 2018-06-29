@@ -63,27 +63,22 @@
     id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
     state: present
 
+- name: get distro codename
+  command: lsb_release -cs
+  register: distro
 - name: "Setup the STABLE Docker repository"
-  apt_repository:
-    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-    state: present
 
-- name: local package update
-  apt: update_cache=yes
+  apt_repository:
+    #repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ distro.stdout }} stable"
+    state: present
+    update_cache: yes
 
 - name: "Install Docker package"
   apt: name=docker-ce state=present
 
-- name: "Ensure Docker is started at boot"
-  service: name=docker enabled=yes
-
 - name: "Configuring Docker Options"
   copy: src=docker2upstart dest=/etc/default/docker owner=root group=root mode=0644
-
-- name: start Docker engine
-  systemd: name=docker state=started daemon_reload=yes
-
-- include_tasks: "{{ lookup('env','PWD') }}/roles/docker/tasks/networks.yml"
 
 #- name: configure RSYSLOG
 #  template:
