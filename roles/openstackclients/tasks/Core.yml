@@ -9,18 +9,20 @@
 - name: install required libraries and tools for PIP
   yum: name={{ item }} state=latest
   with_items:
-    - python-devel
     - openssl-devel
     - libffi-devel
 
 - name: install PIP
-  yum: name=python-pip state=present
+  yum: name="{{ item }}" state=present
+    - python-pip
+    - python-devel
 
 # INSTALL VIA PIP because the packaged version might install older clients
 - name: upgrade PIP
   pip:
     name: pip
-    extra_args: --upgrade
+    extra_args: "--upgrade --force-reinstall"
     state: present
-    version: 10.0.1
+    #version: 10.0.1
+    version: 9.0.3
 
