@@ -14,9 +14,6 @@
     - docker-engine
     - docker-python
 
-- name: remove 'docker-py' (last release 1.10.6 stopped at Nov. 2016)
-  pip: name=docker-py state=absent
-
 ###
 
 - name: install PIP
@@ -28,6 +25,9 @@
     extra_args: --upgrade
     state: present
     version: 10.0.1
+
+- name: install 'docker-py'
+  pip: name=docker-py state=present
 
 - name: install required packages 
   yum: name="{{ item }}"

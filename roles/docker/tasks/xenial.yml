@@ -34,7 +34,7 @@
   - pycrypto
   - six
   - requests
-#  - docker-py
+  - docker-py
 
 - name: "Remove deprecated Docker package"
   apt: name=lxc-docker state=absent
@@ -75,10 +75,10 @@
     state: present
 
 - name: get distro codename
-  command: lsb_release -cs
+  command: "lsb_release -cs"
   register: distro
-- name: "Setup the STABLE Docker repository"
 
+- name: "Setup the STABLE Docker repository"
   apt_repository:
     #repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
     repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ distro.stdout }} stable"
