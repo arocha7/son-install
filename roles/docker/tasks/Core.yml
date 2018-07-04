@@ -1,23 +1,37 @@
 ---
 
-- yum: name=epel-release state=latest
-
-- name: install Docker dependency libraries
-  yum: name={{ item }} state=present update_cache=yes
-  with_items:
-  - python-pip
-
-- name: make sure docker-python RPM is not installed
-  yum: name=docker-python state=absent
+- name: uninstall previous Docker releases
+  yum: name="{{ item }}" state=absent update_cache=yes
+  with_items: 
+    - docker-client
+    - docker-client-latest
+    - docker-common
+    - docker-latest
+    - docker-latest-logrotate
+    - docker-logrotate
+    - docker-selinux
+    - docker-engine-selinux
+    - docker-engine
+    - docker-python
 
 - name: make sure required PyPi packages are installed
-  pip: name=docker-py state=present
+  pip: name=docker-py state=absent
+
+###
+
+- name: install PIP
+  yum: name=python-pip state=present
+
+- name: upgrade PIP
+  pip: name=pip state=present version=10.0.1
 
 - name: install required packages 
   yum: name="{{ item }}"
   with_items:
     - device-mapper-persistent-data
     - lvm2
+
+- yum: name=epel-release state=latest
 
 #- name: add Docker repo to YUM
 #  copy: src=docker.repo dest=/etc/yum.repos.d/docker.repo owner=root group=root mode=0644

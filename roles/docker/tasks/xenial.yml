@@ -16,7 +16,7 @@
   - python3-apt
   - python-pip
   - python-dev
-  - python-setuptools
+#  - python-setuptools
   - python-httplib2
   - python-keyczar
   - python-pkg-resources
@@ -25,7 +25,7 @@
 - name: install PIP
   apt: name=python-pip state=present
 
-- name: install docker-py library on the remote server
+- name: install required library
   pip: name={{ item }} state=present
   with_items:
   - jinja2
@@ -34,13 +34,24 @@
   - pycrypto
   - six
   - requests
-  - docker-py
+#  - docker-py
 
 - name: "Remove deprecated Docker package"
   apt: name=lxc-docker state=absent
 
 - name: "Remove Docker package"
-  apt: name=docker-engine state=absent
+  apt: name="{{ item }}" state=absent
+  with_items:
+  - docker-engine
+  - docker-io
+
+- name: remove files and directories
+  file:
+    state: "{{ item }}"
+    path: "/var/lib/docker/"
+  with_items:
+    - absent
+    - directory
 
 - name: "Remove deprecated Docker APT repository"
   apt_repository: repo="deb https://get.docker.com/ubuntu docker main" state=absent update_cache=no

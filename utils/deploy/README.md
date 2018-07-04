@@ -1,7 +1,7 @@
-Here you have a list of standalone applications ready to deploy the VNF/NS (or the SP) to an existing VM or host.
+Here you have a list of standalone playbooks ready to deploy to an existing guest or localhost.
 
 
-Deploy the SP or VNF/NS to a target machine
+Deploy the SP to a target machine
 ===========================================
 
 * 1st connect to the target machine via SSH
@@ -9,17 +9,20 @@ Deploy the SP or VNF/NS to a target machine
 * 3rd upgrade the Operating System packages and install libraries and tools
 * 4rd run 'XXX.yml' playbook to deploy the XXX application, eg:
 
-SP deployment to the localhost
-* ansible-playbook utils/deploy/SP.yml [-e 'target=localhost']
+* ansible-playbook utils/deploy/sp.yml -i inventory/sp/hosts -e 'target=localhost'
 
-vPSA deployment 
-* ansible-playbook utils/deploy/vpsa.yml [-e 'target=localhost']
+
+Deploy a VNF or NS (composed VNF's in a flow chain)
+===================================================
+
+Example: vPSA deployment
+* ansible-playbook utils/deploy/vpsa.yml -i inventory/sp/hosts -e 'target=localhost'
 
 
 Deploy a Kubernetes cluster
 ===========================
 
-* ansible-playbook utils/deploy/kubernetes.yml [-i inventory/hosts]
+* ansible-playbook utils/deploy/kubernetes.yml [-i inventory/kube/hosts]
 
 
 Create a single or multiple VMs on an Openstack VIM
