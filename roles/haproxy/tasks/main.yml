@@ -1,26 +1,125 @@
 ---
 # tasks file for haproxy
 
-# http://cbonte.github.io/haproxy-dconv/
+### HAProxy CE (http://www.haproxy.org/)
 
-- name: installing HA Proxy
+
+## PREPARE
+
+- name: installing requirements
   include_tasks: "{{ ansible_os_family }}.yml"
 
-- name: install HA Proxy
-  package: name=haproxy state=present
+## INSTALL
+## the packaged repos are old: U16_1.6.3 / CE7_1.5.18
+
+#- name: installing HA Proxy
+#  package: name=haproxy state=present
+
+- name: download HAProxy tarball
+  unarchive:
+    src: "http://www.haproxy.org/download/{{ release }}/src/haproxy-{{ tarball_ver }}.tar.gz"
+    dest: /tmp
+    remote_src: true
+
+- name: compile HAProxy
+  make:
+    chdir: /tmp/haproxy-{{ tarball_ver }}
+    target: all
+    params:
+      ARCH: native
+      CPU: x86_64
+      TARGET: linux2628
+      USE_LINUX_TPROXY: 1
+      USE_ZLIB: 1
+      USE_REGPARM: 1
+      USE_PCRE: 1
+      USE_PCRE_JIT: 1 
+      USE_OPENSSL: 1
+      SSL_INC: /usr/include
+      SSL_LIB: /usr/lib
+      ADDLIB: '-ldl'
+      CFLAGS: "-O2 -g -fno-strict-aliasing -DTCP_USER_TIMEOUT=18" 
+
+- shell: cd /tmp/haproxy-{{ tarball_ver }} && make install
+
+- name: copy executable 'haproxy'
+  copy:
+    src: "/tmp/haproxy-{{ tarball_ver }}/haproxy"
+    dest: /usr/local/sbin/haproxy
+    remote_src: yes
+    owner: root
+    group: root
+    mode: 0775
+
+
+## SETUP
+
+- name: ensure group "haproxy" exists
+  group:
+    name: haproxy
+    state: present
+
+- name: create 'haproxy' service user
+  user:
+    name: "haproxy"
+    comment: "haproxy user"
+    group: haproxy
+
+- name: copy 'haproxy.cfg'
+  copy:
+    src: "/tmp/haproxy-{{ tarball_ver }}/examples/haproxy.init"
+    dest: /etc/init.d/haproxy
+    remote_src: yes
+    owner: haproxy
+    group: haproxy
+    mode: 0775
+
+- name: copy 'haproxy.service'
+  copy:
+    src: "haproxy.service"
+    dest: "/etc/systemd/system/haproxy.service"
+    remote_src: no
+    owner: root
+    group: root
+    mode: 0644
+
+- name: create a directory if it doesn't exist
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: haproxy
+    group: haproxy
+    mode: 0775
+  with_items:
+    - /etc/haproxy
+    - /run/haproxy
+    - /var/lib/haproxy
+
+- name: create 'stats' file
+  file: path=/var/lib/haproxy/stats state=touch mode='u=rw,g=rw,o=r'
+
+
+## CONFIGURE
 
 - name: setting your specific configuration
   copy:
-    remote_src: false
     src: "{{ lookup('env','PWD') }}/roles/haproxy/files/haproxy.cfg"
     dest: /etc/haproxy/haproxy.cfg
+    remote_src: false
+
+## START
 
 - name: start HA Proxy
-  service: name=haproxy state=started enabled=yes
+  systemd: name=haproxy state=started daemon_reload=yes enabled=yes
+
+## TEST
 
 - command: haproxy -v
-  become: true
   register: haproxy_ver
 - debug:
     var: haproxy_ver.stdout
 
+# firewall-cmd --permanent --zone=public --add-service=http
+# firewall-cmd --permanent --zone=public --add-port=8181/tcp
+# firewall-cmd --reload  
+#  http://<load-balancer-ip>/haproxy?stats

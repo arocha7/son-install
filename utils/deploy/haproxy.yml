@@ -1,8 +1,8 @@
 ---
-- name: deploy HAProxy to the target machine
+- name: deploy HAProxy (TCP/HTTP load balancer)
   hosts: "{{ target | default('localhost') }}"
   become: true
   roles:
-  - firewall
+  #- firewall
   - haproxy
 

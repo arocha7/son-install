@@ -4,6 +4,7 @@
   yum: name={{ item }}
   become: true
   with_items:
+    - gcc
     - pcre-static
     - pcre-devel
-
+    - openssh-devel
