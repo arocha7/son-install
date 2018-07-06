@@ -16,3 +16,11 @@
     - libpcre3-dev
     - libssl-dev
 
+- name: "Setup the STABLE repository"
+  apt_repository:
+    repo: "ppa:vbernat/haproxy-1.8"
+    state: present
+
+- name: upgrade all packages to the latest version
+  apt: upgrade=yes update_cache=yes
+
