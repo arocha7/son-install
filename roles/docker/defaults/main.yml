@@ -1,8 +1,0 @@
----
-# defaults file for docker
-
-docker_network_name: tango
-docker_addr_space: 172.23.0.0/24
-docker_gateway: 172.23.0.1
-docker_ip_range: 172.23.0.128/25
-

@@ -1,8 +1,0 @@
----
-- name: deploy SON-CLIent tools to the target machine
-  hosts: "{{ target | default ('localhost') }}"
-  become: true
-  vars:
-    vm_user: "{{ lookup('env','PWD') }}"
-  roles:
-    - son-cli

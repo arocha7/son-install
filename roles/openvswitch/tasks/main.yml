@@ -1,5 +1,0 @@
----
-# tasks file for ovs
-
-- include_tasks: "{{ ansible_distribution_release }}.yml"
-

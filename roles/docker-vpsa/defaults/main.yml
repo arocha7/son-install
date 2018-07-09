@@ -1,5 +1,0 @@
----
-
-#vl_enduser: "{{ 'sonata.dem-net' if pop == 'ncsrd' and proj == 'dem' else 'dem-netw' }}"
-
-vl_mgmt: vpsa-mgmt
