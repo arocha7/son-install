@@ -1,0 +1,44 @@
+---
+# defaults file for sp
+nbofvms: 1
+plat: sp
+flv: sp.3_6_30
+
+# Docker network segment
+docker_network_name: sp-docker-net
+
+# SONATA 5G NFV SP version
+sp_ver: dev
+version: v3.1
+
+# SONATA FQDN
+domain_name: sonata-nfv.eu
+fqdn: "{{ plat }}.{{ pop }}.{{ domain_name }}"
+
+# set the passwd at "~/.ssh/.vault_pass
+sp_user: sonata
+sp_pass: "$1$SRc2ws2Z$rSdCC/UKiatagNdfsTVuf0"
+
+# GTK
+gtk_db_name: gatekeeper
+gtk_db_user: sonatatest
+gtk_db_pass: sonata
+
+# GATEKEEPER USER MGMT
+gtk_keycloak_user: admin
+gtk_keycloak_pass: admin
+
+# GATEKEEPER APPLICATION
+app_gk_base_url: http://localhost/api/v2
+
+# IA
+ia_repo_user: sonatatest
+ia_repo_pass: sonata
+
+# MONIT
+mon_db_name: monitoring
+mon_db_user: monitoringuser
+mon_db_pass: sonata
+
+# CATALOGUE
+repository: registry.sonata-nfv.eu:5000

@@ -1,0 +1,10 @@
+---
+- name: "deploy JENKINS CI server to run as a container"
+  hosts: "{{ target | default('localhost') }}"
+  become: true
+  connection: local
+  vars:
+    vl_mgmt: "mgmtvirtlink"
+    vl_input: "inputvirtlink"
+  roles:
+  - docker-jenkins

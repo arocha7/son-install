@@ -1,0 +1,112 @@
+---
+- name: to ensure that APT works with the HTTPS method and that CA certificates are installed
+  apt: name={{ item }} state=present update_cache=yes
+  with_items:
+  - software-properties-common
+  - apt-transport-https
+  - ca-certificates
+  - curl
+
+- name: Install Docker dependency libraries
+  apt: name={{ item }} state=present update_cache=yes
+  with_items:
+  - apparmor
+  - aptitude
+  - python-apt
+  - python3-apt
+  - python-pip
+  - python-dev
+#  - python-setuptools
+  - python-httplib2
+  - python-keyczar
+  - python-pkg-resources
+  - git
+
+- name: install PIP
+  apt: name=python-pip state=present
+
+- name: install required library
+  pip: name={{ item }} state=present
+  with_items:
+  - jinja2
+  - PyYAML
+  - setuptools
+  - pycrypto
+  - six
+  - requests
+  - docker-py
+
+- name: "Remove deprecated Docker package"
+  apt: name=lxc-docker state=absent
+
+- name: "Remove Docker package"
+  apt: name="{{ item }}" state=absent
+  with_items:
+  - docker-engine
+  - docker-io
+
+- name: remove files and directories
+  file:
+    state: "{{ item }}"
+    path: "/var/lib/docker/"
+  with_items:
+    - absent
+    - directory
+
+- name: "Remove deprecated Docker APT repository"
+  apt_repository: repo="deb https://get.docker.com/ubuntu docker main" state=absent update_cache=no
+
+- name: "Remove deprecated Docker APT key"
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: 36A1D7869245C8950F966E92D8576A8BA88D21E9
+    state: absent
+
+- name: "Remove Docker APT key"
+  apt_key:
+    keyserver: p80.pool.sks-keyservers.net
+    id: 58118E89F3A912897C070ADBF76221572C52609D
+    state: absent
+
+- name: "Add official GPG key"
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+    state: present
+
+- name: get distro codename
+  command: "lsb_release -cs"
+  register: distro
+
+- name: "Setup the STABLE Docker repository"
+  apt_repository:
+    #repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ distro.stdout }} stable"
+    state: present
+    update_cache: yes
+
+- name: "Install Docker package"
+  apt: name=docker-ce state=present
+
+- name: "Configuring Docker Options"
+  copy: src=docker2upstart dest=/etc/default/docker owner=root group=root mode=0644
+
+#- name: configure RSYSLOG
+#  template:
+#    src: rsyslog.j2
+#    dest: /etc/rsyslog.d/30-docker.conf
+#    owner: root
+#    group: root
+#    mode: 0644
+#  notify:
+#  - restart rsyslog
+
+#- name: configure LOGROTATE
+#  template:
+#    src: logrotate.j2
+#    dest: /etc/logrotate.d/docker
+#    owner: root
+#    group: root
+#    mode: 0644
+#  notify:
+#  - restart rsyslog

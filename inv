@@ -1,0 +1,6 @@
+[hap]
+ce7hap ansible_connection=ssh ansible_user=centos ansible_ssh_private_key_file=~/.ssh/tng-infra.pem ansible_host=172.31.8.139
+u16hap ansible_connection=ssh ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/tng-infra.pem ansible_host=172.31.8.133
+[sta-sp-ave]
+sta-sp-ave.5gtango.eu ansible_connection=local ansible_user=tango ansible_password=t4ng0 ansible_host=172.31.8.124
+
