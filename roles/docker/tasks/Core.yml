@@ -26,8 +26,11 @@
     state: present
     version: 10.0.1
 
-- name: install 'docker-py'
-  pip: name=docker-py state=present
+- name: uninstall 'docker' (v1.10.6)
+  pip: name=docker-py state=absent
+
+- name: install 'docker' (v3.4.x)
+  pip: name=docker state=present
 
 - name: install required packages 
   yum: name="{{ item }}"
