@@ -16,7 +16,8 @@
     - libpcre3-dev
     - libssl-dev
 
-- name: "Setup the STABLE repository"
+# https://fabianlee.org/2017/10/16/haproxy-zero-downtime-reloads-with-haproxy-1-8-on-ubuntu-16-04-with-systemd/
+- name: setup the stable repository
   apt_repository:
     repo: "ppa:vbernat/haproxy-1.8"
     state: present
