@@ -6,18 +6,14 @@
 
 ## PREPARE
 
-- name: installing requirements
+- name: preparing and installing
   include_tasks: "{{ ansible_os_family }}.yml"
 
 
 ## INSTALL
 
-- name: installing HA Proxy
-  package: name=haproxy state=present
-
 
 ## SETUP
-
 
 
 ## CONFIGURE
@@ -32,6 +28,7 @@
 
 - name: start HA Proxy
   systemd: name=haproxy state=started daemon_reload=yes enabled=yes
+
 
 ## TEST
 

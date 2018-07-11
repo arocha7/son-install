@@ -1,6 +1,6 @@
 #- yum: name=* state=latest
 
-- name: install HA Proxy requirements
+- name: install HA Proxy required packages
   yum: name={{ item }}
   with_items:
     #- gcc
@@ -12,4 +12,13 @@
   yum:
     name: http://cbs.centos.org/kojifiles/packages/haproxy/1.8.1/5.el7/x86_64/haproxy18-1.8.1-5.el7.x86_64.rpm
     state: present
+
+- name: ensures dir exists
+  file:
+    path: "/run/haproxy/"
+    state: directory
+    recurse: yes
+    owner: "root"
+    group: "root"
+    mode: 0755
 

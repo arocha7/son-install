@@ -9,7 +9,7 @@
 - name: install development libraries and tools
   apt: name=build-essential state=latest
 
-- name: install HA Proxy requirements
+- name: install HA Proxy pre-required packages
   apt: name={{ item }}
   with_items:
     #- pcre-static
@@ -24,4 +24,7 @@
 
 - name: upgrade all packages to the latest version
   apt: upgrade=yes update_cache=yes
+
+- name: installing HA Proxy
+  apt: name=haproxy state=present
 
