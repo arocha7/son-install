@@ -1,5 +1,5 @@
 ---
-- hosts: target
+- hosts: '{{ target }}'
   connection: ssh
   become: true
   roles:
