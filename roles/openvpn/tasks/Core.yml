@@ -1,24 +1,88 @@
-- debug: msg="##### INSTALLING OpenVPN {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
+- debug: msg="##### Starting OpenVPN deployment {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
+
+## INSTALL
 
 - name:  upgrade all packages to the latest version
   yum: name='*' state=latest update_cache=yes
 
 - yum: name=epel-release state=latest
 
-- name: install OpenVPN and tools
-  yum: name={{ item }}
-  with_items:
-    - openvpn
-    - easy-rsa
-    #- iptables-services
+- name: install OpenVPN
+  yum: name=openvpn state=present
 
-- name: copy 'easy-rsa' script generation to OpenVPN folder
-  synchronize:
-    src: /usr/share/easy-rsa
-    dest: /etc/openvpn
-  delegate_to: "{{ inventory_hostname }}"
+- unarchive:
+    src: 'https://github.com/OpenVPN/easy-rsa-old/archive/2.3.3.tar.gz'
+    dest: /tmp
 
-- name: set 'vars' for CA
-  copy:
-    src: vars
-    dest: /etc/openvpn/easy-rsa/3.0.3
+- file:
+    path: /etc/openvpn/easy-rsa
+    state: directory
+    mode: 0755
+
+- copy:
+    src: "/tmp/easy-rsa-old-2.3.3/easy-rsa/2.0/*
+    dest: /etc/openvpn/easy-rsa
+    remote_src: yes
+
+- shell: 'chown centos /etc/openvpn/easy-rsa/'
+
+## CONFIG
+
+- name: Configuring OpenVPN
+  block:
+    - copy:
+        src: server.conf
+        dest: /etc/openvpn
+        #src: "/usr/share/doc/openvpn-{{ tarball }}/sample/sample-config-files/server.conf"
+        #remote_src: yes
+    - shell: 'openvpn --genkey --secret /etc/openvpn/myvpn.tlsauth'
+
+- name: Generating Keys and Certificates
+  block:
+    - file:
+        path: '/etc/openvpn/easy-rsa/keys'
+        state: directory
+        mode: 0755
+    - copy:
+        src: 'vars'
+        dest: '/etc/openvpn/easy-rsa'
+
+- include_tasks: build-ca.yml
+
+- include_tasks: build-ca-client.yml
+
+- copy:
+    src: /etc/openvpn/easy-rsa/openssl-1.0.0.cnf
+    dest: /etc/openvpn/easy-rsa/openssl.cnf
+    remote_src: yes
+
+- name: open firewall ports
+  block:
+  - firewalld:
+      service: OpenSSH
+      permanent: true
+      state: enabled
+  - firewalld:
+      port: 1143/udp
+      permanent: true
+      state: enabled
+  - systemd:
+      name: firewalld
+      state: restarted
+      daemon_reload: yes
+
+- name: enable IP Forwarding
+  # this will route all web traffic from your client to your server’s IP address,
+  # and your client’s public IP address will effectively be hidden
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: restart networking stack
+  systemd:
+    name: network
+    state: restarted
+
