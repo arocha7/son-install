@@ -18,12 +18,17 @@
 
 - name: setup 'vars' for CA
   copy:
-    #src: "{{ lookup('env','PWD') }}/roles/openvpn/files/vars"
-    src: "vars"
+    src: "{{ lookup('env','PWD') }}/roles/openvpn/files/vars"
     dest: /usr/share/easy-rsa/
 
+- file:
+    path: "{{ lookup('env','HOME') }}/openvpnca"
+    state: directory
+    state: absent
+
 - name: setup the CA directory
-  shell: make-cadir "{{ lookup('env','HOME') }}/openvpnca"
+  shell: "make-cadir {{ lookup('env','HOME') }}/openvpnca"
+  become: false
 
 - include_tasks: build-ca.yml
 
@@ -47,11 +52,12 @@
         path: /etc/openvpn
         state: directory
         mode: 0755
-    - unarchive:
-        src: /usr/share/doc/openvpn/examples/sample-config-files/server.conf.gz
+    - shell: 'gunzip /usr/share/doc/openvpn/examples/sample-config-files/server.conf.gz'
+    - copy:
+        src: /usr/share/doc/openvpn/examples/sample-config-files/server.conf
         dest: /etc/openvpn
         remote_src: yes
-    
+
 - name: open firewall ports
   block:
   - ufw:
