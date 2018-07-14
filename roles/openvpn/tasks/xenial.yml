@@ -69,8 +69,6 @@
       rule: allow
       name: 'OpenSSH'
 
-## START
-
 - name: enable IP Forwarding
   # this will route all web traffic from your client to your server’s IP address,
   # and your client’s public IP address will effectively be hidden
@@ -82,4 +80,6 @@
     reload: yes
   notify:
     - restart networking
+
+## START
 
