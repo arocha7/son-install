@@ -1,0 +1,3 @@
+- name: Generate a Client Certificate and Key Pair
+  shell: "cd {{ lookup('env','HOME') }}/openvpnca/ && source vars executable=/bin/bash && ./build-key clnt01"
+

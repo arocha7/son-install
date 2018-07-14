@@ -52,6 +52,7 @@
         path: /etc/openvpn
         state: directory
         mode: 0755
+    - apt: name=unzip state=present
     - shell: 'gunzip /usr/share/doc/openvpn/examples/sample-config-files/server.conf.gz'
     - copy:
         src: /usr/share/doc/openvpn/examples/sample-config-files/server.conf
@@ -62,7 +63,8 @@
   block:
   - ufw:
       rule: allow
-      port: '1194/udp'
+      port: '1194'
+      proto: udp
   - ufw:
       rule: allow
       name: 'OpenSSH'
@@ -78,9 +80,6 @@
     sysctl_set: yes
     state: present
     reload: yes
-
-- name: restart networking stack
-  systemd:
-    name: networking.service
-    state: restarted
+  notify:
+    - restart networking
 
