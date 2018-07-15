@@ -30,9 +30,25 @@
   shell: "make-cadir {{ lookup('env','HOME') }}/openvpnca"
   become: false
 
-- include_tasks: build-ca.yml
+- name: prepare the build of CA
+  shell: "cd {{ lookup('env','HOME') }}/openvpnca/ && source vars executable=/bin/bash && ./clean-all"
+  become_user: "{{ vm_user }}"
 
-- include_tasks: build-ca-client.yml
+- name: building the CA
+  shell: "cd {{ lookup('env','HOME') }}/openvpnca/ && source vars executable=/bin/bash && ./pkitool --initca"
+  become_user: "{{ vm_user }}"
+
+- name: building the CA
+  shell: "cd {{ lookup('env','HOME') }}/openvpnca/ && source vars executable=/bin/bash && ./pkitool --server server"
+  become_user: "{{ vm_user }}"
+
+- name: generate a strong Diffie-Hellman keys
+  shell: "{{ lookup('env','HOME') }}/openvpnca/build-dh"
+  become_user: "{{ vm_user }}"
+
+- name: generate an HMAC signature to strengthen the server TLS integrity verification capabilities
+  shell: "openvpn --genkey --secret {{ lookup('env','HOME') }}/openvpnca/keys/ta.key"
+  become_user: "{{ vm_user }}"
  
 ## CONFIG
 

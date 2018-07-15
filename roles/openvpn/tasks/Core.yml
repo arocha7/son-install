@@ -13,21 +13,25 @@
 - unarchive:
     src: 'https://github.com/OpenVPN/easy-rsa-old/archive/2.3.3.tar.gz'
     dest: /tmp
+    owner: "{{ vm_user }}"
+    group: "{{ vm_user }}"
     remote_src: yes
 
 - file:
     path: /etc/openvpn/easy-rsa
     state: directory
+    owner: "{{ vm_user }}"
+    group: "{{ vm_user }}"
     mode: 0755
 
 - copy:
     src: "{{ item }}"
     dest: /etc/openvpn/easy-rsa
+    owner: "{{ vm_user }}"
+    group: "{{ vm_user }}"
     remote_src: yes
   with_fileglob:
-    - /tmp/easy-rsa-old-2.3.3/easy-rsa/2.0/*
-
-- shell: 'chown -R {{ vm_user }} /etc/openvpn/easy-rsa/'
+    - '/tmp/easy-rsa-old-2.3.3/easy-rsa/2.0/*'
 
 ## CONFIG
 
@@ -41,18 +45,55 @@
 
 - shell: 'openvpn --genkey --secret /etc/openvpn/myvpn.tlsauth'
 
-- name: Generating Keys and Certificates
+- name: assure a clean environ to build of CA
+  file:
+    path: '/etc/openvpn/easy-rsa/keys'
+    state: directory
+    state: absent
+
+- name: setup a directory to the generated Keys and Certificates
   file:
     path: '/etc/openvpn/easy-rsa/keys'
     state: directory
     mode: 0755
-- copy:
+
+- name: setup the CA configuration file
+  copy:
     src: '{{ lookup("env","PWD") }}/roles/openvpn/files/vars'
     dest: '/etc/openvpn/easy-rsa'
 
-- include_tasks: build-ca.yml
+- name: building the CA
+  shell: "source /etc/openvpn/easy-rsa/vars executable=/bin/bash && /etc/openvpn/easy-rsa/pkitool --initca"
+  become_user: "{{ vm_user }}"
 
-- include_tasks: build-ca-client.yml
+- name: building the CA
+  shell: "source /etc/openvpn/easy-rsa/vars executable=/bin/bash && /etc/openvpn/easy-rsa/pkitool --server server"
+  become_user: "{{ vm_user }}"
+
+- name: generate a strong Diffie-Hellman keys
+  shell: "/etc/openvpn/easy-rsa/build-dh"
+  become_user: "{{ vm_user }}"
+
+- name: generate an HMAC signature to strengthen the server TLS integrity verification capabilities
+  shell: "openvpn --genkey --secret /etc/openvpn/easy-rsa/keys/ta.key"
+  become_user: "{{ vm_user }}"
+
+- name: Copy the generated files to the OpenVPN Directory
+  block:
+    - copy:
+        src: "/etc/openvpn/easy-rsa/keys/{{ item }}"
+        dest: /etc/openvpn
+        remote_src: yes
+      with_fileglob:
+        - ca.crt
+        - server.crt
+        - server.key
+        - ta.key
+        - dh2048.pem
+
+- name: building the CA client
+  shell: "source vars executable=/bin/bash && /etc/openvpn/easy-rsa/pkitool clnt01"
+  become_user: "{{ vm_user }}"
 
 - copy:
     src: /etc/openvpn/easy-rsa/openssl-1.0.0.cnf
