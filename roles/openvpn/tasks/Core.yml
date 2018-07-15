@@ -24,14 +24,18 @@
     group: "{{ vm_user }}"
     mode: 0755
 
+- find: 
+    paths: '/tmp/easy-rsa-old-2.3.3/easy-rsa/2.0/'
+  register: matched
 - copy:
-    src: "{{ item }}"
-    dest: /etc/openvpn/easy-rsa
+    src: "{{ item.path }}"
+    dest: '/etc/openvpn/easy-rsa'
     owner: "{{ vm_user }}"
     group: "{{ vm_user }}"
     remote_src: yes
-  with_fileglob:
-    - '/tmp/easy-rsa-old-2.3.3/easy-rsa/2.0/*'
+    mode: 0775
+  with_items: "{{ matched.files }}"
+
 
 ## CONFIG
 
@@ -39,11 +43,11 @@
   copy:
     src: "{{ lookup('env','PWD') }}/roles/openvpn/files/server.conf"
     dest: /etc/openvpn
-    owner: root
-    group: root
+    owner: "{{ vm_user }}"
+    group: "{{ vm_user }}"
     mode: 0644
 
-- shell: 'openvpn --genkey --secret /etc/openvpn/myvpn.tlsauth'
+- shell: '/usr/sbin/openvpn --genkey --secret /etc/openvpn/myvpn.tlsauth'
 
 - name: assure a clean environ to build of CA
   file:
@@ -55,6 +59,8 @@
   file:
     path: '/etc/openvpn/easy-rsa/keys'
     state: directory
+    owner: "{{ vm_user }}"
+    group: "{{ vm_user }}"
     mode: 0755
 
 - name: setup the CA configuration file
@@ -75,24 +81,37 @@
   become_user: "{{ vm_user }}"
 
 - name: generate an HMAC signature to strengthen the server TLS integrity verification capabilities
-  shell: "openvpn --genkey --secret /etc/openvpn/easy-rsa/keys/ta.key"
+  shell: "/usr/sbin/openvpn --genkey --secret /etc/openvpn/easy-rsa/keys/ta.key"
   become_user: "{{ vm_user }}"
 
-- name: Copy the generated files to the OpenVPN Directory
-  block:
-    - copy:
-        src: "/etc/openvpn/easy-rsa/keys/{{ item }}"
-        dest: /etc/openvpn
-        remote_src: yes
-      with_fileglob:
-        - ca.crt
-        - server.crt
-        - server.key
-        - ta.key
-        - dh2048.pem
+- find:
+    paths: '/etc/openvpn/easy-rsa/keys'
+    patterns: '*.crt,*.key,*.pem'
+    recurse: yes
+  register: matched
+- copy:
+    src: "{{ item.path }}"
+    dest: '/etc/openvpn'
+    owner: "{{ vm_user }}"
+    group: "{{ vm_user }}"
+    remote_src: yes
+    mode: 0664
+  with_items: "{{ matched.files }}"
+
+#- name: Copy the generated files to the OpenVPN Directory
+#  copy:
+#    src: "/etc/openvpn/easy-rsa/keys/{{ item }}"
+#    dest: /etc/openvpn
+#    remote_src: yes
+#  with_fileglob:
+#    - ca.crt
+#    - server.crt
+#    - server.key
+#    - ta.key
+#    - dh2048.pem
 
 - name: building the CA client
-  shell: "source vars executable=/bin/bash && /etc/openvpn/easy-rsa/pkitool clnt01"
+  shell: "source /etc/openvpn/easy-rsa/vars executable=/bin/bash && /etc/openvpn/easy-rsa/pkitool clnt01"
   become_user: "{{ vm_user }}"
 
 - copy:
@@ -102,8 +121,11 @@
 
 - name: open firewall ports
   block:
+  - yum:
+      name: firewalld
+      state: present
   - firewalld:
-      service: OpenSSH
+      port: 22/tcp
       permanent: true
       state: enabled
   - firewalld:
