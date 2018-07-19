@@ -1,0 +1,7 @@
+---
+- hosts: '{{ target }}'
+  connection: ssh
+  become: true
+  roles:
+    - openvpn
+

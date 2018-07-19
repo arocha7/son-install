@@ -1,0 +1,148 @@
+- debug: msg="##### Starting OpenVPN deployment {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
+
+## INSTALL
+
+- name:  upgrade all packages to the latest version
+  yum: name='*' state=latest update_cache=yes
+
+- yum: name=epel-release state=latest
+
+- name: install OpenVPN
+  yum: name=openvpn state=present
+
+- unarchive:
+    src: 'https://github.com/OpenVPN/easy-rsa-old/archive/2.3.3.tar.gz'
+    dest: /tmp
+    owner: "{{ vm_user }}"
+    group: "{{ vm_user }}"
+    remote_src: yes
+
+- file:
+    path: /etc/openvpn/easy-rsa
+    state: directory
+    owner: "{{ vm_user }}"
+    group: "{{ vm_user }}"
+    mode: 0755
+
+- find: 
+    paths: '/tmp/easy-rsa-old-2.3.3/easy-rsa/2.0/'
+  register: matched
+- copy:
+    src: "{{ item.path }}"
+    dest: '/etc/openvpn/easy-rsa'
+    owner: "{{ vm_user }}"
+    group: "{{ vm_user }}"
+    remote_src: yes
+    mode: 0775
+  with_items: "{{ matched.files }}"
+
+
+## CONFIG
+
+- name: Configuring OpenVPN
+  copy:
+    src: "{{ lookup('env','PWD') }}/roles/openvpn/files/server.conf"
+    dest: /etc/openvpn
+    owner: "{{ vm_user }}"
+    group: "{{ vm_user }}"
+    mode: 0644
+
+- shell: '/usr/sbin/openvpn --genkey --secret /etc/openvpn/myvpn.tlsauth'
+
+- name: assure a clean environ to build of CA
+  file:
+    path: '/etc/openvpn/easy-rsa/keys'
+    state: directory
+    state: absent
+
+- name: setup a directory to the generated Keys and Certificates
+  file:
+    path: '/etc/openvpn/easy-rsa/keys'
+    state: directory
+    owner: "{{ vm_user }}"
+    group: "{{ vm_user }}"
+    mode: 0755
+
+- name: setup the CA configuration file
+  copy:
+    src: '{{ lookup("env","PWD") }}/roles/openvpn/files/vars'
+    dest: '/etc/openvpn/easy-rsa'
+
+- name: building the CA
+  shell: "source /etc/openvpn/easy-rsa/vars executable=/bin/bash && /etc/openvpn/easy-rsa/pkitool --initca"
+  become_user: "{{ vm_user }}"
+
+- name: building the CA
+  shell: "source /etc/openvpn/easy-rsa/vars executable=/bin/bash && /etc/openvpn/easy-rsa/pkitool --server server"
+  become_user: "{{ vm_user }}"
+
+- name: generate a strong Diffie-Hellman keys
+  shell: "/etc/openvpn/easy-rsa/build-dh"
+  become_user: "{{ vm_user }}"
+
+- name: generate an HMAC signature to strengthen the server TLS integrity verification capabilities
+  shell: "/usr/sbin/openvpn --genkey --secret /etc/openvpn/easy-rsa/keys/ta.key"
+  become_user: "{{ vm_user }}"
+
+- find:
+    paths: '/etc/openvpn/easy-rsa/keys'
+    patterns: '*.crt,*.key,*.pem'
+    recurse: yes
+  register: matched
+- copy:
+    src: "{{ item.path }}"
+    dest: '/etc/openvpn'
+    owner: "{{ vm_user }}"
+    group: "{{ vm_user }}"
+    remote_src: yes
+    mode: 0664
+  with_items: "{{ matched.files }}"
+
+#- name: Copy the generated files to the OpenVPN Directory
+#  copy:
+#    src: "/etc/openvpn/easy-rsa/keys/{{ item }}"
+#    dest: /etc/openvpn
+#    remote_src: yes
+#  with_fileglob:
+#    - ca.crt
+#    - server.crt
+#    - server.key
+#    - ta.key
+#    - dh2048.pem
+
+- name: building the CA client
+  shell: "source /etc/openvpn/easy-rsa/vars executable=/bin/bash && /etc/openvpn/easy-rsa/pkitool clnt01"
+  become_user: "{{ vm_user }}"
+
+- copy:
+    src: /etc/openvpn/easy-rsa/openssl-1.0.0.cnf
+    dest: /etc/openvpn/easy-rsa/openssl.cnf
+    remote_src: yes
+
+- name: open firewall ports
+  block:
+  - yum:
+      name: firewalld
+      state: present
+  - firewalld:
+      port: 22/tcp
+      permanent: true
+      state: enabled
+  - firewalld:
+      port: 1143/udp
+      permanent: true
+      state: enabled
+  - systemd:
+      name: firewalld
+      state: restarted
+      daemon_reload: yes
+
+- name: enable IP Forwarding
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+    sysctl_set: yes
+    state: present
+    reload: yes
+  notify: restart network
+

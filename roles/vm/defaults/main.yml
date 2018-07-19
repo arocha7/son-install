@@ -1,0 +1,6 @@
+---
+# defaults file for vm
+domain_name: sonata-nfv.eu
+plat: vm
+localhome: "{{ lookup('env','HOME') }}"
+#flv: m1.small

@@ -1,0 +1,5 @@
+---
+# defaults file for Jenkins
+plat: jenkins
+svc_port: 8080
+flv: m1.medium

@@ -1,0 +1,49 @@
+---
+
+- name: Upgrade all packages to the latest version
+  apt:
+    name: "*"
+    state: latest
+
+- name: install development libraries
+  apt:
+    name: build-essential
+    state: latest
+
+- name: install required libraries
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - libreadline-dev
+    - libc-ares-dev
+    - pkg-config
+
+- stat: path=/etc/ufw/ufw
+  register: pkg
+
+- name: stop and disable 'UFW' service
+  systemd:
+    name: ufw
+    state: stopped
+    enabled: no
+  when: not pkg.stat.exists
+
+- name: install Quagga
+  apt: name="quagga" state=present
+
+- name: copy sample config files
+  copy:
+    src: "{{ item }}"
+    dest: /etc/quagga
+    owner: quagga
+    group: quagga
+    mode: 0644
+  with_items:
+    - zebra.conf
+    - bgpd.conf
+    - ospfd.conf
+    - isisd.conf
+    - debian.conf
+    - daemons
+

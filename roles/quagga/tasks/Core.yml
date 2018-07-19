@@ -1,0 +1,36 @@
+---
+- name: DevTools group install
+  yum: name="@Development tools" state=present
+
+- name: install required libraries
+  yum: name="{{ item }}" state=present 
+  with_items:
+    - readline-devel
+    - c-ares-devel
+    - pkgconfig
+
+- name: check if 'firewalld' package is installed
+  yum:
+    list: firewalld
+  register: pkg
+
+- name: disable 'firewalld' service
+  systemd:
+    name: firewalld
+    state: stopped
+    enabled: no
+  when: pkg.results|selectattr("yumstate", "match", "installed")|list|length != 0
+
+- name: install Quagga
+  yum: name="quagga" state=present
+
+- name: copy sample config files
+  copy:
+    src: "{{ item }}"
+    dest: /etc/quagga
+  with_items:
+    - zebra.conf
+    - bgpd.conf
+    - ospfd.conf
+    - isisd.conf
+

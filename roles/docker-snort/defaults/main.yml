@@ -1,0 +1,7 @@
+---
+
+#vl_enduser: "{{ 'sonata.dem-net' if pop == 'ncsrd' and proj == 'dem' else 'dem-netw' }}"
+
+vl_idsin: vpsa-idsin
+vl_idsout: vpsa-idsout
+

@@ -1,0 +1,33 @@
+---
+# handlers file for quagga
+
+
+- name: stop selinux
+  systemd:
+    name: selinux
+    state: stopped
+    enabled: no
+
+- name: stop iptables
+  systemd:
+    name: iptables
+    state: stopped
+    enabled: no
+
+- name: stop ufw
+  systemd:
+    name: ufw
+    state: stopped
+    enabled: no
+  when: ansible_os_family == "Debian" and ansible_distribution_major_version == "16"
+
+- name: restart quagga
+  systemd:
+    name: "{{ item }}"
+    enabled: yes
+    state: restarted
+    daemon_reload: yes
+  with_items:
+    - quagga
+    - zebra
+    - bgpd

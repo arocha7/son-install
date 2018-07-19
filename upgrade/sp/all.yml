@@ -1,0 +1,37 @@
+---
+
+# upgrade packages and deploy useful tools
+- include_tasks: "{{ lookup('env','PWD') }}/common.yml"
+
+# deploy Docker container engine
+- include_tasks: 'docker.yml'
+
+# deploy web server 
+#- include_tasks: nginx.yml
+
+# deploy MySQL database engine
+#- include_tasks: mysql.yml
+
+# deploy postgreSQL database engine
+#- include_tasks: pgsql.yml
+
+# deploy MongoDB database engine
+#- include_tasks: mongo.yml
+
+# deploy Repositories
+#- include_tasks: repos.yml
+
+# deploy RabbitMQ message bus
+#- include_tasks: broker.yml
+
+# deploy Gatekepper module
+#- include_tasks: gtkall.yml
+
+# deploy MANO framework
+#- include_tasks: mano.yml
+
+# deploy Infastructure Adaptor
+#- include_tasks: ifta.yml
+
+# deploy Monitoring
+#- include_tasks: monit.yml

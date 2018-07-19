@@ -1,0 +1,22 @@
+---
+- debug: msg="##### SP SEC-GW DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
+
+- name: run the SP Security Gateway
+  docker_container:
+    name: "son-sec-gw"
+    image: "{{ repository }}/son-sec-gw:{{ sp_ver }}"
+    state: started
+    recreate: yes
+    pull: true
+    restart_policy: "always"
+    network_mode: bridge
+    networks:
+      - name: "{{ docker_network_name }}"
+        aliases:
+          - son-sec-gw
+    published_ports:
+      - "80:80"
+      - "443:443"
+    volumes: 
+      - "/etc/ssl/private/sonata/:/etc/nginx/cert/"
+

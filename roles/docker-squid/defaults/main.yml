@@ -1,0 +1,7 @@
+---
+
+#vl_enduser: "{{ 'sonata.dem-net' if pop == 'ncsrd' and proj == 'dem' else 'dem-netw' }}"
+
+vl_prxin: vpsa-prxin
+vl_prxout: vpsa-prxout
+

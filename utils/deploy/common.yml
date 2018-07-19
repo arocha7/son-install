@@ -1,0 +1,22 @@
+---
+
+- name: SONATA CMUD v3.1 - upgrade Operating System packages and install useful tools
+  hosts: "{{ plat | default('localhost') }}"
+  become: true
+  connection: ssh
+  vars_files:
+    - "{{ lookup('env','PWD') }}/group_vars/os_{{ pop }}_{{ proj }}_{{ distro }}.yml"
+#    - "{{ lookup('env','PWD') }}/roles/{{ plat }}/vars/main.yml"
+  remote_user: "{{ vm_user }}"
+  roles:
+    - common
+  tasks:
+
+    - name: Wait 300 seconds for port 22 to become open and contain "OpenSSH"
+      wait_for:
+        port: 22
+        host: '{{ (ansible_ssh_host|default(ansible_host))|default(inventory_hostname) }}'
+        search_regex: OpenSSH
+        delay: 10
+      vars:
+        ansible_connection: local

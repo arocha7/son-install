@@ -1,0 +1,43 @@
+---
+# tasks file for haproxy
+
+### HAProxy CE (http://www.haproxy.org/)
+
+
+## PREPARE
+
+- name: preparing and installing
+  include_tasks: "{{ ansible_os_family }}.yml"
+
+
+## INSTALL
+
+
+## SETUP
+
+
+## CONFIGURE
+
+- name: setting your specific configuration
+  copy:
+    src: "{{ lookup('env','PWD') }}/roles/haproxy/files/haproxy.cfg"
+    dest: /etc/haproxy/haproxy.cfg
+    remote_src: false
+
+## START
+
+- name: start HA Proxy
+  systemd: name=haproxy state=started daemon_reload=yes enabled=yes
+
+
+## TEST
+
+- command: haproxy -v
+  register: haproxy_ver
+- debug:
+    var: haproxy_ver.stdout
+
+# firewall-cmd --permanent --zone=public --add-service=http
+# firewall-cmd --permanent --zone=public --add-port=8181/tcp
+# firewall-cmd --reload  
+#  http://<load-balancer-ip>/haproxy?stats
