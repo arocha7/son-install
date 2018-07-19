@@ -1,7 +1,0 @@
----
-# defaults file for docker-openvpn
-
-plat: docker-vpsa
-
-vl_vpnin: vpsa-vpnin
-vl_vpnout: vpsa-vpnout

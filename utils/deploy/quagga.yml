@@ -1,6 +1,0 @@
----
-- name: deploy QUAGGA to the target machine
-  hosts: "{{ target | default('localhost') }}"
-  become: true
-  roles:
-  - quagga

@@ -1,4 +1,0 @@
----
-# tasks file for squidufdbguard
-- include_tasks: "{{ ansible_distribution_release }}.yml"
-

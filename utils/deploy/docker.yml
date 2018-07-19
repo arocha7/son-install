@@ -1,8 +1,0 @@
----
-- name: deploy DOCKER to the target machine
-  hosts: "{{ target | default('localhost') }}"
-  gather_facts: yes
-  become: true
-  roles:
-    - docker
-
