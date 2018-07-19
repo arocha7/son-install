@@ -12,8 +12,13 @@
 - name: previous install APTitude
   apt: name=aptitude state=present
 
-- name: upgrade all packages to the latest version
-  apt: upgrade=yes update_cache=yes
+- name: upgrade the cache of local packages to the latest version
+  apt:
+    name: '*'
+    #upgrade: full
+    update_cache: yes
+    autoclean: yes
+    autoremove: yes
 
 - name: install development libraries and tools
   apt: name=build-essential state=latest

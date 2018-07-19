@@ -78,10 +78,12 @@
   command: "lsb_release -cs"
   register: distro
 
+- set_fact:
+    distro_opsys: "{{ distro.stdout }}"
+
 - name: "Setup the stable Docker repository"
   apt_repository:
-    #repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu '{{ distro.stdout }}' stable"
+    repo: 'deb [arch=amd64] https://download.docker.com/linux/ubuntu "{{ distro_opsys }}" stable'
     state: present
     update_cache: yes
 
@@ -110,3 +112,6 @@
 #    mode: 0644
 #  notify:
 #  - restart rsyslog
+
+#repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu `$(lsb_release -cs) stable"
+
