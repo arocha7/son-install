@@ -18,10 +18,10 @@
     state: present
   become: true
 
-- name: add user 'sonata' with superuser priviledges on Debian machines
+- name: add User with superuser priviledges on Debian machines
   user:
     name: "{{ sp_user }}"
-    comment: "SONATA admin user"
+    comment: "SON-TNG admin user"
     shell: /bin/bash
     group: sudo
     groups: docker
@@ -32,10 +32,10 @@
   shell: "echo '%sudo ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers"
   when: ansible_os_family == "Debian"
 
-- name: add user 'sonata' with superuser priviledges on CentOS 7 machines
+- name: add User with superuser priviledges on CentOS 7 machines
   user:
     name: "{{ sp_user }}"
-    comment: "SONATA admin user"
+    comment: "SON-TNG admin user"
     shell: /bin/bash
     group: wheel
     groups: docker
@@ -103,7 +103,7 @@
 - include: sec-gw.yml
 
 # deploy Google cAdvisor
-#- include: cadvisor.yml
+- include: cadvisor.yml
 
-- name: "Creating SONATA Service"
+#- name: "Creating SONATA Service"
   copy: src=sonata dest=/etc/init.d/sonata owner=root group=root mode=0744

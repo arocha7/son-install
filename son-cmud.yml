@@ -19,21 +19,20 @@
         state: absent
       when: ops == "create"
 
-# STEP 1 - PREPARE THE LOCAL MACHINE, aka Ansible Control Center (or jump host)
+# STEP 1 - PREPARE THE LOCAL MACHINE (aka Ansible Control Center or Jump Host)
   roles:
     - { role: ntp, become: true }
     - { role: common, become: true }
     - { role: openstackclients, become: true }
 
-# STEP 2 - DEPLOY A NEW INSTANCE
+# STEP 2 - DEPLOY A NEW VM
     - { role: vm, when: ops == "create" }
 
-# STEP 3 - DO PACKAGE UPGRADE & TOOLS INSTALLATION TO THE REMOTE MACHINE
-- import_playbook: "{{ lookup('env','PWD') }}/utils/deploy/common.yml"
+# STEP 3 - UPDATE TARGET OPSYS PACKAGES
+    - { role: common, become: true, hosts: "{{ plat }}" } 
 
 # STEP 4 - DEPLOY SPECIFIC SOFTWARE
-- import_playbook: "{{ lookup('env','PWD') }}/{{ ops }}/{{ plat }}/main.yml"
-  when: plat != 'vm'
+    - { role: sp, hosts: "{{ plat }}", remote_user: "{{ vm_user }}", when: plat != 'vm' }
 
 #  post_tasks:
 #    - debug: msg="##### END-DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
