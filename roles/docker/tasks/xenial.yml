@@ -1,4 +1,5 @@
 ---
+
 - name: to ensure that APT works with the HTTPS method and that CA certificates are installed
   apt: name={{ item }} state=present update_cache=yes
   with_items:
@@ -36,6 +37,34 @@
   - requests
   - docker-py
 
+###
+
+- name: create Docker group
+  group:
+    name: docker
+    state: present
+
+- name: set default username
+  set_fact:
+    vm_user: ubuntu
+
+- name: add Docker group to default user
+  user:
+    name: "{{ vm_user }}"
+    shell: /bin/bash
+    groups: docker
+    append: yes
+
+- name: create a directory for Docker logging
+  file:
+    path: /var/log/docker
+    state: directory
+    owner: '{{ vm_user }}'
+    group: docker
+    mode: 0775
+
+###
+
 - name: "Remove deprecated Docker package"
   apt: name=lxc-docker state=absent
 
@@ -47,11 +76,8 @@
 
 - name: remove files and directories
   file:
-    state: "{{ item }}"
+    state: absent
     path: "/var/lib/docker/"
-  with_items:
-    - absent
-    - directory
 
 - name: "Remove deprecated Docker APT repository"
   apt_repository: repo="deb https://get.docker.com/ubuntu docker main" state=absent update_cache=no
@@ -76,7 +102,7 @@
 
 - name: get distro codename
   command: "lsb_release -cs"
-  register: distro
+  register: distro_opsys
 
 - set_fact:
     distro_opsys: "{{ distro.stdout }}"
@@ -92,6 +118,13 @@
 
 - name: "Configuring Docker Options"
   copy: src=docker2upstart dest=/etc/default/docker owner=root group=root mode=0644
+
+- name: start Docker engine
+  systemd:
+    name: docker
+    state: started
+    daemon_reload: yes
+    enabled: yes
 
 #- name: configure RSYSLOG
 #  template:
