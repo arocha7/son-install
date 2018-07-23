@@ -1,7 +1,6 @@
 ---
 - name: deploy a single or multiple guest machines (VMs)
   hosts: localhost
-  #become: true
   connection: local
   vars:
     localhome: "{{ lookup('env','PWD') }}"
