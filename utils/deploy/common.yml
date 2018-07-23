@@ -1,6 +1,6 @@
 ---
 
-- name: SONATA CMUD v3.1 - upgrade Operating System packages and install useful tools
+- name: SONATA CMUD - upgrade target OpSys packages and install useful tools
   hosts: "{{ plat | default('localhost') }}"
   become: true
   connection: ssh

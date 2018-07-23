@@ -1,7 +1,7 @@
 ---
 
-- name: SONATA CMUD v3.1
-  hosts: localhost
+- name: SONATA CMUD [Create, Manage, Update, Destroy]
+  hosts: localhosT
   become: false
   connection: local
   vars:
