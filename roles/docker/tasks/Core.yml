@@ -44,6 +44,7 @@
     - docker-engine-selinux
     - docker-engine
     - docker-python
+  ignore_errors: yes
 
 ###
 
