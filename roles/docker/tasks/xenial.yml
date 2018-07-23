@@ -65,10 +65,10 @@
 
 ###
 
-- name: "Remove deprecated Docker package"
+- name: remove deprecated Docker package
   apt: name=lxc-docker state=absent
 
-- name: "Remove Docker package"
+- name: remove Docker package
   apt: name="{{ item }}" state=absent
   with_items:
   - docker-engine
@@ -79,22 +79,22 @@
     state: absent
     path: "/var/lib/docker/"
 
-- name: "Remove deprecated Docker APT repository"
+- name: remove deprecated Docker APT repository
   apt_repository: repo="deb https://get.docker.com/ubuntu docker main" state=absent update_cache=no
 
-- name: "Remove deprecated Docker APT key"
+- name: remove deprecated Docker APT key
   apt_key:
     keyserver: keyserver.ubuntu.com
     id: 36A1D7869245C8950F966E92D8576A8BA88D21E9
     state: absent
 
-- name: "Remove Docker APT key"
+- name: remove Docker APT key
   apt_key:
     keyserver: p80.pool.sks-keyservers.net
     id: 58118E89F3A912897C070ADBF76221572C52609D
     state: absent
 
-- name: "Add official GPG key"
+- name: add official GPG key
   apt_key:
     url: https://download.docker.com/linux/ubuntu/gpg
     id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
@@ -102,14 +102,14 @@
 
 - name: get distro codename
   command: "lsb_release -cs"
-  register: distro_opsys
+  register: distro_codename
 
 - set_fact:
-    distro_opsys: "{{ distro.stdout }}"
+    adistro={{ distro_codename.stdout }}
 
-- name: "Setup the stable Docker repository"
+- name: setup the stable Docker repository
   apt_repository:
-    repo: 'deb [arch=amd64] https://download.docker.com/linux/ubuntu "{{ distro_opsys }}" stable'
+    repo: 'deb [arch=amd64] https://download.docker.com/linux/ubuntu "{{ adistro }}" stable'
     state: present
     update_cache: yes
 
@@ -117,7 +117,8 @@
   apt: name=docker-ce state=present
 
 - name: "Configuring Docker Options"
-  copy: src=docker2upstart dest=/etc/default/docker owner=root group=root mode=0644
+  #copy: src=docker2upstart dest=/etc/default/docker owner=root group=root mode=0644
+  copy: src=docker.service dest=/lib/systemd/system/ owner=root group=root mode=0644
 
 - name: start Docker engine
   systemd:
@@ -145,6 +146,4 @@
 #    mode: 0644
 #  notify:
 #  - restart rsyslog
-
-#repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu `$(lsb_release -cs) stable"
 

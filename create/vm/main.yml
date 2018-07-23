@@ -1,15 +1,12 @@
 ---
 - name: deploy a single or multiple guest machines (VMs)
   hosts: localhost
-  become: true
+  #become: true
   connection: local
   vars:
     localhome: "{{ lookup('env','PWD') }}"
   pre_tasks:
-    - local_action: shell date +'%F %T'
-      register: ts
-    - debug:
-        msg: "{{ ts.stdout }}"
+    - debug: msg="##### START-OF-VM-DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
     - file:
         path: /var/log/ansible.log
         state: touch
@@ -18,9 +15,6 @@
         mode: "u=rw,g=rw,o=rw"
   roles:
     - vm
-
-#  tasks:
-#    - include_tasks: "{{ lookup('env','PWD') }}/common.yml"
 
   post_tasks:
     - debug: msg="##### END-OF-VM-DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"

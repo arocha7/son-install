@@ -4,11 +4,11 @@
   hosts: localhost
   become: false
   connection: local
-  vars:
-    target: localhost
-    plat: vm
-    public_ip: localhost
-    plat_hostname: "{{ lookup('env','HOSTNAME') }}"
+#  vars:
+#    target: localhost
+#    plat: vm
+#    public_ip: localhost
+#    plat_hostname: "{{ lookup('env','HOSTNAME') }}"
   pre_tasks:
     - debug:
         msg: "EXTERNAL VARIABLES: -e 'plat=vm|sp|psa pop=alabs|ncsrd proj=qual|demo distro=trusty|xenial|Core nbofvms=N'"

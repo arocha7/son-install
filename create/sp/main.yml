@@ -10,8 +10,6 @@
     - debug: msg="##### SP-DEPLOYMENT-PREPARE {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
 
   roles:
-    - common
-    - openstackclients
     - sp
 
   post_tasks:
