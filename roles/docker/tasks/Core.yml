@@ -48,8 +48,20 @@
 
 ###
 
+- name: upgrade all packages
+  yum:
+    name: '*'
+    state: latest
+
+- name: install EPEL
+  yum:
+    name: epel-release
+    state: present
+
 - name: install PIP
-  yum: name=python-pip state=present
+  yum:
+    name: python-pip
+    state: present
 
 - name: upgrade PIP
   pip:
