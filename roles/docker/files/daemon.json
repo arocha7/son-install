@@ -1,0 +1,5 @@
+#platform-independent configurationo
+{
+  "insecure-registries" : ["registry.sonata-nfv.eu:5000"]
+}
+

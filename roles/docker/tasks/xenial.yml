@@ -113,12 +113,11 @@
     state: present
     update_cache: yes
 
-- name: "Install Docker package"
+- name: install Docker package
   apt: name=docker-ce state=present
 
-- name: "Configuring Docker Options"
-  #copy: src=docker2upstart dest=/etc/default/docker owner=root group=root mode=0644
-  copy: src=docker.service dest=/lib/systemd/system/ owner=root group=root mode=0644
+- name: configuring Docker Options
+  copy: src=daemon.json dest=/etc/docker owner=root group=root mode=0644
 
 - name: start Docker engine
   systemd:
