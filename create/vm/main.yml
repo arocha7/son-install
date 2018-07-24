@@ -6,15 +6,8 @@
     localhome: "{{ lookup('env','PWD') }}"
   pre_tasks:
     - debug: msg="##### START-OF-VM-DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
-    - file:
-        path: /var/log/ansible.log
-        state: touch
-        owner: "{{ lookup('env','USER') }}"
-        group: "{{ lookup('env','USER') }}"
-        mode: "u=rw,g=rw,o=rw"
   roles:
     - vm
-
   post_tasks:
     - debug: msg="##### END-OF-VM-DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
 
