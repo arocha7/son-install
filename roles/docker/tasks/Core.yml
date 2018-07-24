@@ -56,15 +56,18 @@
 - name: install EPEL
   yum:
     name: epel-release
-    state: present
+    state: latest
 
 - name: install PIP
   yum:
     name: python-pip
     state: present
 
-- name: uninstall 'docker' (v1.10.6)
-  pip: name=docker-py state=absent
+- name: uninstall 'docker-py' (v1.10.6)
+  pip:
+    name: docker-py
+    state: absent
+  ignore_errors: yes
 
 - name: upgrade PIP
   pip:
@@ -81,8 +84,10 @@
     - device-mapper-persistent-data
     - lvm2
 
-- name: install PIP Docker tools (v3.4.x)
-  pip: name=docker state=present
+- name: install Docker (v3.4.x)
+  pip:
+    name: docker
+    state: present
 
 - name: Import Docker CE repository gpg key
   rpm_key:
