@@ -1,11 +1,9 @@
 ---
 
 - name: SONATA CMUD [Create, Manage, Update, Destroy]
-  hosts: localhosT
+  hosts: localhost
   become: false
   connection: local
-  vars:
-    distro: '{{ ansible_distribution_release }}'
   pre_tasks:
     - debug: msg="##### START-DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
     - file:
