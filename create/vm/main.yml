@@ -8,6 +8,7 @@
     - debug: msg="##### START-OF-VM-DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
   roles:
     - vm
-  tasks:
+  post_tasks:
     - debug: msg="##### UPDATING VM PACKAGES {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
-    - import_playbook: "{{ lookup('env','PWD') }}/utils/deploy/common.yml"
+
+- import_playbook: "{{ lookup('env','PWD') }}/utils/deploy/common.yml"
