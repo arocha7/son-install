@@ -2,14 +2,14 @@
 # handlers file for Docker to manage the daemon
 
 - name: reload docker
-  service: name=docker state=reloaded
+  systemd: name=docker state=reloaded
 
 - name: restart docker
-  service: name=docker state=restarted
+  systemd: name=docker state=restarted daemon_reload=yes
 
 - name: start docker
-  service: name=docker state=started
+  systemd: name=docker state=started
 
 - name: stop docker
-  service: name=docker state=stopped
+  systemd: name=docker state=stopped
 

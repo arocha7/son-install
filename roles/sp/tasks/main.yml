@@ -1,5 +1,11 @@
 ---
 
+- name: configuring Docker Options
+  copy: src=daemon.json dest=/etc/docker owner=root group=root mode=0644
+  become: yes
+  notify:
+    - restart docker
+
 - name: log into private Registry
   docker_login:
     registry: "registry.sonata-nfv.eu:5000"
@@ -203,12 +209,12 @@
         (component == 'all')
 
 # Configuring Athens PoP-2
-#- import_tasks: add-athens-pop2-vim-wim.yml
-#  when: target == 'sta-sp-ath.5gtango.eu'
+- import_tasks: add-athens-pop2-vim-wim.yml
+  when: target == 'sta-sp-ath.5gtango.eu'
 
 # Configuring Aveiro PoP
-#- import_tasks: add-aveiro-pop-vim-wim.yml
-#  when: target == 'sta-sp-ave'
+- import_tasks: add-aveiro-pop2-vim-wim.yml
+  when: target == 'sta-sp-ave.5gtango.eu'
 
 - name: log out of private Registry
   docker_login:

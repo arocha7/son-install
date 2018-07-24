@@ -2,7 +2,8 @@
 # defaults file for sp
 nbofvms: 1
 plat: sp
-flv: sp.3_6_30
+#flv: sp.3_6_30
+flv: m1.medium
 
 # Docker network segment
 docker_network_name: sp-docker-net
