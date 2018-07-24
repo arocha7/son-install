@@ -26,7 +26,7 @@
 
 - lineinfile:
     path: "{{ lookup('env','PWD') }}/ansible.cfg"
-    line: "inventory = inventory/{{ plat }}"
+    line: "inventory = environments/{{ plat }}"
 
 - name: create IN-MEMORY Inventory # temporary in-memory group of hosts that only persists until the end of the playbook
   add_host:
@@ -38,7 +38,7 @@
 
 - name: ensures dir exists
   file:
-    path: "{{ lookup('env','PWD') }}/inventory/{{ plat }}"
+    path: "{{ lookup('env','PWD') }}/environments/{{ plat }}"
     state: directory
     recurse: yes
     owner: "{{ lookup('env','USER') }}"
@@ -49,7 +49,7 @@
   # http://docs.ansible.com/ansible/template_module.html
   template:
     src: "{{ lookup('env','PWD') }}/roles/vm/templates/dynamic_inventory.j2"
-    dest: "{{ lookup('env','PWD') }}/inventory/{{ plat }}/hosts"
+    dest: "{{ lookup('env','PWD') }}/environments/{{ plat }}/hosts"
 
 - name: Add STATIC mappings to /etc/hosts
   become: true

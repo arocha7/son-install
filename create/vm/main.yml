@@ -9,5 +9,5 @@
   roles:
     - vm
   post_tasks:
-    - debug: msg="##### END-OF-VM-DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
-
+    - debug: msg="##### UPDATE-VM-PACKAGES {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
+    - import_playbook: "{{ lookup('env','PWD') }}/utils/deploy/common.yml"

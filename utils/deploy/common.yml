@@ -1,7 +1,7 @@
 ---
 
 - name: SONATA CMUD - upgrade target OpSys packages and install useful tools
-  hosts: "{{ plat | default('localhost') }}"
+  hosts: "{{ plat }}"
   become: true
   connection: ssh
   vars_files:

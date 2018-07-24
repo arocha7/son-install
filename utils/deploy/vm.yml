@@ -18,4 +18,3 @@
     - { role: openstackclients, become: true }
     - vm
 
-- import_playbook: "{{ lookup('env','PWD') }}/utils/deploy/common.yml"
