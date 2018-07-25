@@ -1,6 +1,53 @@
 ---
 
-####
+- name: uninstall previous Docker releases
+  yum: name="{{ item }}" state=absent update_cache=yes
+  with_items: 
+    - docker-client
+    - docker-client-latest
+    - docker-common
+    - docker-latest
+    - docker-latest-logrotate
+    - docker-logrotate
+    - docker-selinux
+    - docker-engine-selinux
+    - docker-engine
+    - docker-python
+  ignore_errors: yes
+
+- name: uninstall 'docker-py' (v1.10.6)
+  pip:
+    name: docker-py
+    state: absent
+  ignore_errors: yes
+
+
+### INSTALL REQUIRED LIBRARIES
+
+- name: upgrade all packages
+  yum:
+    name: '*'
+    state: latest
+
+- name: install EPEL
+  yum:
+    name: epel-release
+    state: latest
+
+- name: install PIP
+  yum:
+    name: python-pip
+    state: present
+
+- name: upgrade PIP
+  pip:
+    name: pip
+    extra_args: --upgrade
+    state: present
+    #version: 10.0.1
+
+
+#### CREATE USER AND GROUP
 
 - name: create Docker group
   group:
@@ -29,54 +76,8 @@
     mode: 0775
   become: true
 
-####
 
-- name: uninstall previous Docker releases
-  yum: name="{{ item }}" state=absent update_cache=yes
-  with_items: 
-    - docker-client
-    - docker-client-latest
-    - docker-common
-    - docker-latest
-    - docker-latest-logrotate
-    - docker-logrotate
-    - docker-selinux
-    - docker-engine-selinux
-    - docker-engine
-    - docker-python
-  ignore_errors: yes
-
-###
-
-- name: upgrade all packages
-  yum:
-    name: '*'
-    state: latest
-
-- name: install EPEL
-  yum:
-    name: epel-release
-    state: latest
-
-- name: install PIP
-  yum:
-    name: python-pip
-    state: present
-
-- name: uninstall 'docker-py' (v1.10.6)
-  pip:
-    name: docker-py
-    state: absent
-  ignore_errors: yes
-
-- name: upgrade PIP
-  pip:
-    name: pip
-    extra_args: --upgrade
-    state: present
-    #version: 10.0.1
-
-####
+#### INSTALL LATEST STABLE RELEASE
 
 - name: install required packages 
   yum: name="{{ item }}"
@@ -108,16 +109,8 @@
 - name: install Docker on CentOS7
   yum: name=docker-ce state=present update_cache=yes
 
-- name: start Docker engine
-  systemd:
-    name: docker
-    state: started
-    daemon_reload: yes
-    enabled: yes
-  become: true
-
-#- name: add Docker configuration options
-#  copy: src=docker2systemd dest=/etc/sysconfig/docker owner=root group=root mode=0644
+- name: add Docker configuration options
+  copy: src=daemon.json dest=/etc/docker/ owner=root group=root mode=0644
 
 #- name: create a directory if it doesn't exist
 #  file: path=/etc/systemd/system/docker.service.d/ state=directory mode=0755
@@ -125,3 +118,11 @@
 #- name: configuring Docker options
 #  copy: src=docker.conf dest=/etc/systemd/system/docker.service.d/docker.conf owner=root group=root mode=0644
 #  register: result
+
+- name: start Docker engine
+  systemd:
+    name: docker
+    state: started
+    daemon_reload: yes
+    enabled: yes
+  become: true

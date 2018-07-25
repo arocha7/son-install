@@ -14,10 +14,7 @@
   - apparmor
   - aptitude
   - python-apt
-  - python3-apt
-  - python-pip
   - python-dev
-#  - python-setuptools
   - python-httplib2
   - python-keyczar
   - python-pkg-resources
@@ -26,44 +23,19 @@
 - name: install PIP
   apt: name=python-pip state=present
 
-- name: install required library
-  pip: name={{ item }} state=present
-  with_items:
-  - jinja2
-  - PyYAML
-  - setuptools
-  - pycrypto
-  - six
-  - requests
-  - docker-py
+#- name: install required library
+#  pip: name={{ item }} state=present
+#  with_items:
+#  - jinja2
+#  - PyYAML
+#  - setuptools
+#  - pycrypto
+#  - six
+#  - requests
+#  - docker-py
 
-###
 
-- name: create Docker group
-  group:
-    name: docker
-    state: present
-
-- name: set default username
-  set_fact:
-    vm_user: ubuntu
-
-- name: add Docker group to default user
-  user:
-    name: "{{ vm_user }}"
-    shell: /bin/bash
-    groups: docker
-    append: yes
-
-- name: create a directory for Docker logging
-  file:
-    path: /var/log/docker
-    state: directory
-    owner: '{{ vm_user }}'
-    group: docker
-    mode: 0775
-
-###
+### REMOVE PREVIOUS INSTALLs
 
 - name: remove deprecated Docker package
   apt: name=lxc-docker state=absent
@@ -93,6 +65,34 @@
     keyserver: p80.pool.sks-keyservers.net
     id: 58118E89F3A912897C070ADBF76221572C52609D
     state: absent
+
+### CREATE  USER AND GROUP
+
+- name: create Docker group
+  group:
+    name: docker
+    state: present
+
+- name: set default username
+  set_fact:
+    vm_user: ubuntu
+
+- name: add Docker group to default user
+  user:
+    name: "{{ vm_user }}"
+    shell: /bin/bash
+    groups: docker
+    append: yes
+
+- name: create a directory for Docker logging
+  file:
+    path: /var/log/docker
+    state: directory
+    owner: '{{ vm_user }}'
+    group: docker
+    mode: 0775
+
+### INSTALL LATEST STABLE RELEASE
 
 - name: add official GPG key
   apt_key:
