@@ -9,6 +9,6 @@ fip: admin_floating_net
 availability_zone: nova
 region_name: regionOne
 key_name: tng-infra
-int_net_id: "2fd632bb-1db8-486a-a412-59b6b310e4ff" # INT
-ext_net_id: "ee400f7e-2707-45c9-98fe-e2813b1fe7f0" # FIP
+int_net_id: "bdda1b0b-de3d-48c7-82d1-92b92fa81d42" # INT
+ext_net_id: "9fb1dc3f-1f4b-43e2-b0b7-0e6594f638a1" # FIP
 
