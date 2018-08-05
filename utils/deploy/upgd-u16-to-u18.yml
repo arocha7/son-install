@@ -1,0 +1,48 @@
+---
+- name: upgrade Ubuntu 16.04 to 18.04 (LTS)
+  hosts: "{{ target | default('localhost') }}"
+  become: true
+  tasks:
+
+  - block:
+
+    - name: update all packages to the latest version
+      apt: update_cache=yes upgrade=full
+
+    - name: update all packages to the latest version
+      apt: upgrade=dist
+
+    - name: ensures 'update-manager-core' is installed so 'do-release-upgrade' can be run
+      apt:
+        name: update-manager-core
+        state: present
+
+    - name: Remove useless packages from the cache
+      apt:
+        autoclean: yes
+
+    - name: remove dependencies that are no longer required
+      apt:
+        autoremove: yes
+
+    - name: run 'do-release-upgrade' non-interactively
+      shell: do-release-upgrade -d -f DistUpgradeViewNonInteractive
+
+    - name: Reboot the server.
+      command: reboot
+      async: 0
+      poll: 0
+
+    - name: Wait for server to reboot.
+      wait_for:
+        host: "{{ ansible_ssh_host }}"
+        port: 22
+        state: started
+      connection: local
+      become: no
+
+    when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == '16.04'
+
+#
+# credits to: [Jeff Geerling](https://www.jeffgeerling.com/blog/2017/ansible-playbook-upgrade-all-ubuntu-1204-lts-hosts-1404-or-1604)
+#
