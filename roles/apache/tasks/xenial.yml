@@ -1,0 +1,59 @@
+---
+
+### PRE-INSTALLATION TASKS
+
+- name: check if the Apache service exists
+  stat: path=/etc/init.d/apache2
+  register: service_status
+
+- name: stop Apache service if it is running
+  service: name=apache2 state=stopped enabled=no
+  when: service_status.stat.exists
+  register: service_stopped
+
+- name: update APT local cache
+  apt: update_cache=yes cache_valid_time=86400
+
+- include_tasks: ufw.yml
+
+### INSTALLATION
+- name: install package Apache2
+  apt:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+  - apache2
+  - apache2-utils
+  - apache2-data
+
+### SETUP
+- name: allow Apache service
+  ufw:
+    rule: allow
+    name: 'Apache Full' # this profile opens both port 80 (normal, unencrypted web traffic) and port 443 (TLS/SSL encrypted traffic)
+    state: reloaded
+
+### CONFIGURATION
+#- name: copy your web content to the target machine
+#  copy:
+#    src: index.html
+#    dest: /var/www/
+#    owner: www-data
+#    group: www-data
+#    mode: 0644
+
+### STARTUP
+- name: start Apache service
+  systemd:
+    name: apache2
+    state: started
+    enabled: yes
+    masked: no
+    daemon_reload: yes
+
+### POST-CONFIGURATION TASKS
+- name: enabled mod_rewrite
+  apache2_module: name=rewrite state=present
+  notify:
+  - restart apache2
+

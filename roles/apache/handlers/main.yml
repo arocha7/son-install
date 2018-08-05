@@ -1,10 +1,23 @@
 ---
 # handlers file for Apache
-- name: restart Apache
-  action: name=apache2 state=restarted
-  when: ansible_os_family == "Debian"
 
-- name: restart Apache
-  action: name=httpd state=restarted
-  when: ansible_os_family == "RedHat"
+- name: restart apache2
+  systemd:
+    name: apache2
+    state: restarted
+
+- name: restart httpd
+  systemd:
+    name: httpd
+    state: restarted 
+
+- name: reload ufw
+  systemd:
+    name: ufw
+    state: reloaded
+
+- name: reload firewalld
+  systemd:
+    name: firewalld
+    state: enabled
 
