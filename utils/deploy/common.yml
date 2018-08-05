@@ -3,9 +3,9 @@
 - name: SONATA CMUD - upgrade target OpSys packages and install useful tools
   hosts: "{{ plat | default('localhost') }}"
   become: true
-  connection: ssh
-  vars_files:
-    - "{{ lookup('env','PWD') }}/group_vars/os_{{ pop }}_{{ proj }}_{{ distro }}.yml"
+#  connection: ssh
+#  vars_files:
+#    - "{{ lookup('env','PWD') }}/group_vars/os_{{ pop }}_{{ proj }}_{{ distro }}.yml"
 #    - "{{ lookup('env','PWD') }}/roles/{{ plat }}/vars/main.yml"
   remote_user: "{{ vm_user }}"
   roles:
