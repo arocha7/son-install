@@ -7,7 +7,7 @@
 #  vars_files:
 #    - "{{ lookup('env','PWD') }}/group_vars/os_{{ pop }}_{{ proj }}_{{ distro }}.yml"
 #    - "{{ lookup('env','PWD') }}/roles/{{ plat }}/vars/main.yml"
-  remote_user: "{{ vm_user }}"
+#  remote_user: "{{ vm_user }}"
   roles:
     - common
   tasks:

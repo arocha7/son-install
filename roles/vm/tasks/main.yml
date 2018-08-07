@@ -60,6 +60,14 @@
     group: "{{ lookup('env','USER') }}"
     mode: 0644
 
+- set_fact:
+    vm_user = ubuntu
+  when: distro == "xenial" or distro == "bionic"
+
+- set_fact:
+    vm_user = centos
+  when: distro == "Core"
+
 - name: WAIT the SSH port listening at the new deployed instance
   command: >
     ssh -oControlMaster=auto -oControlPersist=60s -oUserKnownHostsFile=/dev/null -oBatchMode=yes -oStrictHostKeyChecking=no -i {{ localhome }}/.ssh/{{ item.openstack.key_name }}.pem -l {{ vm_user }} {{ item.openstack.accessIPv4 }} true
