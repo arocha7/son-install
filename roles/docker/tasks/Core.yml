@@ -21,6 +21,9 @@
     state: absent
   ignore_errors: yes
 
+- yum:
+    name: python2-pip
+    state: absent
 
 ### INSTALL REQUIRED LIBRARIES
 
@@ -28,6 +31,7 @@
   yum:
     name: '*'
     state: latest
+    update_cache: yes
 
 - name: install EPEL
   yum:
@@ -37,15 +41,14 @@
 - name: install PIP
   yum:
     name: python-pip
-    state: present
+    state: latest
 
 - name: upgrade PIP
   pip:
     name: pip
     extra_args: --upgrade
     state: present
-    #version: 10.0.1
-
+    #version: 18.0
 
 #### CREATE USER AND GROUP
 
