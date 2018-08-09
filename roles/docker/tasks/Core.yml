@@ -15,15 +15,6 @@
     - docker-python
   ignore_errors: yes
 
-- name: uninstall 'docker-py' (v1.10.6)
-  pip:
-    name: docker-py
-    state: absent
-  ignore_errors: yes
-
-- yum:
-    name: python2-pip
-    state: absent
 
 ### INSTALL REQUIRED LIBRARIES
 
@@ -49,6 +40,7 @@
     extra_args: --upgrade
     state: present
     #version: 18.0
+
 
 #### CREATE USER AND GROUP
 
@@ -88,9 +80,14 @@
     - device-mapper-persistent-data
     - lvm2
 
-- name: install Docker (v3.4.x)
+#- name: install Docker (v3.4.x)
+#  pip:
+#    name: docker
+#    state: latest
+
+- name: install 'docker-py'
   pip:
-    name: docker
+    name: docker-py
     state: present
 
 - name: Import Docker CE repository gpg key
@@ -128,4 +125,3 @@
     state: started
     daemon_reload: yes
     enabled: yes
-  become: true
