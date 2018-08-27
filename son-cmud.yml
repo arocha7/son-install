@@ -20,7 +20,8 @@
   tasks:
 
 # STEP 1 - DEPLOY A NEW INSTANCE
-- import_playbook: "{{ lookup('env','PWD') }}/{{ ops }}/vm/main.yml"
+#- import_playbook: "{{ lookup('env','PWD') }}/{{ ops }}/vm/main.yml"
+- import_playbook: "{{ lookup('env','PWD') }}/utils/deploy/vm.yml"
 
 # STEP 2 - DEPLOY SPECIFIC SOFTWARE
 - import_playbook: "{{ lookup('env','PWD') }}/{{ ops }}/{{ plat }}/main.yml"
