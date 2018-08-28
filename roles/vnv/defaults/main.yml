@@ -1,0 +1,8 @@
+---
+# defaults file for vnv
+
+version: qual
+
+component: all
+
+docker_network_name: tango

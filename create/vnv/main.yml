@@ -1,0 +1,20 @@
+---
+- hosts: "{{ plat }}"
+  become: true
+  connection: ssh
+  vars_files:
+    - "{{ lookup('env','PWD') }}/group_vars/os_{{ pop }}_{{ proj }}_{{ distro }}.yml"
+    - "{{ lookup('env','PWD') }}/group_vars/{{ plat }}/vault.yml"
+  remote_user: "{{ vm_user }}"
+  pre_tasks:
+    - debug: msg="##### SP-DEPLOYMENT-PREPARE {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
+    - package: name=python-pip state=present
+    - shell: 'sudo -EH pip install --upgrade pip'
+    - pip: name=docker state=present
+
+  roles:
+    - vnv
+
+  post_tasks:
+    - debug: msg="##### END-DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
+

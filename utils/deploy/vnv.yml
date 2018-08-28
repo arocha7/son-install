@@ -1,0 +1,15 @@
+---
+
+- hosts: "{{ target | default ('localhost')  }}"
+  become: true
+  vars:
+    plat_hostname: "{{ lookup('env','HOSTNAME') }}"
+  pre_tasks:
+    - file:
+        path: "{{ lookup('env','PWD') }}/ansible.log"
+        state: touch
+        owner: "{{ lookup('env','USER') }}"
+        group: "{{ lookup('env','USER') }}"
+        mode: "u=rw,g=r,o=r"
+  roles:
+    - vnv
