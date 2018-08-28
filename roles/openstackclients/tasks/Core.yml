@@ -17,15 +17,5 @@
   with_items:
     - python-pip
     - python-devel
-    - pyOpenSSL
-
-# INSTALL VIA PIP because the packaged version might install older clients
-#- name: upgrade PIP
-#  pip:
-#    name: pip
-#    extra_args: "--upgrade"
-#    state: present
-
-- name: downgrade PIP
-  shell: "pip install --upgrade --force-reinstall pip==9.0.3"
+#   - pyOpenSSL
 
