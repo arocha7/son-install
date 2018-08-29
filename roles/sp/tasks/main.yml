@@ -1,17 +1,17 @@
 ---
 
-- name: configuring Docker Options
-  copy: src=daemon.json dest=/etc/docker owner=root group=root mode=0644
-  become: yes
-  notify:
-    - restart docker
+#- name: configuring Docker Options
+#  copy: src=daemon.json dest=/etc/docker owner=root group=root mode=0644
+#  become: yes
+#  notify:
+#    - restart docker
 
-- name: log into private Registry
-  docker_login:
-    registry: "registry.sonata-nfv.eu:5000"
-    username: "sonata-nfv"
-    password: "s0n@t@"
-    reauthorize: yes
+#- name: log into private Registry
+#  docker_login:
+#    registry: "registry.sonata-nfv.eu:5000"
+#    username: "sonata-nfv"
+#    password: "s0n@t@"
+#   reauthorize: yes
 
 # Deploying databases
 # deploy postgreSQL database engine

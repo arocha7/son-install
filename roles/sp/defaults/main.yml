@@ -6,11 +6,13 @@ plat: sp
 flv: m1.medium
 
 # Docker network segment
-docker_network_name: sp-docker-net
+docker_network_name: tango
 
 # SONATA 5G NFV SP version
 sp_ver: dev
 version: latest
+component: all
+rack_env: staging
 
 # SONATA FQDN
 domain_name: sonata-nfv.eu
