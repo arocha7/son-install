@@ -2,11 +2,9 @@
 # defaults file for vnv
 
 version: qual
-
 component: all
-
+rack_env: staging
 docker_network_name: tango
-
 repository: "registry.sonata-nfv.eu:5000"
 
 ## VnV Specific Variables
