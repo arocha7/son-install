@@ -119,6 +119,13 @@
 #  copy: src=docker.conf dest=/etc/systemd/system/docker.service.d/docker.conf owner=root group=root mode=0644
 #  register: result
 
+- name: expose docker to '2375/tcp'
+  lineinfile:
+    dest: "/usr/lib/systemd/system/docker.service"
+    regexp: "^ExecStart=/usr/bin/docker"
+    line: "ExecStart=/usr/bin/docker daemon -H fd:// -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock"
+    state: "present"
+
 - name: start Docker engine
   systemd:
     name: docker
