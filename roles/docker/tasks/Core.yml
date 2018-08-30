@@ -108,7 +108,7 @@
 
 ### https://lonelycoding.com/how-to-get-remote-access-to-a-private-docker-registry/
 
-- name: create a directory for Docker logging
+- name: create a directory for Docker reconfiguration file
   file:
     path: "/etc/systemd/system/docker.service.d"
     state: directory
@@ -127,8 +127,8 @@
 - name: get access to a remote private Docker Registry
   lineinfile:
     dest: "/etc/systemd/system/docker.service.d/override.conf"
-    regexp: "^ExecStart=/usr/bin/docker"
-    line: "ExecStart=/usr/bin/dockerd --insecure-registry registry.sonata-nfv.eu:5000"
+    regexp: "^ExecStart=/usr/bin/dockerd"
+    line: "ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock --insecure-registry registry.sonata-nfv.eu:5000"
     state: "present"
 
 - name: start Docker engine
