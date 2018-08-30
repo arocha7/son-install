@@ -3,5 +3,33 @@
 
 - include_tasks: "{{ ansible_distribution_release }}.yml"
 
+- name: install Docker
+  package: name=docker-ce state=present update_cache=yes
+
+### https://lonelycoding.com/how-to-get-remote-access-to-a-private-docker-registry/
+
+- name: create a directory for Docker reconfiguration file
+  file:
+    path: "/etc/systemd/system/docker.service.d"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: override Docker config to support Insecure Registry
+  copy:
+    src: "override.conf"
+    dest: "/etc/systemd/system/docker.service.d/override.conf"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: start Docker engine
+  systemd:
+    name: docker
+    state: started
+    daemon_reload: yes
+    enabled: yes
+
 - include_tasks: "{{ lookup('env','PWD') }}/roles/docker/tasks/networks.yml"
 

@@ -113,22 +113,22 @@
     state: present
     update_cache: yes
 
-- name: install Docker package
-  apt: name=docker-ce state=present
+#- name: install Docker package
+#  apt: name=docker-ce state=present
 
-- name: configure Insecure Registry
-  lineinfile:
-    dest: "/lib/systemd/system/docker.service"
-    regexp: "^ExecStart=/usr/bin/docker"
-    line: "ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock --insecure-registry registry.sonata-nfv.eu:5000"
-    state: present
+#- name: configure Insecure Registry
+#  lineinfile:
+#    dest: "/lib/systemd/system/docker.service"
+#    regexp: "^ExecStart=/usr/bin/docker"
+#    line: "ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock --insecure-registry registry.sonata-nfv.eu:5000"
+#    state: present
 
-- name: start Docker engine
-  systemd:
-    name: docker
-    state: started
-    daemon_reload: yes
-    enabled: yes
+#- name: start Docker engine
+#  systemd:
+#    name: docker
+#    state: started
+#    daemon_reload: yes
+#    enabled: yes
 
 #- name: configure RSYSLOG
 #  template:

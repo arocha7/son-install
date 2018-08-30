@@ -103,38 +103,31 @@
     gpgcheck: yes
     state: present
 
-- name: install Docker on CentOS7
-  yum: name=docker-ce state=present update_cache=yes
+#- name: install Docker on CentOS7
+#  yum: name=docker-ce state=present update_cache=yes
 
 ### https://lonelycoding.com/how-to-get-remote-access-to-a-private-docker-registry/
 
-- name: create a directory for Docker reconfiguration file
-  file:
-    path: "/etc/systemd/system/docker.service.d"
-    state: directory
-    owner: root
-    group: root
-    mode: 0755
+#- name: create a directory for Docker reconfiguration file
+#  file:
+#    path: "/etc/systemd/system/docker.service.d"
+#    state: directory
+#    owner: root
+#    group: root
+#    mode: 0755
 
-- name: override Docker config to support Insecure Registry
-  copy:
-    src: docker.service_ce7
-    dest: "/etc/systemd/system/docker.service.d/override.conf"
-    owner: root
-    group: root
-    mode: 0644
+#- name: override Docker config to support Insecure Registry
+#  copy:
+#    src: "override.conf"
+#    dest: "/etc/systemd/system/docker.service.d/override.conf"
+#    owner: root
+#    group: root
+#    mode: 0644
 
-- name: get access to a remote private Docker Registry
-  lineinfile:
-    dest: "/etc/systemd/system/docker.service.d/override.conf"
-    regexp: "^ExecStart=/usr/bin/dockerd"
-    line: "ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock --insecure-registry registry.sonata-nfv.eu:5000"
-    state: "present"
-
-- name: start Docker engine
-  systemd:
-    name: docker
-    state: started
-    daemon_reload: yes
-    enabled: yes
+#- name: start Docker engine
+#  systemd:
+#    name: docker
+#    state: started
+#    daemon_reload: yes
+#    enabled: yes
 
