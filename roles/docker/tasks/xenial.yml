@@ -113,31 +113,31 @@
     state: present
     update_cache: yes
 
-- name: install Docker package
-  apt: name=docker-ce state=present
+#- name: install Docker package
+#  apt: name=docker-ce state=present
 
-- name: set Read permissions to /etc/docker
-  file:
-    path: /etc/docker
-    state: directory
-    mode: 0755
+#- name: set Read permissions to /etc/docker
+#  file:
+#    path: /etc/docker
+#    state: directory
+#    mode: 0755
 
-- name: configuring Docker Options
-  copy: src=daemon.json dest=/etc/docker owner=root group=root mode=0644
+#- name: configuring Docker Options
+#  copy: src=daemon.json dest=/etc/docker owner=root group=root mode=0644
 
-- name: expose docker to '2375/tcp' 
-  lineinfile: 
-    dest: "/lib/systemd/system/docker.service" 
-    regexp: "^ExecStart=/usr/bin/docker" 
-    line: "ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock" 
-    state: "present" 
+#- name: expose docker to '2375/tcp' 
+#  lineinfile: 
+#    dest: "/lib/systemd/system/docker.service" 
+#    regexp: "^ExecStart=/usr/bin/docker" 
+#    line: "ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock" 
+#    state: "present" 
 
-- name: start Docker engine
-  systemd:
-    name: docker
-    state: started
-    daemon_reload: yes
-    enabled: yes
+#- name: start Docker engine
+#  systemd:
+#    name: docker
+#    state: started
+#    daemon_reload: yes
+#    enabled: yes
 
 #- name: configure RSYSLOG
 #  template:

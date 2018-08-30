@@ -48,7 +48,6 @@
   group:
     name: docker
     state: present
-  become: true
 
 - name: set default username
   set_fact:
@@ -60,7 +59,6 @@
     shell: /bin/bash
     groups: docker
     append: yes
-  become: true
 
 - name: create a directory for Docker logging
   file:
@@ -69,7 +67,6 @@
     owner: '{{ vm_user }}'
     group: docker
     mode: 0775
-  become: true
 
 
 #### INSTALL LATEST STABLE RELEASE
@@ -106,29 +103,29 @@
     gpgcheck: yes
     state: present
 
-- name: install Docker on CentOS7
-  yum: name=docker-ce state=present update_cache=yes
+#- name: install Docker on CentOS7
+#  yum: name=docker-ce state=present update_cache=yes
 
-- name: add Docker configuration options
-  copy: src=daemon.json dest=/etc/docker/ owner=root group=root mode=0644
+# https://lonelycoding.com/how-to-get-remote-access-to-a-private-docker-registry/
 
-#- name: create a directory if it doesn't exist
-#  file: path=/etc/systemd/system/docker.service.d/ state=directory mode=0755
+#- name: create a directory for Docker logging
+#  file:
+#    path: "/etc/systemd/system/docker.service.d"
+#    state: directory
+#    owner: root
+#    group: root
+#    mode: 0755
 
-#- name: configuring Docker options
-#  copy: src=docker.conf dest=/etc/systemd/system/docker.service.d/docker.conf owner=root group=root mode=0644
-#  register: result
+#- name: get access to a remote private Docker Registry
+#  lineinfile:
+#    dest: "/etc/systemd/system/docker.service.d/override.conf"
+#    regexp: "^ExecStart=/usr/bin/docker"
+#    line: "ExecStart=/usr/bin/dockerd --insecure-registry registry.sonata-nfv.eu:5000"
+#    state: "present"
 
-- name: expose docker to '2375/tcp'
-  lineinfile:
-    dest: "/usr/lib/systemd/system/docker.service"
-    regexp: "^ExecStart=/usr/bin/docker"
-    line: "ExecStart=/usr/bin/docker daemon -H fd:// -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock"
-    state: "present"
-
-- name: start Docker engine
-  systemd:
-    name: docker
-    state: started
-    daemon_reload: yes
-    enabled: yes
+#- name: start Docker engine
+#  systemd:
+#    name: docker
+#    state: started
+#    daemon_reload: yes
+#    enabled: yes
