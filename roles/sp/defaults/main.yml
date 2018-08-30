@@ -13,6 +13,7 @@ sp_ver: dev
 version: latest
 component: all
 rack_env: staging
+target: "sta-sp-ave.5gtango.eu"
 
 # SONATA FQDN
 domain_name: sonata-nfv.eu

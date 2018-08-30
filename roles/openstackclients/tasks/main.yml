@@ -15,8 +15,9 @@
   with_items:
     - pyopenssl
     - setuptools
+    - wheel
+    - docker-py
     - shade
-    - docker
 
 - name: install Openstack command line clients
   pip: name={{ item }} state=latest

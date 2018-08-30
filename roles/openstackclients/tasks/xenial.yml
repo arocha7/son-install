@@ -9,13 +9,11 @@
 - name: install required libraries and tools for PIP
   apt: name={{ item }} state=latest
   with_items:
-  #- build-essential
-  - python-dev
   - libssl-dev
   - libffi-dev
-  #- nova-common
-  #- python-shade
 
 - name: install PIP
-  apt: name=python-pip state=present
-
+  apt: name={{ item }} state=present
+  with_items:
+  - python-dev
+  - python-pip
