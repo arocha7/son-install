@@ -1,6 +1,3 @@
-$ sudo systemctl edit docker
-Editing "/etc/systemd/system/docker.service.d/override.conf" canceled: temporary file is empty
-[centos@ce7acc ~]$ sudo cat /usr/lib/systemd/system/docker.service
 [Unit]
 Description=Docker Application Container Engine
 Documentation=https://docs.docker.com
