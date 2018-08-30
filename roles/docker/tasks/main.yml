@@ -3,32 +3,5 @@
 
 - include_tasks: "{{ ansible_distribution_release }}.yml"
 
-- name: install Docker 
-  package: name=docker-ce state=present update_cache=yes
-
-# https://lonelycoding.com/how-to-get-remote-access-to-a-private-docker-registry/
-
-- name: configuration for Insecure Registry
-  file:
-    path: "/etc/systemd/system/docker.service.d"
-    state: directory
-    owner: root
-    group: root
-    mode: 0755
-
-- name: get access to a remote private Docker Registry
-  lineinfile:
-    dest: "/etc/systemd/system/docker.service.d/override.conf"
-    regexp: "^ExecStart=/usr/bin/docker"
-    line: "ExecStart=/usr/bin/dockerd --insecure-registry registry.sonata-nfv.eu:5000"
-    state: "present"
-
-- name: start Docker engine
-  systemd:
-    name: docker
-    state: started
-    daemon_reload: yes
-    enabled: yes
-
 - include_tasks: "{{ lookup('env','PWD') }}/roles/docker/tasks/networks.yml"
 
