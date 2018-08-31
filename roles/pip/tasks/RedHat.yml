@@ -48,7 +48,7 @@
   yum:
     name: "python{{ py_ver | default('2') }}-pip"
     state: present
-  when: ansible_os_family != "RedHat" or (ansible_os_family == "RedHat" and py_ver='2')
+  when: ansible_os_family != "RedHat" or (ansible_os_family == "RedHat" and py_ver == '2')
 
 - name: install PIP3 to Redhat/CentOS
   yum:
