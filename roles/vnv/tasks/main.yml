@@ -3,6 +3,13 @@
 - name: install required library
   pip: name=docker-py state=present
 
+- name: log into private Registry
+  docker_login:
+    registry: "registry.sonata-nfv.eu:5000"
+    username: "sonata-nfv"
+    password: "s0n@t@"
+    reauthorize: yes
+
 # Deploying VnV Databases
 
 # Deploying VnV Components
@@ -66,3 +73,7 @@
 - import_tasks: portal.yml
   when: (component == 'portal') or
         (component == 'all')
+
+- name: log into private Registry
+  docker_login:
+    state: absent

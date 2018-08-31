@@ -12,4 +12,6 @@
         group: "{{ lookup('env','USER') }}"
         mode: "u=rw,g=r,o=r"
   roles:
+    - pip
+    - docker
     - vnv
