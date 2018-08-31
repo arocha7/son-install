@@ -1,0 +1,11 @@
+---
+# tasks file for pip
+
+#- include_tasks: "{{ ansible_distribution_release }}.yml"
+
+- name: upgrade PIP
+  pip:
+    name: pip
+    extra_args: "--upgrade"
+    state: present
+

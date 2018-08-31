@@ -1,0 +1,8 @@
+---
+- name: deploy PIP to the target machine
+  hosts: "{{ target | default('localhost') }}"
+  gather_facts: yes
+  become: true
+  roles:
+    - { role: pip, py_ver: "{{ py_ver }} | default('2') }}" }
+
