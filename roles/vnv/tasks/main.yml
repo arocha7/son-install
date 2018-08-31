@@ -1,4 +1,8 @@
 ---
+
+- name: install required library
+  pip: name=docker-py state=present
+
 # Deploying VnV Databases
 
 # Deploying VnV Components

@@ -8,11 +8,9 @@
   remote_user: "{{ vm_user }}"
   pre_tasks:
     - debug: msg="##### SP-DEPLOYMENT-PREPARE {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
-    - package: name=python-pip state=present
-    - shell: 'sudo -EH pip install --upgrade pip'
-    - pip: name=docker state=present
 
   roles:
+    - pip
     - vnv
 
   post_tasks:
