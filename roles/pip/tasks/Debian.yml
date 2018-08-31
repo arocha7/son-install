@@ -10,7 +10,7 @@
   - libffi-dev
   - python-dev
   - python-pip
-  when: py_ver='2'
+  when: py_ver == '2'
 
 - name: install PIP3
   apt: name={{ item }} state=present
@@ -19,4 +19,4 @@
   - libffi-dev
   - python-dev
   - python3-pip
-  when: py_ver='3'
+  when: py_ver == '3'
