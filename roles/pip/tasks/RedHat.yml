@@ -7,7 +7,7 @@
   yum:
     name: epel-release
     state: latest
-    update_caches: yes
+    update_cache: yes
 
 - name: install the 'Development tools' package group
   yum:
