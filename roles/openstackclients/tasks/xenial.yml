@@ -6,14 +6,3 @@
 - name: upgrade all packages to the latest version
   apt: upgrade=yes update_cache=yes
 
-- name: install required libraries and tools for PIP
-  apt: name={{ item }} state=latest
-  with_items:
-  - libssl-dev
-  - libffi-dev
-
-- name: install PIP
-  apt: name={{ item }} state=present
-  with_items:
-  - python-dev
-  - python-pip

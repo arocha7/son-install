@@ -10,15 +10,15 @@
     mode: 0644
 
 - name:  upgrade all packages to the latest version
-  become: true
+#  become: true
   yum: name='*' state=latest update_cache=yes
 
-- yum: name=epel-release state=latest
-  become: true
+#- yum: name=epel-release state=latest
+# become: true
 
 - name: install useful operating system tools
   yum: name={{ item }}
-  become: true
+#  become: true
   with_items:
   - sysstat
   - nmap
