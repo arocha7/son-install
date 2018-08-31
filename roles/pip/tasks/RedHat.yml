@@ -42,7 +42,7 @@
   - name: create Symbolic Link
     shell: 'cd /usr/bin/ && ln -s /usr/bin/python3.6 python3'
 
-  when: py_ver='3'
+  when: py_ver == '3'
 
 - name: install PIP
   yum:
@@ -54,5 +54,5 @@
   yum:
     name: "python36u-pip"
     state: present
-  when: ansible_os_family == "RedHat" and py_ver='3'
+  when: ansible_os_family == "RedHat" and py_ver == '3'
 
