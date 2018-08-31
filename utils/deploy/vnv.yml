@@ -13,5 +13,6 @@
         mode: "u=rw,g=r,o=r"
   roles:
     - pip
+    - openstackclients
     - docker
     - vnv

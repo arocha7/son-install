@@ -27,6 +27,13 @@
 - name: Docker creating network
   shell: 'docker network create --driver=bridge --subnet={{ docker_addr_space }} --gateway={{ docker_gateway }} --ip-range={{ docker_ip_range }} "{{ docker_network_name }}"'
   become: true
-  notify:
-    - restart docker
+#  notify:
+#    - restart docker
   when: dockernetremoved is succeeded
+
+- name: restart Docker engine
+  systemd:
+    name: docker
+    state: restarted
+    daemon_reload: yes
+

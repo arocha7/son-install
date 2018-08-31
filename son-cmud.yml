@@ -13,16 +13,15 @@
         group: "{{ lookup('env','USER') }}"
         mode: "u=rw,g=rw,o=rw"
     - file:
-        path: "{{ lookup('env','PWD') }}/group_vars/{{ plat }}/hosts"
+        path: "{{ lookup('env','PWD') }}/environments/{{ plat }}/hosts"
         state: absent
       when: ops == "create"
 
   tasks:
 
 # STEP 1 - DEPLOY A NEW INSTANCE
-#- import_playbook: "{{ lookup('env','PWD') }}/{{ ops }}/vm/main.yml"
-- import_playbook: "{{ lookup('env','PWD') }}/utils/deploy/vm.yml"
+- import_playbook: "utils/deploy/vm.yml"
 
 # STEP 2 - DEPLOY SPECIFIC SOFTWARE
-- import_playbook: "{{ lookup('env','PWD') }}/{{ ops }}/{{ plat }}/main.yml"
+- import_playbook: "{{ ops }}/{{ plat }}/main.yml"
 

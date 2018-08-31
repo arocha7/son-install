@@ -10,7 +10,6 @@
     - debug: msg="##### SP-DEPLOYMENT-PREPARE {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
 
   roles:
-    - pip
     - vnv
 
   post_tasks:
