@@ -4,12 +4,11 @@
 # UBUNTU/DEBIAN
 
 - name: start 'firewall' service
-  service: name=ufw state=started
-  when: ansible_os_family == "Debian"
+  systemd: name=ufw state=started enabled=yes
 
 - name: open SVC port at FW
   ufw:
     state: enabled
     rule: allow # TO FIX
-  when: ansible_os_family == "Debian"
-#
+    proto: tcp
+    port: 80

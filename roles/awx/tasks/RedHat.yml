@@ -1,0 +1,124 @@
+# this playbooks follows this [AWX install guide](https://www.howtoforge.com/tutorial/centos-ansible-awx-installation/)
+- name: install 'firewalld'
+  yum:
+    name: firewalld
+    state: present
+
+- name: start 'firewalld'
+  systemd:
+    name: firewalld
+    state: started
+    enabled: yes
+    daemon_reload: yes
+
+- name: pull in the python2 version of the firewalld libraries
+  yum: name=python-firewall state=present
+
+- name: open HTTP(S) ports
+  firewalld:
+    service: "{{ item }}"
+    permanent: true
+    state: enabled
+  with_items:
+    - http
+    - https
+  notify: reload firewalld
+
+- name: install EPEL
+  yum:
+    name: epel-release
+    state: present
+
+- name: enable PostgreSQL repo
+  yum:
+    name: https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm
+    state: present
+
+- name: install the PostgreSQL rpm from a remote repo
+  yum:
+    name: postgresql96-server
+    state: present
+
+- name: install other required products
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - rabbitmq-server
+    - wget
+    - memcached
+    - nginx
+    - ansible
+
+- name: add AWX repo
+  shell: "wget -O /etc/yum.repos.d/awx-rpm.repo https://copr.fedorainfracloud.org/coprs/mrmeee/awx/repo/epel-7/mrmeee-awx-epel-7.repo"
+
+- name: install AWX
+  yum:
+    name: awx
+    state: present
+
+- name: initialize the database
+  shell: /usr/pgsql-9.6/bin/postgresql96-setup initdb
+
+- name: restart RabbitMQ service
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: rabbitmq-server
+
+- name: start pgSQL service
+  systemd:
+    state: started
+    name: postgresql-9.6
+
+- name: create user for database
+  shell: "sudo -u postgres createuser -S awx"
+  ignore_errors: true
+
+- name: create database
+  shell: "sudo -u postgres createdb -O awx awx"
+  ignore_errors: true
+
+- name: importing data into database
+  shell: "sudo -u awx /opt/awx/bin/awx-manage migrate"
+# ignore_errors: true
+
+- shell: echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'root@localhost', 'password')" | sudo -u awx /opt/awx/bin/awx-manage shell
+
+- shell: "sudo -u awx /opt/awx/bin/awx-manage create_preload_data"
+
+- shell: "sudo -u awx /opt/awx/bin/awx-manage provision_instance --hostname=$(hostname)"
+
+- shell: "sudo -u awx /opt/awx/bin/awx-manage register_queue --queuename=tower --hostnames=$(hostname)"
+
+- name: take the backup of 'nginx.conf'
+  copy:
+    src: '/etc/nginx/nginx.conf'
+    dest: '/etc/nginx/nginx.conf.BCK'
+    remote_src: yes
+  
+- name: replace 'nginx.conf'
+  shell: 'wget -O /etc/nginx/nginx.conf https://raw.githubusercontent.com/sunilsankar/awx-build/master/nginx.conf'
+
+- name: start 'NGINX'
+  systemd:
+    name: nginx
+    state: started
+    enabled: yes
+    daemon_reload: yes
+
+- name: start AWX services
+  systemd:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+    daemon_reload: yes
+  with_items:
+    - awx-cbreceiver
+    - awx-celery-beat
+    - awx-celery-worker
+    - awx-channels-worker
+    - awx-daphne
+    - awx-web
+

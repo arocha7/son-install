@@ -1,0 +1,6 @@
+---
+- name: "deploy AWX to the target VM appliance"
+  hosts: "{{ target | default('localhost') }}"
+  become: true
+  roles:
+  - awx

@@ -1,0 +1,9 @@
+---
+# tasks file for awx
+
+- name: SELinux (temporarily) disabled
+  selinux: policy=targeted state=permissive
+
+- name: installing pre-required packages based on distro
+  include_tasks: "{{ ansible_os_family }}.yml"
+
