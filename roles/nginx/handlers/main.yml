@@ -7,7 +7,7 @@
   service: name=firewalld state=restarted
   when: ansible_os_family == "RedHat"
 
-- name: reload firewalld
+- name: reload ufw
   ufw:
     state: reloaded
   when: ansible_os_family == "Debian"

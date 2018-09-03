@@ -31,5 +31,4 @@
     rule: allow
     port: "{{ svc_port }}"
     proto: tcp
-  notify: reload firewalld
-#
+  notify: reload ufw

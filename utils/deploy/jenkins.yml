@@ -2,11 +2,10 @@
 - name: "deploy JENKINS CI server to the target VM appliance"
   hosts: "{{ target | default('localhost') }}"
   become: true
-  connection: local
   roles:
-  - ntp
   - common
-  - openjdk
+  - ntp
   - firewall
+  - openjdk
   - nginx
   - jenkins
