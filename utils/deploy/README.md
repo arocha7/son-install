@@ -30,8 +30,10 @@ Create a single or multiple VMs on an Openstack VIM
 ===================================================
 If you need to create a guest machine, then use the 'vm.yml' playbook for it. For example, to deploy *two* Ubuntu 16.04 VMs on Alabs' PoP at Demo tenant:
 ```
-$ ansible-playbook utils/deploy/vm.yml -e 'plat=vm pop=alabs proj=demo distro=xenial nbofvms=2' [-v]
+$ ansible-playbook utils/deploy/vm.yml -e 'pop=alabs proj=demo distro=xenial nbofvms=2' [-v]
 ```
+NOTE: assuming that you are going to instantiate a VM to an Openstack VIM, you must set the appropriate 'clouds.yaml' at '~/.config/openstack/"
+
 
 Upgrade Ubuntu 16.04 to Ubuntu 18.04
 ====================================
