@@ -7,7 +7,5 @@
   pre_tasks:
     - debug: msg="##### VM START DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
   roles:
-    - { role: common, become: true }
-    - { role: openstackclients, become: true }
     - vm
 

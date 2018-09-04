@@ -9,8 +9,6 @@
 #  register: new_archive
 
 - name: update 'setuptools'
-  pip: name='setuptools' state=absent
-- name: update 'setuptools'
   pip: name='setuptools' state=present
 
 - name: install Shade

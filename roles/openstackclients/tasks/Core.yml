@@ -1,5 +1,27 @@
 ---
+# tasks file for openstackclients
 
-- name: upgrade all packages to the latest version
-  yum: name='*' state=latest update_cache=yes
+- name: revert to PIP 9.0.3 (PIP 10 no longer uninstalls distutils packages)
+  pip:
+    name: pip==9.0.3
+    state: forcereinstall
+
+- include_tasks: shade.yml
+
+- name: enable RDO repo to get OSC packages
+  yum: 
+    name: "centos-release-openstack-{{ os_release }}"
+    state: present
+
+- name: install Openstack command line clients
+  yum: name={{ item }} state=present
+  with_items:
+    - python-openstackclient
+    - python-keystoneclient
+    - python-heatclient
+    - python-glanceclient
+    - python-cinderclient
+    - python-swiftclient
+    - python-novaclient
+    - python-neutronclient
 

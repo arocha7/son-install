@@ -1,5 +1,13 @@
 ---
 
+- import_role:
+    name: pip
+
+- name: a Python library for the Docker Engine API
+  pip:
+    name: docker-py
+    state: present
+
 - name: log into private Registry
   docker_login:
     registry: "registry.sonata-nfv.eu:5000"
