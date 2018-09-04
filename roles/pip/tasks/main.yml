@@ -3,9 +3,3 @@
 
 - include_tasks: "{{ ansible_os_family }}.yml"
 
-- name: upgrade PIP
-  pip:
-    name: pip
-    extra_args: "--upgrade"
-    state: present
-
