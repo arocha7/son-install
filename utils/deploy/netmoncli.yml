@@ -5,7 +5,7 @@
   become: true
 
 #1. Overall bandwidth - nload, bmon, slurm, bwm-ng, cbm, speedometer, netload
-#2. Overall bandwidth (batch style output) - vnstat, ifstat, dstat, collectl
+#2. Overall bandwidth (batch style output) - vmstat, ifstat, dstat, collectl
 #3. Bandwidth per socket connection - iftop, iptraf, tcptrack, pktstat, netwatch, trafshow
 #4. Bandwidth per process - nethogs
 #   https://linoxide.com/monitoring-2/network-monitoring-tools-linux/
@@ -161,12 +161,12 @@
         state: present
       when: ansible_os_family == "Debian" or ansible_os_family == "Kali GNU/Linux"
 
-### 
+### http://dag.wiee.rs/home-made/dstat/
     - name: dstat
       package:
         name: dstat
         state: present
-      when: ansible_os_family == "Debian" or ansible_os_family == "Kali GNU/Linux"
+      #when: ansible_os_family == "Debian" or ansible_os_family == "Kali GNU/Linux"
 
     #  - name: COLLECTL
     #package:
