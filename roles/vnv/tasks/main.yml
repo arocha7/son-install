@@ -1,8 +1,5 @@
 ---
 
-- import_role:
-    name: pip
-
 - name: install 'docker-py' (required library)
   pip: name=docker-py state=present
 
