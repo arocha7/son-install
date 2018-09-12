@@ -15,6 +15,10 @@
 
 # Authenticate to private Docker Registry
 
+- name: force temporary logon
+  shell: "docker login -u sonata-nfv -p s0n@t@ registry.sonata-nfv.eu:5000"
+  no_log: true
+
 - name: log into private Registry
   docker_login:
     registry: "registry.sonata-nfv.eu:5000"
