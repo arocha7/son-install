@@ -9,10 +9,23 @@
   become: true
   when: ansible_os_family == "Debian"
 
+- name: install 'virtualenv'
+  yum:
+    name: python-virtualenv
+    state: present
+  become: true
+  when: ansible_os_family == "RedHat"
+
+- name: uninstall 'docker-py' (deprecated)
+  pip:
+    name: docker-py
+    state: absent
+  become: true
+
 - name: install 'Docker SDK for Python' (replaces 'docker-py' obsoleted)
   pip:
     name: docker
-    state: latest
+    state: present
   become: true
 
 # Authenticate to private Docker Registry
