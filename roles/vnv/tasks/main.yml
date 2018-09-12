@@ -17,13 +17,17 @@
 
 # Authenticate to private Docker Registry
 
-- name: log into private Registry
+- name: force temporary logon
+  shell: "docker login -u sonata-nfv -p s0n@t@ registry.sonata-nfv.eu:5000"
+  no_log: true
+
+- name: login to private Registry
   docker_login:
     registry: "registry.sonata-nfv.eu:5000"
     username: "sonata-nfv"
     password: "s0n@t@"
     reauthorize: yes
-    #config_path: "{{ lookup('env','HOME') }}/.docker/config.json"
+    config_path: "{{ lookup('env','HOME') }}/.docker/config.json"
 
 - file:
     path: "/root/.docker"
