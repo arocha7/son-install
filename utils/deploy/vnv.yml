@@ -1,15 +1,16 @@
 ---
 
 - hosts: "{{ target | default ('localhost')  }}"
-  become: true
   vars:
     plat_hostname: "{{ lookup('env','HOSTNAME') }}"
     DOCKER_HOST: "--insecure-registry registry.sonata-nfv.eu:5000"
     pip_install_packages:
       - name: docker-py
         state: absent
+        become: true
       - name: docker
         state: present
+        become: true
 
   pre_tasks:
     - file:
@@ -19,6 +20,6 @@
         group: "{{ lookup('env','USER') }}"
         mode: "u=rw,g=r,o=r"
   roles:
-    - pip
-    - docker
+    - { role: pip,    become: true }
+    - { role: docker, become: true }
     - vnv

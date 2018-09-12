@@ -3,10 +3,16 @@
 # Install required libraries
 
 - name: install 'virtualenv'
-  apt: name=virtualenv state=present
+  apt:
+    name: virtualenv
+    state: present
+  become: true
 
 - name: install 'Docker SDK for Python' (replaces 'docker-py' obsoleted)
-  pip: name=docker state=latest
+  pip:
+    name: docker
+    state: latest
+  become: true
 
 # Authenticate to private Docker Registry
 
@@ -16,7 +22,20 @@
     username: "sonata-nfv"
     password: "s0n@t@"
     reauthorize: yes
-    config_path: "{{ lookup('env','HOME') }}/.docker/config.json"
+    #config_path: "{{ lookup('env','HOME') }}/.docker/config.json"
+
+- file:
+    path: "/root/.docker"
+    state: directory
+    mode: 0755
+  become: true
+
+- name: copy "auth" file on the remote machine
+  copy:
+    src: "{{ lookup('env','HOME') }}/.docker/config.json"
+    dest: "/root/.docker/config.json"
+    remote_src: yes
+  become: true
 
 # Deploying VnV Databases
 
