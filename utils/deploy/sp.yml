@@ -13,6 +13,6 @@
         group: "{{ lookup('env','USER') }}"
         mode: "u=rw,g=r,o=r"
   roles:
-    - "{ role: pip, become: true }"
-    - "{ role: docker, become: true }"
+    - { role: pip, become: true }
+    - { role: docker, become: true }
     - sp

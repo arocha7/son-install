@@ -7,6 +7,7 @@
     name: virtualenv
     state: present
   become: true
+  when: ansible_os_family == "Debian"
 
 - name: install 'Docker SDK for Python' (replaces 'docker-py' obsoleted)
   pip:
