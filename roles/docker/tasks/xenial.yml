@@ -20,8 +20,10 @@
   - python-pkg-resources
   - git
 
-- name: install PIP
-  apt: name=python-pip state=present
+#- name: install PIP
+#  apt: name=python-pip state=present
+- include_role:
+    name: pip
 
 - name: install required library
   pip: name={{ item }} state=present
@@ -32,7 +34,8 @@
 #  - pycrypto
 #  - six
 #  - requests
-  - docker-py
+#  - docker-py
+  - docker
 
 
 ### REMOVE PREVIOUS INSTALLs

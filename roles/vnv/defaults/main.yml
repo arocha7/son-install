@@ -1,7 +1,8 @@
 ---
 # defaults file for vnv
 
-version: qual
+#version: qual
+version: latest
 component: all
 rack_env: staging
 docker_network_name: tango

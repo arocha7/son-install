@@ -4,6 +4,13 @@
   become: true
   vars:
     plat_hostname: "{{ lookup('env','HOSTNAME') }}"
+    DOCKER_HOST: "--insecure-registry registry.sonata-nfv.eu:5000"
+    pip_install_packages:
+      - name: docker-py
+        state: absent
+      - name: docker
+        state: present
+
   pre_tasks:
     - file:
         path: "{{ lookup('env','PWD') }}/ansible.log"
@@ -13,6 +20,5 @@
         mode: "u=rw,g=r,o=r"
   roles:
     - pip
-    - openstackclients
     - docker
     - vnv

@@ -1,7 +1,9 @@
 ---
 # Running the Sonata MONGODB (Docker container)
+
 - debug: msg="##### SP MONGODB DEPLOYMENT {{ lookup('pipe', 'date +%Y%M%D-%H%M%S') }}"
-- name: deploy MongoDB as a Container
+
+- name: deploy MongoDB as a container
   docker_container:
     name: "tng-mongo"
     image: "mongo"
