@@ -7,10 +7,23 @@
   become: true
   when: ansible_os_family == "Debian"
 
+- name: install 'virtualenv'
+  yum:
+    name: python-virtualenv
+    state: present
+  become: true
+  when: ansible_os_family == "RedHat"
+
+- name: uninstall 'docker-py' (deprecated)
+  pip:
+    name: docker
+    state: absent
+  become: true
+
 - name: install 'Docker SDK for Python' (replaces 'docker-py' obsoleted)
   pip:
     name: docker
-    state: latest
+    state: present
   become: true
 
 # Authenticate to private Docker Registry
@@ -25,7 +38,7 @@
     username: "sonata-nfv"
     password: "s0n@t@"
     reauthorize: yes
-    #config_path: "{{ lookup('env','HOME') }}/.docker/config.json"
+    config_path: "{{ lookup('env','HOME') }}/.docker/config.json"
 
 - file:
     path: "/root/.docker"
