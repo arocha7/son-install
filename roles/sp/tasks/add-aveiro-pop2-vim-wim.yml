@@ -8,15 +8,15 @@
     /usr/bin/docker exec -t son-postgres psql -h localhost -U sonatatest -d vimregistry -c \
     "INSERT INTO VIM (UUID, TYPE, VENDOR, ENDPOINT, USERNAME, CONFIGURATION, CITY, COUNTRY, PASS, AUTHKEY, NAME, DOMAIN) \
     VALUES ('1111-22222222-33333333-4444', 'compute', 'Heat', '172.31.8.16', 'tango', \
-    '{\"tenant_ext_net\":\"3283ec5d-984e-46e7-8eac-312a79b878f1\", \"tenant_private_net_id\":\"192.168.1.0\", \"tenant_private_net_length\":16, \
-    \"tenant\":\"5gtango\", \"tenant_ext_router\":\"eecdb2e2-bae8-443e-b96a-bc8871cf4ddc\"}', 'Aveiro', 'Portugal', 't4ng0', null, '5gtango', 'default');"
+    '{\"tenant_ext_net\":\"3283ec5d-984e-46e7-8eac-312a79b878f1\", \"tenant_private_net_id\":\"172.16.0.0\", \"tenant_private_net_length\":16, \
+    \"tenant\":\"tango\", \"tenant_ext_router\":\"eecdb2e2-bae8-443e-b96a-bc8871cf4ddc\"}', 'Aveiro-Beach', 'Portugal', 't4ng0', null, 'Aveiro-8-Net', 'default');"
 
 - name: "Adding the VIM-Network"
   shell: |
     /usr/bin/docker exec -t son-postgres psql -h localhost -U sonatatest -d vimregistry -c \
     "INSERT INTO VIM (UUID, TYPE, VENDOR, ENDPOINT, USERNAME, CONFIGURATION, CITY, COUNTRY, PASS, AUTHKEY, NAME, DOMAIN) \
-    VALUES ('aaaa-bbbbbbbb-cccccccc-dddd', 'network', 'ovs', '172.31.8.16', 'tango', '{"compute_uuid":"1111-22222222-33333333-4444"}', \
-    'Aveiro', 'Portugal', 't4ng0', null,'5gtango','default');"
+    VALUES ('aaaa-bbbbbbbb-cccccccc-dddd', 'network', 'ovs', '172.31.8.103', 'tango', '{"compute_uuid":"1111-22222222-33333333-4444"}', \
+    'Aveiro-Beach', 'Portugal', 't4ng0', null,'Aveiro-8-Net','default');"
 
 - name: "Linking VIM Compute-Network"
   shell: |
@@ -28,7 +28,7 @@
   shell: | 
     /usr/bin/docker exec -t son-postgres psql -h localhost -U postgres -d wimregistry -c \
     "INSERT INTO WIM (UUID, TYPE, VENDOR, ENDPOINT, USERNAME, PASS, AUTHKEY, NAME) \
-    VALUES ('1234-12345678-12345678-1234', 'WIM', 'MOCK', '10.30.0.13', 'admin', 'admin', null, 'AthensWan');"
+    VALUES ('1234-12345678-12345678-1234', 'WIM', 'MOCK', '172.31.8.103', 'admin', 'admin', null, 'AthensWan');"
 
 - name: "Linking VIM - WIM"
   shell: |

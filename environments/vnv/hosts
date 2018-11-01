@@ -1,0 +1,2 @@
+[vnv]
+vnv-alabs-tng-xenial-01-1536760209 ansible_connection=ssh ansible_user=ubuntu ansible_ssh_private_key_file=/home/ubuntu/.ssh/tng-infra.pem ansible_host=172.31.8.116 

@@ -6,7 +6,9 @@
 - name: install PIP
   block:
 
-  - apt: name={{ libssl-dev, libffi-dev, python-dev, python-pip }} state=present
+  - apt:
+      name: [ libssl-dev, libffi-dev, python-dev, python-pip ]
+      state: present
 
   - name: upgrade PIP
     pip:
@@ -16,5 +18,7 @@
   when: py_ver == '2'
 
 - name: install PIP3
-  apt: name={{ libssl-dev, libffi-dev, python-dev, python3-pip }} state=present
+  apt:
+    name: [ libssl-dev, libffi-dev, python-dev, python3-pip ]
+    state: present
   when: py_ver == '3'
