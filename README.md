@@ -9,7 +9,12 @@
 * manage the SP services and applications lifecycle
 * zero downtime roll up upgrades
 
-All you need is a 'bash' shell with Ansible installed to run 'son-cmud.yml', ie, all the SONATA CMUD operations can be executed in a single line command
+All you need is a 'bash' shell with Ansible installed to run 'son-cmud.yml', ie, all the SONATA CMUD operations can be executed in a single command
+line
+
+## What's new in Release 4.0
+* VNV platform deployment
+
 
 ## What's new in Release 3.1
 * new SON features
@@ -20,7 +25,6 @@ All you need is a 'bash' shell with Ansible installed to run 'son-cmud.yml', ie,
 
 
 ## What's new in Release 2.0
-
 Deploy the platform from the scratch for a specific environment (integration, qualification, demonstration)
 * step 1: provision infrastrucutre
 * step 2: standardize configurations
@@ -38,14 +42,14 @@ Deploy the platform from the scratch for a specific environment (integration, qu
 
 ## Requirements
 
-* Ansible 2.3.0+
-* Shade 1.16.0+
+* Ansible tool 2.3.0+
+* Shade library 1.16.0+
 
 
 ## Usage
 
 The structure of 'son-install' is flexible enough to:
-* deploy and manage a single service or application to an existing machine
+* deploy and manage a single service or application to the localhost or to a remote machine
 * deploy, manage, upgrade, destroy a complex distributed platform
 
 
@@ -77,19 +81,27 @@ The structure of 'son-install' is flexible enough to:
  echo sonata | tee ~/.ssh/.vault_pass
 ```
 
-* 3rd - create the inventory file (ex, for an 'ubuntu' username)
+* 3rd - create the inventory file (the example use 'ubuntu' as username)
 ```
-; inventory/sp/hosts
+; environments/sp/hosts
 [target]
-YOUR_HOSTNAME ansible_connection=ssh ansible_user=ubuntu ansible_ssh_private_key_file=/home/ubuntu/.ssh/tng-infra.pem ansible_host='YOUR_PUBLIC_IPADDR'
+YOUR_HOSTNAME ansible_connection=ssh ansible_user=ubuntu ansible_ssh_private_key_file=/home/ubuntu/.ssh/'YOUR_PRIVATE_RSA_KEY'.pem ansible_host='PUBLIC_IPADDR'
 ```
 
-* 4rd - deploy the SP to the local machine
+* 4rd - deploy the SP 
+
+- to your local machine:
 ```
-$ ansible-playbook utils/deploy/sp.yml -i inventory/sp/hosts -e "target=<YOUR_PUBLIC_IPADDR>" [-v]
+$ ansible-playbook utils/deploy/sp.yml -e target=localhost [-v]
 ```
-where:
-* target: is the IP address of the (local) guest machine, ie, the Floating IP in Openstack lingo
+
+- to the remote machine:
+```
+$ ansible-playbook utils/deploy/sp.yml -i environments/sp/hosts -e "target=<YOUR_PUBLIC_IPADDR>" [-v]
+```
+where 'target' is the IP address of the remote guest machine (the Floating IP in Openstack lingo)
+
+
 
 [![asciicast](https://asciinema.org/a/44MwPYliuOxxYBFkkm7M8eqM4.png)](https://asciinema.org/a/44MwPYliuOxxYBFkkm7M8eqM4)
 
@@ -103,7 +115,7 @@ The complete way to deploy and manage SONATA 5G NFV services and application fro
 
 1. The SP database passwords are encrypted - you MUST create an external file "~/.ssh/.vault_pass" with the string "sonata" inside
 
-2. To avoid setting password credentials, use the private key pair (eg, "~/.ssh/YOUR-KEY.pem") of the public key you have used when creating the VM
+2. To avoid setting password credentials, use the private key pair (eg, "~/.ssh/YOUR-RSA-KEY.pem") of the public key you have used when creating the VM
 NOTE: actually, it assumes the default cloud image Username ('ubuntu' or 'centos') using key based authentication
 
 3. Create the hidden file that contains the available Openstack clouds that you can connect [os_client_config](http://docs.openstack.org/developer/os-client-config/) - choose one of the following options:
@@ -130,12 +142,13 @@ Example for Openstack Mitaka release:
 
 #### Deployment
 
- $ git clone -b v2 https://github.com/sonata-nfv/son-install.git
+ $ git clone https://github.com/sonata-nfv/son-install.git
 
  $ cd son-install
 
-s $* ansible-playbook son-cmud.yml -e "ops=[CREATE/MANAGE/UPGRADE/DESTROY] plat=[SP] pop=[NCSRD|ALABS] distro=[trusty|xenial|Core] ver=[latest|dev|2.1]"
-
+```
+$ ansible-playbook son-cmud.yml -e "ops=[CREATE/MANAGE/UPGRADE/DESTROY] plat=[SP] pop=[NCSRD|ALABS] proj=[SON/TNG] distro=[trusty|xenial|Core] ver=[latest|dev|4.0]"
+```
 NOTE: depending on the performance of your infrastructure deployment and the download time to get package updates, this run could spent from 30 to 60 minutes.
 
 [![asciicast](http://asciinema.org/a/32wmaiey5d54d5l6msdd7nu32.png)](http://asciinema.org/a/32wmaiey5d54d5l6msdd7nu32?autoplay=1)
@@ -159,7 +172,7 @@ To ask for the status of all the SP services
 ### Example to UPGRADE a platform (to be enhanced on future release)
 
 To upgrade the SP (this implementation is on the roadmap)
- $ ansible-playbook son-cmud.yml -e 'ops=upgrade plat=sp pop=alabs proj=demo sp_ver=2.1'
+ $ ansible-playbook son-cmud.yml -e 'ops=upgrade plat=sp pop=alabs proj=demo sp_ver=4.0'
 
 
 ### Example to DESTROY a platform

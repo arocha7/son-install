@@ -4,6 +4,8 @@ nbofvms: 1
 plat: sp
 #flv: sp.3_6_30
 flv: m1.medium
+clean: false
+platform: sp
 
 # Docker network segment
 docker_network_name: tango

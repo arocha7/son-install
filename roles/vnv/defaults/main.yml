@@ -1,6 +1,8 @@
 ---
 # defaults file for vnv
 
+clean: false
+platform: sp
 #version: qual
 version: latest
 component: all
