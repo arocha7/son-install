@@ -20,11 +20,9 @@
     state: latest
 
 - name: install PIP pre-required packages
-  yum: name={{ item }} state=present
-  with_items:
-    - openssl-devel
-    - libffi-devel
-    - python-wheel
+  yum:
+    name: [openssl-devel, libffi-devel, python-wheel]
+    state: present
 
 - name: PIP3 install on Redhat/CentOS
   block:

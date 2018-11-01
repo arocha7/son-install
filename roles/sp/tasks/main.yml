@@ -20,7 +20,7 @@
     state: absent
   become: true
 
-- name: install 'Docker SDK for Python' (replaces 'docker-py' obsoleted)
+- name: install 'Docker SDK for Python' (it replaces obsoleted 'docker-py')
   pip:
     name: docker
     state: present

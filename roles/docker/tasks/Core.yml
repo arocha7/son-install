@@ -72,19 +72,19 @@
 #### INSTALL LATEST STABLE RELEASE
 
 - name: install required packages 
-  yum: name="{{ item }}"
-  with_items:
-    - device-mapper-persistent-data
-    - lvm2
+  yum:
+    name: [ device-mapper-persistent-data, lvm2 ]
+    state: present
 
-#- name: install Docker (v3.4.x)
-#  pip:
-#    name: docker
-#    state: latest
-
-- name: install 'docker-py'
+- name: uninstall 'docker-py' (DEPRECATED)
   pip:
     name: docker-py
+    state: absent
+  ignore_errors: true
+
+- name: install Docker SDK (v3.4.x)
+  pip:
+    name: docker
     state: present
 
 - name: Import Docker CE repository gpg key
