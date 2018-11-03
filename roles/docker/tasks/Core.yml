@@ -1,18 +1,10 @@
 ---
 
 - name: uninstall previous Docker releases
-  yum: name="{{ item }}" state=absent update_cache=yes
-  with_items: 
-    - docker-client
-    - docker-client-latest
-    - docker-common
-    - docker-latest
-    - docker-latest-logrotate
-    - docker-logrotate
-    - docker-selinux
-    - docker-engine-selinux
-    - docker-engine
-    - docker-python
+  yum:
+    name: [docker-client, docker-client-latest, docker-common, docker-latest, docker-latest-logrotate, docker-logrotate, docker-selinux, docker-engine-selinux, docker-engine, docker-python]
+    state: absent
+    update_cache: yes
   ignore_errors: yes
 
 

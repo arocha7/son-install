@@ -1,72 +1,15 @@
 ---
-
-# Install required libraries
-
-- name: install 'virtualenv'
-  apt:
-    name: virtualenv
-    state: present
-  become: true
-  when: ansible_os_family == "Debian"
-
-- name: install 'virtualenv'
-  yum:
-    name: python-virtualenv
-    state: present
-  become: true
-  when: ansible_os_family == "RedHat"
-
-- name: uninstall 'docker-py' (deprecated)
-  pip:
-    name: docker-py
-    state: absent
-  become: true
-
-- name: install 'Docker SDK for Python' (replaces 'docker-py' obsoleted)
-  pip:
-    name: docker
-    state: present
-  become: true
-
-# Authenticate to private Docker Registry
-
-- name: force temporary logon
-  shell: "docker login -u sonata-nfv -p s0n@t@ registry.sonata-nfv.eu:5000"
-  no_log: true
-
-- name: login to private Registry
-  docker_login:
-    registry: "registry.sonata-nfv.eu:5000"
-    username: "sonata-nfv"
-    password: "s0n@t@"
-    reauthorize: yes
-    config_path: "{{ lookup('env','HOME') }}/.docker/config.json"
-
-- file:
-    path: "/root/.docker"
-    state: directory
-    mode: 0755
-  become: true
-
-- name: copy "auth" file on the remote machine
-  copy:
-    src: "{{ lookup('env','HOME') }}/.docker/config.json"
-    dest: "/root/.docker/config.json"
-    remote_src: yes
-  become: true
-
 # Deploying VnV Databases
+
+# Deploying VnV Components
 
 # deploy mongo
 - import_tasks: mongo.yml
   when: (component == 'database') or
         (component == 'all')
 
-# Deploying VnV Components
-
 # deploy tng-vnv-lcm
 - import_tasks: lcm.yml
-  become: true
   when: (component == 'lcm') or
         (component == 'all')
 
@@ -119,7 +62,3 @@
 - import_tasks: portal.yml
   when: (component == 'portal') or
         (component == 'all')
-
-#- name: logout private Registry
-#  docker_login:
-#    state: absent

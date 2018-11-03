@@ -11,7 +11,7 @@
   when: dockernet is succeeded
   register: dockerps
 
-- name: stop all the running Docker containers 
+- name: stop all running Docker containers 
   shell: "docker stop $(sudo docker ps -a -q)"
   become: true
   ignore_errors: true

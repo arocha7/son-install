@@ -17,13 +17,7 @@
 # become: true
 
 - name: install useful operating system tools
-  yum: name={{ item }}
+  yum:
+    name: [sysstat, nmap, lsof, tree, wget, dialog, nscd]
+    state: present
 #  become: true
-  with_items:
-  - sysstat
-  - nmap
-  - lsof
-  - tree
-  - wget
-  - dialog
-  - nscd

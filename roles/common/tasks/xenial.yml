@@ -24,12 +24,6 @@
   apt: name=build-essential state=latest
 
 - name: install useful operating system tools
-  apt: name={{ item }} state=latest
-  with_items:
-  - sysstat
-  - nmap
-  - tree
-  - htop
-  - policycoreutils
-  - dialog
-  - nscd
+  apt:
+    name: [sysstat, nmap, tree, htop, policycoreutils, dialog, nscd]
+    state: latest
