@@ -1,0 +1,96 @@
+version: '3'
+
+services:
+
+  mongo:
+    image: mongo
+    networks:
+      - default
+    ports:
+     - "27017:27017"
+
+  lcm:
+    image: "registry.sonata-nfv.eu/tng-vnv-lcm:latest"
+    environment:
+      - APP_GK_BASE_URL="{{ app_gk_base_url }}"
+      - APP_CAT_BASE_URL="{{ catalogue_url }}"
+      - LOGGING_LEVEL_ORG_APACHE_HTTP_WIRE="{{ app_vnv_logging_level }}"
+      - LOGGING_LEVEL_SUN_NET_WWW_PROTOCOL_HTTP="{{ app_vnv_logging_level }}" 
+    networks:
+      - default
+    ports:
+     - "6100:6100"
+
+  cat:
+    image: "registry.sonata-nfv.eu/tng-cat:latest"
+    networks:
+      - default
+    ports:
+     - "4011:4011"
+
+  rep:
+    image: "registry.sonata-nfv.eu/tng-rep:latest"
+    networks:
+      - default
+    ports:
+     - "4012:4012"
+
+  gtk-common:
+    image: "registry.sonata-nfv.eu/tng-gtk-common:latest"
+    environment:
+      - UNPACKAGER_URL="{{ unpackager_url }}"
+      - CATALOGUE_URL="{{ catalogue_url }}"
+      - INTERNAL_CALLBACK_URL="{{ internal_callback_url }}"
+      - EXTERNAL_CALLBACK_URL="{{ external_callback_url }}"
+    networks:
+      - default
+    ports:
+     - "32003:5000"
+
+  gtk-vnv:
+    image: "registry.sonata-nfv.eu/tng-gtk-vnv:latest"
+    environment:
+      - REPOSITORY_URL="{{ repository_url }}"
+      - CATALOGUE_URL="{{ catalogue_url }}"
+    networks:
+      - default
+    ports:
+     - "5000:5000"
+
+  sec-gtw:
+    image: "registry.sonata-nfv.eu/tng-sec-gtw:latest"
+    networks:
+      - default
+    ports:
+     - "80:80"
+     - "443:433"
+
+  api-gtw:
+    image: "registry.sonata-nfv.eu/tng-api-gtw:latest"
+    environment:
+      - ROUTES_FILE=vnv_routes.yml
+      - EXTERNAL_CALLBACK_URL=http://tng-vnv-lcm:6100/api/v1/packages/on-change
+    networks:
+      - default
+    ports:
+     - "32002:5000"
+
+  sdk-pkg:
+    image: "registry.sonata-nfv.eu/tng-sdk-package:latest"
+    networks:
+      - default
+    ports:
+     - "5099:5099"
+
+  portal:
+    image: "registry.sonata-nfv.eu/tng-portal:latest"
+    networks:
+      - default
+    ports:
+     - "4200:4200"
+
+
+networks:
+  default:
+    external:
+      name: tango
