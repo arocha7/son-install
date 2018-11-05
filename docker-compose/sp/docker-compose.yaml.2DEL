@@ -1,0 +1,51 @@
+version='3'
+
+services:
+
+  pgsql:
+    image=ntboes/postgres-uuid
+    environment:
+      - POSTGRES_DB=$${ gtk_db_name }
+      - POSTGRES_USER=$${ gtk_db_user }
+      - POSTGRES_PASSWORD=$${ gtk_db_pass }
+    networks:
+      - default
+    ports:
+      - "5432:5432"
+
+  mongo:
+    image=mongo
+    networks:
+      - default
+    ports:
+      - "27017:27017"
+
+  redis:
+    image=redis
+    networks:
+      - default
+    ports:
+      - "6379:6379"
+
+  pgsql-monitoring:
+    image=ntboes/postgres-uuid
+    environment:
+      - POSTGRES_DB=$${ mon_db_name }
+      - POSTGRES_USER=$${ mon_db_user }
+      - POSTGRES_PASSWORD=$${ mon_db_pass }
+    networks:
+      - default
+    ports:
+      - "5433:5432"
+
+  influxdb:
+    image=$${ repository }/son-monitor-influxdb:$${ version }
+    networks:
+      - default
+    ports:
+      - "8086:8086"
+
+networks:
+  default:
+    external:
+      name: tango

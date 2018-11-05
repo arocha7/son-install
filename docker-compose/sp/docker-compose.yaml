@@ -1,0 +1,308 @@
+version: '3'# https://docs.docker.com/compose/compose-file/
+
+services:
+
+## DATABASES
+
+  pgsql:
+    image: ntboes/postgres-uuid
+    environment:
+      - POSTGRES_DB=$${ gtk_db_name }
+      - POSTGRES_USER=$${ gtk_db_user }
+      - POSTGRES_PASSWORD=$${ gtk_db_pass }
+    volumes:
+      - "/etc/sonata/data/postgres:/var/lib/postgresql/data"
+    networks:
+      - default
+    ports:
+      - "5432:5432"
+
+  mongo:
+    image: mongo
+    networks:
+      - default
+    ports:
+      - "27017:27017"
+
+  redis:
+    image: redis
+    networks:
+      - default
+    ports:
+      - "6379:6379"
+
+  pgsql-monitoring:
+    image: ntboes/postgres-uuid
+    environment:
+      - POSTGRES_DB=$${ mon_db_name }
+      - POSTGRES_USER=$${ mon_db_user }
+      - POSTGRES_PASSWORD=$${ mon_db_pass }
+    volumes:
+      - /etc/sonata/data/postgresmon:/var/lib/postgresql/data
+    networks:
+      - default
+    ports:
+      - "5433:5432"
+
+  influxdb:
+    image: registry.sonata-nfv.eu:5000/son-monitor-influxdb:latest
+    networks:
+      - default
+    ports:
+      - "8086:8086"
+
+## MESSAGE QUEUE
+
+  rabbitmq:
+    image: rabbitmq:3.6.15-management
+    environment:
+      - RABBITMQ_CONSOLE_LOG=new
+    networks:
+      - default
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+## TNG uSVCs
+
+  portal:
+    image: "registry.sonata-nfv.eu:5000/tng-portal:latest"
+    networks:
+      - default
+    ports:
+      - "4200:4200"
+
+  tng-sdk-pkg:
+    image: "registry.sonata-nfv.eu:5000/tng-sdk-package:latest"
+    networks:
+      - default
+    ports:
+      - "5099:5099"
+
+  api-gtw:
+    image: "registry.sonata-nfv.eu:5000/tng-api-gtw:latest"
+    environment:
+      - ROUTES_FILE=vnv_routes.yml
+      - EXTERNAL_CALLBACK_URL=$${ external_callback_url }
+    networks:
+      - default
+    ports:
+      - "32002:5000"
+
+  gtk-common:
+    image: "registry.sonata-nfv.eu:5000/tng-gtk-common:latest"
+    environment:
+      - UNPACKAGER_URL=$${ unpackager_url }
+      - CATALOGUE_URL=$${ catalogue_url }
+      - INTERNAL_CALLBACK_URL=$${ internal_callback_url }
+      - EXTERNAL_CALLBACK_URL=$${ external_callback_url }
+    networks:
+      - default
+    ports:
+      - "32003:5000"
+
+  gtk-sp:
+    image: "registry.sonata-nfv.eu:5000/tng-gtk-sp:latest"
+    environment:
+      - REPOSITORY_URL=$${ repository_url }
+      - CATALOGUE_URL=$${ catalogue_url }
+      - RACK_ENV="$${ rack_env }"
+      - MQSERVER="amqp://guest:guest@son-broker:5672"
+      - MQSERVER:_URL="amqp://guest:guest@son-broker:5672"
+      - DATABASE_URL="postgres://$${ gtk_db_user }:$${ gtk_db_pass }@son-postgres:5432/$${ gtk_db_name }"
+      - POSTGRES_PASSWORD="$${ gtk_db_pass }"
+      - POSTGRES_USER="$${ gtk_db_user }"
+      - DATABASE_HOST="son-postgres"
+      - DATABASE_PORT=5432
+    networks:
+      - default
+    ports:
+      - "5000:5000"
+
+  gtk-usr:
+    image: "registry.sonata-nfv.eu:5000/tng-gtk-usr:latest"
+    environment:
+      - CATALOGUES_URL=http://tng-cat:4011/catalogues/api/v2
+      - RACK_ENV="$${ rack_env }"
+      - MQSERVER=amqp://guest:guest@son-broker:5672
+      - MQSERVER_URL=amqp://guest:guest@son-broker:5672
+      - DATABASE_URL="postgres://$${ gtk_db_user }:$${ gtk_db_pass }@son-postgres:5432/$${ gtk_db_name }"
+      - POSTGRES_PASSWORD="$${ gtk_db_pass }"
+      - POSTGRES_USER="$${ gtk_db_user }"
+      - DATABASE_HOST="son-postgres"
+      - DATABASE_PORT=5432
+    networks:
+      - default
+    ports:
+      - "4567:4567"
+
+  rep:
+    image: "registry.sonata-nfv.eu:5000/tng-rep:latest"
+    networks:
+      - default
+    ports:
+      - "4012:4012"
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+      - 9.9.9.9
+
+  cat:
+    image: "registry.sonata-nfv.eu:5000/tng-cat:latest"
+    networks:
+      - default
+    ports:
+      - "4011:4011"
+
+  slice-mngr:
+    image: "registry.sonata-nfv.eu:5000/tng-slice-mngr:latest"
+    networks:
+      - default
+    ports:
+      - "5998:5998"
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+      - 9.9.9.9
+
+  tng-policy-mngr:
+    image: "registry.sonata-nfv.eu:5000/tng-policy-mngr:latest"
+    environment:
+      - MONGO_DB="mongo"
+      - HOST_BROKER="son-broker"
+      - CATALOGUE="tng-cat:4011"
+      - MONITORING_MANAGERr="son-monitor-manager:8000"
+    networks:
+      - default
+    ports:
+      - "8081:8081"
+
+  sla-mngr:
+    image: "registry.sonata-nfv.eu:5000/tng-sla-mgmt:latest"
+    environment:
+      - CATALOGUES_URL=http://tng-cat:4011/catalogues/api/v2/
+      - MONITORING_URL=http://son-monitor-manager:8000/api/v1/
+      - RACK_ENV=integration
+      - MQSERVER="amqp://guest:guest@son-broker:5672"
+      - DATABASE_HOST=son-postgres
+      - DATABASE_PORT=5432
+      - POSTGRES_PASSWORD="$${ gtk_db_pass }"
+      - POSTGRES_USER="$${ gtk_db_user }"
+      - POSTGRES_DB="$${ gtk_db_name }"
+      - BROKER_EXCHANGE=son-kernel
+      - BROKER_HOST=son-broker
+    networks:
+      - default
+    ports:
+      - "8080:8080"
+
+  pluginmgr:
+    image: "registry.sonata-nfv.eu:5000/pluginmanager:latest"
+    environment:
+      - mongo_host=mongo
+      - broker_host="amqp://guest:guest@son-broker:5672/%2F"
+    networks:
+      - default
+    ports:
+      - "8001:8001"
+
+  servicelifecyclemanagement:
+    image: "registry.sonata-nfv.eu:5000/servicelifecyclemanagement:latest"
+    environment:
+      - cat_path="http://tng-cat:4011/api/catalogues/v2"
+      - repo_path="http://tng-rep:4012"
+      - nsr_collection=nsrs
+      - vnfr_collection=vnfrs
+      - monitoring_path=http://son-monitor-manager:8000/api/v1
+      - broker_host="amqp://guest:guest@son-broker:5672/%2F"
+    networks:
+      - default
+
+  functionlifecyclemanagement:
+    image: "registry.sonata-nfv.eu:5000/functionlifecyclemanagement:latest"
+    environment:
+      - cat_path="http://tng-cat:4011/api/catalogues/v2"
+      - repo_path="http://tng-rep:4012"
+      - vnfr_collection=vnfrs
+      - monitoring_path=http://son-monitor-manager:8000/api/v1
+      - broker_host="amqp://guest:guest@son-broker:5672/%2F"
+    networks:
+      - default
+
+  specificmanagerregistry:
+    image: "registry.sonata-nfv.eu:5000/specificmanagerregistry:latest"
+    environment:
+      - broker_host="amqp://guest:guest@son-broker:5672/%2F"
+      - broker_name=son-broker,broker
+    networks:
+      - default
+
+  placementexecutive:
+    image: "registry.sonata-nfv.eu:5000/placementexecutive:latest"
+    environment:
+      - broker_host="amqp://guest:guest@son-broker:5672/%2F"
+    networks:
+      - default
+
+  placementplugin:
+    image: "registry.sonata-nfv.eu:5000/placementplugin:latest"
+    environment:
+      - broker_host="amqp://guest:guest@son-broker:5672/%2F"
+    networks:
+      - default
+
+  son-sp-infrabstract:
+    image: "registry.sonata-nfv.eu:5000/son-sp-infrabstract:latest"
+    environment:
+      - broker_host="son-broker"
+      - broker_uri="amqp://guest:guest@son-broker:5672/%2F"
+      - repo_host="son-postgres"
+      - repo_port="5432"
+      - repo_user=$${ ia_repo_user }
+      - repo_pass=$${ ia_repo_pass }
+    networks:
+      - default
+
+  wim-adaptor:
+    image: "registry.sonata-nfv.eu:5000/wim-adaptor:latest"
+    environment:
+      - broker_host="son-broker"
+      - broker_uri="amqp://guest:guest@son-broker:5672/%2F"
+      - repo_host="son-postgres"
+      - repo_port="5432"
+      - repo_user=$${ ia_repo_user }
+      - repo_pass=$${ ia_repo_pass }
+    networks:
+      - default
+
+  sec-gtw:
+    image: "registry.sonata-nfv.eu:5000/tng-sec-gtw:latest"
+    networks:
+      - default
+    ports:
+      - "80:80"
+      - "443:433"
+
+  api-gtw:
+    image: "registry.sonata-nfv.eu:5000/tng-api-gtw:latest"
+    environment:
+      - ROUTES_FILE=vnv_routes.yml
+      - EXTERNAL_CALLBACK_URL=$${ external_callback_url }
+    networks:
+      - default
+    ports:
+      - "32002:5000"
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "tcp://10.130.0.219:123"
+
+networks:
+  default:
+    external:
+      name: tango
+
+volumes:
+  pgsqlgtk: {}
+  pgsqlmon: {}
+
