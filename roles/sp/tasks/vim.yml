@@ -1,6 +1,9 @@
 ---
 # Running the Sonata GTK-VIM (Docker container)
-- debug: msg="##### SP GTK-VIM DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
+
+- debug:
+    msg: "##### SP GTK-VIM DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
+
 # Ensure son-gtkvim is not present
 - name: DELETE GATEKEEPER VIM (GTKVIM) (Docker container)
   docker_container:
@@ -8,8 +11,8 @@
     state: absent
 
 # Populate pgSQL database VIM
-- name: create data model and populate db
-  shell: /usr/bin/docker run --net={{ docker_network_name }} -i -e DATABASE_HOST=son-postgres -e MQSERVER=amqp://guest:guest@son-broker:5672 -e RACK_ENV=integration -e DATABASE_PORT=5432 -e POSTGRES_PASSWORD={{ gtk_db_pass }} -e POSTGRES_USER={{ gtk_db_user }} -e POSTGRES_DB={{ gtk_db_name }} --rm=true {{ repository }}/son-gtkvim:{{ version }} bundle exec rake db:migrate
+#- name: create data model and populate db
+#  shell: /usr/bin/docker run --net={{ docker_network_name }} -i -e DATABASE_HOST=son-postgres -e MQSERVER=amqp://guest:guest@son-broker:5672 -e RACK_ENV=integration -e DATABASE_PORT=5432 -e POSTGRES_PASSWORD={{ gtk_db_pass }} -e POSTGRES_USER={{ gtk_db_user }} -e POSTGRES_DB={{ gtk_db_name }} --rm=true {{ repository }}/son-gtkvim:{{ version }} bundle exec rake db:migrate
 
 # Start GTK VIM (Docker container)
 - name: GATEKEEPER VIM
@@ -33,4 +36,7 @@
     recreate: yes
     pull: true
     restart_policy: "always"
-    published_ports: "5700:5700"
+    published_ports:
+      - "5700:5700"
+    command: 
+      - bundle exec rake db:migrate
