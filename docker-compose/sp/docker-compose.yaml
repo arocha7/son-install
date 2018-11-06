@@ -2,6 +2,22 @@ version: '3'# https://docs.docker.com/compose/compose-file/
 
 services:
 
+## MESSAGE QUEUE
+
+  son-broker:
+    image: rabbitmq:3.6.15-management
+    environment:
+      - RABBITMQ_CONSOLE_LOG=new
+    networks:
+      default:
+        aliases:
+          - son-broker
+          - rabbitmq
+          - broker
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
 ## DATABASES
 
   pgsql:
@@ -13,21 +29,31 @@ services:
     volumes:
       - "/etc/sonata/data/postgres:/var/lib/postgresql/data"
     networks:
-      - default
+      default:
+        aliases:
+          - son-postgres
     ports:
       - "5432:5432"
 
   mongo:
     image: mongo
     networks:
-      - default
+      default:
+        aliases:
+          - son-mongo
+          - mongo
     ports:
       - "27017:27017"
+    volumes:
+      - "/etc/sonata/data/mongodb:/data/db"
 
   redis:
     image: redis
     networks:
-      - default
+      default:
+        aliases:
+          - son-redis
+          - redis
     ports:
       - "6379:6379"
 
@@ -40,42 +66,45 @@ services:
     volumes:
       - /etc/sonata/data/postgresmon:/var/lib/postgresql/data
     networks:
-      - default
+      default:
+        aliases:
+          - son-monitor-postgres
+          - postgsql
     ports:
       - "5433:5432"
+    volumes:
+      - "/etc/sonata/data/postgresmon:/var/lib/postgresql/data"
 
   influxdb:
     image: registry.sonata-nfv.eu:5000/son-monitor-influxdb:latest
     networks:
-      - default
+      default:
+        aliases:
+          - son-monitor-influxdb
+          - influxdb
+          - influx
     ports:
       - "8086:8086"
-
-## MESSAGE QUEUE
-
-  rabbitmq:
-    image: rabbitmq:3.6.15-management
-    environment:
-      - RABBITMQ_CONSOLE_LOG=new
-    networks:
-      - default
-    ports:
-      - "5672:5672"
-      - "15672:15672"
 
 ## TNG uSVCs
 
   portal:
     image: "registry.sonata-nfv.eu:5000/tng-portal:latest"
+    environment:
+      - PLATFORM=$${ platform }
     networks:
-      - default
+      default:
+        aliases:
+          - tng-portal
     ports:
       - "4200:4200"
 
   tng-sdk-pkg:
     image: "registry.sonata-nfv.eu:5000/tng-sdk-package:latest"
     networks:
-      - default
+      default:
+        aliases:
+          - son-validate
     ports:
       - "5099:5099"
 
@@ -85,9 +114,15 @@ services:
       - ROUTES_FILE=vnv_routes.yml
       - EXTERNAL_CALLBACK_URL=$${ external_callback_url }
     networks:
-      - default
+      default:
+        aliases:
+          - tng-api-gtw
     ports:
       - "32002:5000"
+#    logging:
+#      driver: gelf
+#      options:
+#        syslog-address: "gelf-address=udp://10.130.0.219:12900"
 
   gtk-common:
     image: "registry.sonata-nfv.eu:5000/tng-gtk-common:latest"
@@ -97,7 +132,9 @@ services:
       - INTERNAL_CALLBACK_URL=$${ internal_callback_url }
       - EXTERNAL_CALLBACK_URL=$${ external_callback_url }
     networks:
-      - default
+      default:
+        aliases:
+          - tng-gtk-common
     ports:
       - "32003:5000"
 
@@ -106,18 +143,22 @@ services:
     environment:
       - REPOSITORY_URL=$${ repository_url }
       - CATALOGUE_URL=$${ catalogue_url }
-      - RACK_ENV="$${ rack_env }"
+      - RACK_ENV=$${ rack_env }
       - MQSERVER="amqp://guest:guest@son-broker:5672"
-      - MQSERVER:_URL="amqp://guest:guest@son-broker:5672"
+      - MQSERVER_URL="amqp://guest:guest@son-broker:5672"
       - DATABASE_URL="postgres://$${ gtk_db_user }:$${ gtk_db_pass }@son-postgres:5432/$${ gtk_db_name }"
-      - POSTGRES_PASSWORD="$${ gtk_db_pass }"
-      - POSTGRES_USER="$${ gtk_db_user }"
+      - POSTGRES_PASSWORD=$${ gtk_db_pass }
+      - POSTGRES_USER=$${ gtk_db_user }
       - DATABASE_HOST="son-postgres"
       - DATABASE_PORT=5432
     networks:
-      - default
+      default:
+        aliases:
+          - tng-gtk-sp
     ports:
       - "5000:5000"
+#    command:
+#      - bundle exec rake db:migrate
 
   gtk-usr:
     image: "registry.sonata-nfv.eu:5000/tng-gtk-usr:latest"
@@ -132,14 +173,20 @@ services:
       - DATABASE_HOST="son-postgres"
       - DATABASE_PORT=5432
     networks:
-      - default
+      default:
+        aliases:
+          - tng-gtk-usr
     ports:
       - "4567:4567"
+#    command:
+#      - bundle exec rake db:migrate
 
   rep:
     image: "registry.sonata-nfv.eu:5000/tng-rep:latest"
     networks:
-      - default
+      default:
+        aliases:
+          - tng-rep
     ports:
       - "4012:4012"
     dns:
@@ -150,20 +197,24 @@ services:
   cat:
     image: "registry.sonata-nfv.eu:5000/tng-cat:latest"
     networks:
-      - default
+      default:
+        aliases:
+          - tng-cat
     ports:
       - "4011:4011"
-
-  slice-mngr:
-    image: "registry.sonata-nfv.eu:5000/tng-slice-mngr:latest"
-    networks:
-      - default
-    ports:
-      - "5998:5998"
     dns:
       - 8.8.8.8
       - 8.8.4.4
       - 9.9.9.9
+
+  slice-mngr:
+    image: "registry.sonata-nfv.eu:5000/tng-slice-mngr:latest"
+    networks:
+      default:
+        aliases:
+          - tng-slice-mngr
+    ports:
+      - "5998:5998"
 
   tng-policy-mngr:
     image: "registry.sonata-nfv.eu:5000/tng-policy-mngr:latest"
@@ -173,7 +224,9 @@ services:
       - CATALOGUE="tng-cat:4011"
       - MONITORING_MANAGERr="son-monitor-manager:8000"
     networks:
-      - default
+      default:
+        aliases:
+          - tng-policy-mngr
     ports:
       - "8081:8081"
 
@@ -183,7 +236,7 @@ services:
       - CATALOGUES_URL=http://tng-cat:4011/catalogues/api/v2/
       - MONITORING_URL=http://son-monitor-manager:8000/api/v1/
       - RACK_ENV=integration
-      - MQSERVER="amqp://guest:guest@son-broker:5672"
+      - MQSERVER="amqp://guest:guest@son-broker:5672/"
       - DATABASE_HOST=son-postgres
       - DATABASE_PORT=5432
       - POSTGRES_PASSWORD="$${ gtk_db_pass }"
@@ -192,7 +245,9 @@ services:
       - BROKER_EXCHANGE=son-kernel
       - BROKER_HOST=son-broker
     networks:
-      - default
+      default:
+        aliases:
+          - tng-sla-mgmt
     ports:
       - "8080:8080"
 
@@ -200,9 +255,11 @@ services:
     image: "registry.sonata-nfv.eu:5000/pluginmanager:latest"
     environment:
       - mongo_host=mongo
-      - broker_host="amqp://guest:guest@son-broker:5672/%2F"
+      - broker_host=amqp://guest:guest@son-broker:5672
     networks:
-      - default
+      default:
+        aliases:
+          - pluginmanager
     ports:
       - "8001:8001"
 
@@ -214,9 +271,12 @@ services:
       - nsr_collection=nsrs
       - vnfr_collection=vnfrs
       - monitoring_path=http://son-monitor-manager:8000/api/v1
-      - broker_host="amqp://guest:guest@son-broker:5672/%2F"
+      - broker_host="amqp://guest:guest@son-broker:5672/"
     networks:
-      - default
+      default:
+        aliases:
+          - servicelifecyclemanagement
+
 
   functionlifecyclemanagement:
     image: "registry.sonata-nfv.eu:5000/functionlifecyclemanagement:latest"
@@ -225,63 +285,81 @@ services:
       - repo_path="http://tng-rep:4012"
       - vnfr_collection=vnfrs
       - monitoring_path=http://son-monitor-manager:8000/api/v1
-      - broker_host="amqp://guest:guest@son-broker:5672/%2F"
+      - broker_host="amqp://guest:guest@son-broker:5672/"
     networks:
-      - default
+      default:
+        aliases:
+          - functionlifecyclemanagement
 
   specificmanagerregistry:
     image: "registry.sonata-nfv.eu:5000/specificmanagerregistry:latest"
     environment:
-      - broker_host="amqp://guest:guest@son-broker:5672/%2F"
+      - broker_host="amqp://guest:guest@son-broker:5672/"
       - broker_name=son-broker,broker
     networks:
-      - default
+      default:
+        aliases:
+          - specificmanagerregistry
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
 
   placementexecutive:
     image: "registry.sonata-nfv.eu:5000/placementexecutive:latest"
     environment:
-      - broker_host="amqp://guest:guest@son-broker:5672/%2F"
+      - broker_host="amqp://guest:guest@son-broker:5672/"
     networks:
-      - default
+      default:
+        aliases:
+          - placementexecutive
 
   placementplugin:
     image: "registry.sonata-nfv.eu:5000/placementplugin:latest"
     environment:
-      - broker_host="amqp://guest:guest@son-broker:5672/%2F"
+      - broker_host="amqp://guest:guest@son-broker:5672/"
     networks:
-      - default
+      default:
+        aliases:
+          - placementplugin
 
   son-sp-infrabstract:
     image: "registry.sonata-nfv.eu:5000/son-sp-infrabstract:latest"
     environment:
       - broker_host="son-broker"
-      - broker_uri="amqp://guest:guest@son-broker:5672/%2F"
+      - broker_uri="amqp://guest:guest@son-broker:5672/"
       - repo_host="son-postgres"
       - repo_port="5432"
       - repo_user=$${ ia_repo_user }
       - repo_pass=$${ ia_repo_pass }
     networks:
-      - default
+      default:
+        aliases:
+          - son-gtkvim
 
   wim-adaptor:
     image: "registry.sonata-nfv.eu:5000/wim-adaptor:latest"
     environment:
       - broker_host="son-broker"
-      - broker_uri="amqp://guest:guest@son-broker:5672/%2F"
+      - broker_uri="amqp://guest:guest@son-broker:5672/"
       - repo_host="son-postgres"
       - repo_port="5432"
       - repo_user=$${ ia_repo_user }
       - repo_pass=$${ ia_repo_pass }
     networks:
-      - default
+      default:
+        aliases:
+          - wim-adaptor
 
   sec-gtw:
     image: "registry.sonata-nfv.eu:5000/tng-sec-gtw:latest"
     networks:
-      - default
+      default:
+        aliases:
+          - tng-sec-gtw
     ports:
       - "80:80"
       - "443:433"
+    volumes:
+      - "/etc/ssl/private/sonata/:/etc/nginx/cert/"
 
   api-gtw:
     image: "registry.sonata-nfv.eu:5000/tng-api-gtw:latest"
@@ -289,13 +367,15 @@ services:
       - ROUTES_FILE=vnv_routes.yml
       - EXTERNAL_CALLBACK_URL=$${ external_callback_url }
     networks:
-      - default
+      default:
+        aliases:
+          - tng-api-gtw
     ports:
       - "32002:5000"
-    logging:
-      driver: syslog
-      options:
-        syslog-address: "tcp://10.130.0.219:123"
+#    logging:
+#      driver: syslog
+#      options:
+#        syslog-address: "gelf-address=udp://10.130.0.219:12900"
 
 networks:
   default:
