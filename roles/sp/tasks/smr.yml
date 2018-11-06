@@ -9,7 +9,7 @@
     name: specificmanagerregistry
     image: "{{ repository }}/specificmanagerregistry:{{ version }}"
     env:
-      broker_host: amqp://guest:guest@son-broker:5672/%2F
+      broker_host: "amqp://guest:guest@son-broker:5672"
       broker_name: son-broker,broker
     network_mode: bridge
     networks:
