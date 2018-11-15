@@ -66,11 +66,10 @@ export KEY_PROVINCE="AV"
 export KEY_CITY="Aveiro"
 export KEY_ORG="Altice Labs"
 export KEY_EMAIL="arocha@ptinovacao.pt"
-export KEY_OU="SONATA-NFV"
+export KEY_OU="5GTANGO"
 
 # X509 Subject Field
-#export KEY_NAME="EasyRSA"
-export KEY_NAME="server"
+export KEY_NAME="EasyRSA"
 
 # PKCS11 Smart Card
 # export PKCS11_MODULE_PATH="/usr/lib/changeme.so"
