@@ -20,8 +20,9 @@ $ docker-compose --version
 
 
 
-# VNV deployment
+# APPLICATION deployment
 
 ```
+$ cd son-install/docker-compose/'APP'
 $ docker-compose docker-compose.yml
 ```
