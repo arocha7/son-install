@@ -69,7 +69,7 @@ export KEY_EMAIL="arocha@ptinovacao.pt"
 export KEY_OU="5GTANGO"
 
 # X509 Subject Field
-export KEY_NAME="EasyRSA"
+export KEY_NAME="tng0vpn"
 
 # PKCS11 Smart Card
 # export PKCS11_MODULE_PATH="/usr/lib/changeme.so"
