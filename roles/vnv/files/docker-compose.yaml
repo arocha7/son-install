@@ -11,8 +11,8 @@ services:
 
   tng-vnv-lcm:
     image: registry.sonata-nfv.eu:5000/tng-vnv-lcm:latest
-    env_file:
-      - ./.env
+#    env_file:
+#      - ./.env
     environment:
       - APP_GK_BASE_URL=$${ app_gk_base_url }
       - APP_CAT_BASE_URL=$${ catalogue_url }
@@ -108,7 +108,7 @@ services:
      - "5099:5099"
 
   tng-sdk-analyze-weight:
-    image: "{{ repository }}/tng-sdk-analyze-weight:{{ version }}"
+    image: "registry.sonata-nfv.eu:5000/tng-sdk-analyze-weight:latest"
     networks:
       - default
     ports:
