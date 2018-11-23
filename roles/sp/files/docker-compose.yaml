@@ -1,5 +1,11 @@
 version: '3'# https://docs.docker.com/compose/compose-file/
 
+#  export COMPOSE_PROJECT_NAME=sp | vnv
+#  docker-compose --project-name { sp } -f { cfg_sp } up -d
+
+# previous action
+# docker login -u sonata-nfv -p ****** registry.sonata-nfv.eu:5000
+
 services:
 
 ## MESSAGE QUEUE
@@ -379,8 +385,10 @@ services:
 
 networks:
   default:
-    external:
+    external: # to join a pre-existing network
       name: tango
+# Previous action:
+# docker network create --driver=bridge --subnet=172.23.0.0/23 --gateway=172.23.0.1 --ip-range=172.23.0.128/25 tango
 
 volumes:
   pgsqlgtk: {}
