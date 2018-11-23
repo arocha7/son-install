@@ -9,7 +9,7 @@ services:
     ports:
      - "27017:27017"
 
-  lcm:
+  tng-vnv-lcm:
     image: registry.sonata-nfv.eu:5000/tng-vnv-lcm:latest
     env_file:
       - ./.env
@@ -23,21 +23,43 @@ services:
     ports:
      - "6100:6100"
 
-  cat:
+  tng-vnv-tee:
+    image: "registry.sonata-nfv.eu:5000/tng-vnv-tee:latest"
+    environment:
+      - APP_GK_BASE_URL=$${ app_gk_base_url }
+      - APP_CAT_BASE_URL=$${ catalogue_url }
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/usr/bin/docker:/usr/bin/docker"
+      #- "tee:/workspace"
+    networks:
+      - default
+    ports:
+     - "6200:6200"
+
+  tng-cat:
     image: "registry.sonata-nfv.eu:5000/tng-cat:latest"
     networks:
       - default
     ports:
      - "4011:4011"
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+      - 9.9.9.9
 
-  rep:
+  tng-rep:
     image: "registry.sonata-nfv.eu:5000/tng-rep:latest"
     networks:
       - default
     ports:
      - "4012:4012"
+    dns:
+      - 8.8.4.4
+      - 8.8.8.8
+      - 9.9.9.9
 
-  gtk-common:
+  tng-gtk-common:
     image: "registry.sonata-nfv.eu:5000/tng-gtk-common:latest"
     environment:
       - UNPACKAGER_URL="$${ unpackager_url }"
@@ -67,7 +89,7 @@ services:
      - "80:80"
      - "443:433"
 
-  api-gtw:
+  tng-api-gtw:
     image: "registry.sonata-nfv.eu:5000/tng-api-gtw:latest"
     environment:
       - ROUTES_FILE=vnv_routes.yml
@@ -78,14 +100,21 @@ services:
     ports:
      - "32002:5000"
 
-  sdk-pkg:
+  tng-sdk-pkg:
     image: "registry.sonata-nfv.eu:5000/tng-sdk-package:latest"
     networks:
       - default
     ports:
      - "5099:5099"
 
-  portal:
+  tng-sdk-analyze-weight:
+    image: "{{ repository }}/tng-sdk-analyze-weight:{{ version }}"
+    networks:
+      - default
+    ports:
+     - "8084:8084"
+
+  tng-portal:
     image: "registry.sonata-nfv.eu:5000/tng-portal:latest"
     networks:
       - default
