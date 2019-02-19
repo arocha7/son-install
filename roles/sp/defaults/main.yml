@@ -10,9 +10,9 @@ platform: sp
 # Docker network segment
 docker_network_name: tango
 
-# SONATA 5G NFV SP version
-sp_ver: dev
-version: latest
+# SONATA 5G NFV SP version - NOTE: STAGING ENVIRON = QUALL
+sp_ver: int
+version: int
 component: all
 rack_env: staging
 target: "sta-sp-ave.5gtango.eu"

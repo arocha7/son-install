@@ -1,5 +1,4 @@
 ---
-
 # Installation Start
 - name: Installation Start
   uri:
@@ -10,7 +9,6 @@
       User-Agent: "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0"
   ignore_errors: True
   when: target == "localhost"
-
 
 # Authenticate to private Docker Registry
 
@@ -325,6 +323,11 @@
   ignore_errors: True
   when: target == 'sta-sp-ave'
 
+- name: log out of private Registry
+  docker_login:
+    state: absent
+
+
 # Installation Start
 - name: Installation Finished
   uri:
@@ -335,9 +338,3 @@
       User-Agent: "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0"
   ignore_errors: True
   when: target == "localhost"
-
-
-- name: log out of private Registry
-  docker_login:
-    state: absent
-
