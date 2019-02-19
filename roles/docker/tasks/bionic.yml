@@ -1,0 +1,148 @@
+---
+
+- name: to ensure that APT works with the HTTPS method and that CA certificates are installed
+  apt:
+    name: [software-properties-common, apt-transport-https, ca-certificates, curl]
+    state: present
+    update_cache: yes
+
+- name: Install Docker dependency libraries
+  apt:
+    name: [apparmor, aptitude, python-apt, python-dev, python-httplib2, python-keyczar, python-pkg-resources, git]
+    state: present 
+    update_cache: yes
+
+#- name: install PIP
+#  apt: name=python-pip state=present
+- include_role:
+    name: pip
+
+- name: install required library
+  pip: name=docker state=present
+#  - jinja2
+#  - PyYAML
+#  - setuptools
+#  - pycrypto
+#  - six
+#  - requests
+#  - docker-py
+
+
+
+### REMOVE PREVIOUS INSTALLs
+
+- name: remove deprecated Docker package
+  apt: name=lxc-docker state=absent
+
+- name: remove Docker package
+  apt:
+    name: [docker-engine, docker-io]
+    state: absent
+
+#- name: remove files and directories
+#  file:
+#    state: absent
+#    path: "/var/lib/docker/"
+
+- name: remove deprecated Docker APT repository
+  apt_repository:
+    repo: "deb https://get.docker.com/ubuntu docker main"
+    state: absent
+    update_cache: no
+
+- name: remove deprecated Docker APT key
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: 36A1D7869245C8950F966E92D8576A8BA88D21E9
+    state: absent
+
+- name: remove Docker APT key
+  apt_key:
+    keyserver: p80.pool.sks-keyservers.net
+    id: 58118E89F3A912897C070ADBF76221572C52609D
+    state: absent
+
+### CREATE  USER AND GROUP
+
+- name: create Docker group
+  group:
+    name: docker
+    state: present
+
+- name: set default username
+  set_fact:
+    vm_user: ubuntu
+
+- name: add Docker group to default user
+  user:
+    name: "{{ vm_user }}"
+    shell: /bin/bash
+    groups: docker
+    append: yes
+
+- name: create a directory for Docker logging
+  file:
+    path: /var/log/docker
+    state: directory
+    owner: '{{ vm_user }}'
+    group: docker
+    mode: 0775
+
+### INSTALL LATEST STABLE RELEASE
+
+- name: add official GPG key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+    state: present
+
+- name: get distro codename
+  command: "lsb_release -cs"
+  register: distro_codename
+
+- set_fact:
+    adistro={{ distro_codename.stdout }}
+
+- name: setup the stable Docker repository
+  apt_repository:
+    repo: 'deb [arch=amd64] https://download.docker.com/linux/ubuntu "{{ adistro }}" stable'
+    state: present
+    update_cache: yes
+
+#- name: install Docker package
+#  apt: name=docker-ce state=present
+
+#- name: configure Insecure Registry
+#  lineinfile:
+#    dest: "/lib/systemd/system/docker.service"
+#    regexp: "^ExecStart=/usr/bin/docker"
+#    line: "ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock --insecure-registry registry.sonata-nfv.eu:5000"
+#    state: present
+
+#- name: start Docker engine
+#  systemd:
+#    name: docker
+#    state: started
+#    daemon_reload: yes
+#    enabled: yes
+
+#- name: configure RSYSLOG
+#  template:
+#    src: rsyslog.j2
+#    dest: /etc/rsyslog.d/30-docker.conf
+#    owner: root
+#    group: root
+#    mode: 0644
+#  notify:
+#  - restart rsyslog
+
+#- name: configure LOGROTATE
+#  template:
+#    src: logrotate.j2
+#    dest: /etc/logrotate.d/docker
+#    owner: root
+#    group: root
+#    mode: 0644
+#  notify:
+#  - restart rsyslog
+

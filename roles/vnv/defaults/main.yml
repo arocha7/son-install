@@ -3,8 +3,7 @@
 
 clean: false
 platform: sp
-#version: qual
-version: latest
+version: int
 component: all
 rack_env: staging
 docker_network_name: tango
@@ -49,6 +48,6 @@ app_vnv_logging_level: DEBUG
 routes_file: vnv_routes.yml
 unpackager_url: "http://sta-sp-ave.5gtango.eu:5099/api/v1/packages"
 catalogue_url: "http://sta-sp-ave.5gtango.eu:4011/catalogues/api/v2"
-repository_url: "http://tng-rep:4012"
-external_callback_url: "http://sta-vnv-ave.5gtango.eu:6100/tng-vnv-lcm/api/v1/packages/on-change"
-internal_callback_url: "http://sta-vnv-ave.5gtango.eu:6100/tng-vnv-lcm/api/v1/packages/on-change"
+repository_url: "http://sta-sp-ave.5gtango.eu:4012"
+external_callback_url: "http://int-vnv.5gtango.eu:6100/tng-vnv-lcm/api/v1/packages/on-change"
+internal_callback_url: "http://int-vnv.5gtango.eu:6100/tng-vnv-lcm/api/v1/packages/on-change"

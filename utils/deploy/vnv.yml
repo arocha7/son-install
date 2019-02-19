@@ -12,7 +12,7 @@
         group: "{{ lookup('env','USER') }}"
         mode: "u=rw,g=r,o=r"
   roles:
-    - { role: common, become: true }
+    #- { role: common, become: true }
     - { role: pip,    become: true }
     - { role: docker, become: true }
     - vnv
