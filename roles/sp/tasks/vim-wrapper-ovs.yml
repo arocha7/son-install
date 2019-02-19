@@ -1,10 +1,10 @@
 ---
-# Running the Sonata Infrastructure Abstractor WIM Adaptor (Docker container)
-- debug: msg="##### SP Infrastructure Abstractor WIM Adaptor DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
-- name: deploying Infrastructure Abstractor WIM Adaptor (Docker container)
+# Running the Sonata Infrastructure Abstractor VIM Ovs Wrapper (Docker container)
+- debug: msg="##### SP Infrastructure Abstractor VIM Ovs Wrapper DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H%M') }}"
+- name: deploying Infrastructure Abstractor VIM Ovs Wrapper (Docker container)
   docker_container:
-    name: wim-adaptor
-    image: "{{ repository }}/wim-adaptor:{{ version }}"
+    name: vim-wrapper-ovs
+    image: "{{ repository }}/vim-wrapper-ovs:{{ version }}"
     restart_policy: "always"
     state: started
     recreate: yes
@@ -19,8 +19,5 @@
     network_mode: bridge
     networks:
       - name: "{{ docker_network_name }}"
-        aliases:
-          - wim-adaptor
         links:
           - son-broker
-

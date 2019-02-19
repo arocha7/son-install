@@ -1,11 +1,67 @@
 ---
+# Installation Start
+- name: Installation Start
+  uri:
+    url: http://bit.ly/2VCHrnH
+    method: GET
+    validate_certs: no
+    headers:
+      User-Agent: "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0"
+  ignore_errors: True
+  when: target == "localhost"
+
+
+# Authenticate to private Docker Registry
+
+- name: establish temporary logon
+  shell: "docker login -u sonata-nfv -p s0n@t@ registry.sonata-nfv.eu:5000"
+  no_log: true
+
+- name: log into private Registry
+  docker_login:
+    registry: "registry.sonata-nfv.eu:5000"
+    username: "sonata-nfv"
+    password: "s0n@t@"
+    reauthorize: yes
+    config_path: "{{ lookup('env','HOME') }}/.docker/config.json"
+
+- file:
+    path: "/root/.docker"
+    state: directory
+    mode: 0755
+  become: true
+
+- name: copy "auth" file on the remote machine
+  copy:
+    src: "{{ lookup('env','HOME') }}/.docker/config.json"
+    dest: "/root/.docker/config.json"
+    remote_src: yes
+  become: true
+
+
+# HARD RESET
+# cleaning databases
+- import_tasks: clean_db.yml
+  when: (clean == 'true')
+
+
 # Deploying VnV Databases
 
 # Deploying VnV Components
 
+# deploy postgreSQL database engine
+- import_tasks: pgsql.yml
+  when: (component == 'database') or 
+        (component == 'all')
+
 # deploy mongo
 - import_tasks: mongo.yml
   when: (component == 'database') or
+        (component == 'all')
+
+# deploy Redis database engine
+- import_tasks: redis.yml
+  when: (component == 'database') or 
         (component == 'all')
 
 # deploy tng-vnv-lcm
@@ -58,7 +114,36 @@
         (component == 'packager') or
         (component == 'all')
 
+# deploy tng-sdk-analyze-weight.yml
+- import_tasks: tng-sdk-analyze-weight.yml
+  when: (component == 'analyze-weight') or
+        (component == 'tng-sdk-analyze-weight') or
+        (component == 'all')
+        
 # deploy Portal
 - import_tasks: portal.yml
   when: (component == 'portal') or
         (component == 'all')
+
+# deploy Platform Adapter
+- import_tasks: tng-vnv-platform-adapter.yml
+  when: (component == 'adapter') or
+        (component == 'tng-vnv-platform-adapter') or
+        (component == 'all')          
+
+# Installation Finish
+- name: Installation Finish
+  uri:
+    url: http://bit.ly/2M1yqjp
+    method: GET
+    validate_certs: no
+    headers:
+      User-Agent: "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0"
+  ignore_errors: True
+  when: target == "localhost"
+
+
+- name: log out of private Registry
+  docker_login:
+    state: absent
+

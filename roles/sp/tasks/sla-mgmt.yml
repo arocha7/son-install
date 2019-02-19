@@ -1,9 +1,6 @@
 ---
 # Running the 5GTANGO SLA Manager Framework
-
-- debug:
-    msg: "##### 5GTANGO SLA Manager Framework DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
-
+- debug: msg="##### 5GTANGO SLA Manager Framework DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
 - name: 5GTANGO SLA Manager Framework - running Docker containers
   docker_container:
     name: tng-sla-mgmt
@@ -23,6 +20,7 @@
       POSTGRES_DB: "{{ gtk_db_name }}"
       BROKER_EXCHANGE: son-kernel
       BROKER_HOST: son-broker
+      GATEKEEPER_URL: http://tng-gtk-sp:5000/
     network_mode: bridge
     networks:
       - name: "{{ docker_network_name }}"

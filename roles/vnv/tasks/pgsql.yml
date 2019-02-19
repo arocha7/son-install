@@ -23,4 +23,4 @@
     published_ports: 5432:5432
 
 - name: Wait until the string "Postgres" is UP
-  wait_for: host=0.0.0.0 port=5432 timeout=30 delay=10 state=started
+  wait_for: host=0.0.0.0 port=5432 timeout=30 delay=10 state=started	

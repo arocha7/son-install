@@ -1,5 +1,17 @@
 ---
 
+# Installation Start
+- name: Installation Start
+  uri:
+    url: http://bit.ly/2HhYU1J
+    method: GET
+    validate_certs: no
+    headers:
+      User-Agent: "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0"
+  ignore_errors: True
+  when: target == "localhost"
+
+
 # Authenticate to private Docker Registry
 
 - name: establish temporary logon
@@ -118,6 +130,16 @@
   when: (component == 'policy-manager') or
         (component == 'all')
 
+# deploy nexus repository
+- import_tasks: nexus.yml
+  when: (component == 'policy-manager') or
+        (component == 'all')
+
+# deploy Policy Manager
+- import_tasks: tng-dpolicy-mngr.yml
+  when: (component == 'policy-manager') or
+        (component == 'all')
+
 # deploy SLA Management Framework
 - import_tasks: sla-mgmt.yml
   when: (component == 'sla-management') or
@@ -161,16 +183,48 @@
         (component == 'all')
 
 ## Deploy IA
-# VIM adaptor
-- import_tasks: vim-adaptor.yml
+- import_tasks: ia-nbi.yml
   when: (component == 'infrastructure-abstraction') or
-        (component == 'vim-adaptor') or
+        (component == 'ia-nbi') or
         (component == 'all')
 
-# WIM adaptor
-- import_tasks: wim-adaptor.yml
+- import_tasks: vim-wrapper-heat.yml
   when: (component == 'infrastructure-abstraction') or
-        (component == 'wim-adaptor') or
+        (component == 'vim-wrappers') or
+        (component == 'all')
+
+- import_tasks: vim-wrapper-mock.yml
+  when: (component == 'infrastructure-abstraction') or
+        (component == 'vim-wrappers') or
+        (component == 'all')
+
+- import_tasks: vim-wrapper-ovs.yml
+  when: (component == 'infrastructure-abstraction') or
+        (component == 'vim-wrappers') or
+        (component == 'all')
+
+# IA Kubernetes Wrapper
+- import_tasks: k8s-wrapper.yml
+  when: (component == 'infrastructure-abstraction') or
+        (component == 'vim-wrappers') or
+        (component == 'tng-sp-ia-k8s') or
+        (component == 'all')
+
+- import_tasks: wim-wrapper-vtn.yml
+  when: (component == 'infrastructure-abstraction') or
+        (component == 'wim-wrappers') or
+        (component == 'all')
+
+- import_tasks: wim-wrapper-mock.yml
+  when: (component == 'infrastructure-abstraction') or
+        (component == 'wim-wrappers') or
+        (component == 'all')
+
+# IA WIM TAPI Wrapper
+- import_tasks: wim-wrapper-tapi.yml
+  when: (component == 'infrastructure-abstraction') or
+        (component == 'wim-wrappers') or
+        (component == 'tng-sp-ia-wtapi') or
         (component == 'all')
 
 ## Deploying Monitoring Components
@@ -186,13 +240,19 @@
         (component == 'prometheus') or
         (component == 'all')
 
+# deploy Monitoring Alertmanager
+- import_tasks: alertmanager.yml
+  when: (component == 'monitoring') or
+        (component == 'alertmanager') or
+        (component == 'all')
+
 # deploy Monitoring Manager
 - import_tasks: monitmgr.yml
   when: (component == 'monitoring') or
         (component == 'monitoring-manager') or
         (component == 'all')
 
-# deploy Monitoring Manager
+# deploy Monitoring SNMP Manager
 - import_tasks: snmpmng.yml
   when: (component == 'monitoring') or
         (component == 'monitoring-snmp') or
@@ -264,6 +324,18 @@
 - import_tasks: add-aveiro-pop2-vim-wim.yml
   ignore_errors: True
   when: target == 'sta-sp-ave'
+
+# Installation Start
+- name: Installation Finished
+  uri:
+    url: http://bit.ly/2SHwPC8
+    method: GET
+    validate_certs: no
+    headers:
+      User-Agent: "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0"
+  ignore_errors: True
+  when: target == "localhost"
+
 
 - name: log out of private Registry
   docker_login:
