@@ -16,6 +16,14 @@
 - name: establish temporary logon
   shell: "docker login -u sonata-nfv -p s0n@t@ registry.sonata-nfv.eu:5000"
   no_log: true
+ 
+- file:
+    path: "{{ lookup('env','HOME') }}/.docker/"
+    #state: directory
+    mode: 0775
+    owner: "{{ lookup('env','USER') }}"
+    group: docker
+    recurse: true
 
 - name: log into private Registry
   docker_login:
