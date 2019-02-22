@@ -2,5 +2,5 @@
 - hosts: "{{ target | default ('localhost') }}"
   become: true
   roles:
-    - openstackclients
+    - osc
 
