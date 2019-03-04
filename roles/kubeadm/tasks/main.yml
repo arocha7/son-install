@@ -20,24 +20,9 @@
   shell: kubeadm init --pod-network-cidr="{{ k8s_network_flannel_plugin }}" #--ignore-preflight-errors=all
   when: network_addon == "FLANNEL"
 
-- name: deploy K8s network "FLANNEL" plugin
-  shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be0084506e4ec919aa1c114638878db11b/Documentation/kube-flannel.yml
-  when: network_addon == "FLANNEL"
-  become: false
-
 - name: initialize K8s network "CALICO" plugin
   shell: kubeadm init --pod-network-cidr="{{ k8s_network_calico_plugin }}"
   when: network_addon == "CALICO"
-
-- name: deploy K8s network "CALICO" plugin
-  shell: kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/hosted/rbac-kdd.yaml
-  when: network_addon == "CALICO"
-  become: false
-
-- name: deploy K8s network "CALICO" plugin
-  shell: kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml
-  when: network_addon == "CALICO"
-  become: false
 
 #-  shell: "getent group ubuntu | awk -F: '{print $1}'"
 
@@ -58,6 +43,21 @@
     owner: "{{ lookup('env','USER') }}"
     group: "{{ lookup('env','USER') }}"
   when: network_addon == "CALICO" or network_addon == "FLANNEL"
+
+- name: deploy K8s network "FLANNEL" plugin
+  shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be0084506e4ec919aa1c114638878db11b/Documentation/kube-flannel.yml
+  when: network_addon == "FLANNEL"
+  become: false
+
+- name: deploy K8s network "CALICO" plugin
+  shell: kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/hosted/rbac-kdd.yaml
+  when: network_addon == "CALICO"
+  become: false
+
+- name: deploy K8s network "CALICO" plugin
+  shell: kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml
+  when: network_addon == "CALICO"
+  become: false
 
 - name: to be able to schedule pods on the master (for a single-machine Kubernetes cluster for development)
   shell: kubectl taint nodes --all node-role.kubernetes.io/master-
