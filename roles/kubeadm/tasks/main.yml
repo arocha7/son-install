@@ -2,3 +2,54 @@
 # tasks file for kubeadm
 
 - include_tasks: "{{ ansible_os_family }}.yml"
+
+- name: (re)start Docker engine
+  systemd:
+    name: docker
+    state: started
+    daemon_reload: yes
+    enabled: yes
+
+- name: get Docker Images
+  shell: kubeadm config images pull
+
+# You can install only one pod network per cluster
+
+- name: initialize K8s "FLANNEL" network plugin
+  shell: kubeadm init --pod-network-cidr="{{ k8s_network_flannel_plugin }}" 
+  when: k8s_network_plugin == "FLANNEL"
+
+- name: deploy K8s network "FLANNEL" plugin
+  shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be0084506e4ec919aa1c114638878db11b/Documentation/kube-flannel.yml
+  when: k8s_network_plugin == "FLANNEL"
+
+- name: initialize K8s network "CALICO" plugin
+  shell: kubeadm init --pod-network-cidr="{{ k8s_network_calico_plugin }}"
+  when: k8s_network_plugin == "CALICO"
+
+- name: deploy K8s network "CALICO" plugin
+  shell: kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/hosted/rbac-kdd.yaml
+  when: k8s_network_plugin == "CALICO"
+
+- name: deploy K8s network "CALICO" plugin
+  shell: kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml
+  when: k8s_network_plugin == "CALICO"
+
+#-  shell: "getent group ubuntu | awk -F: '{print $1}'"
+
+- name: Create directory for K8s CONFIG file
+  file:
+    path: "{{ lookup('env','HOME') }}/.kube"
+    state: directory
+    owner: "{{ lookup('env','USER') }}"
+    group: "{{ lookup('env','USER') }}"
+    mode: 0775
+
+- name: set config file
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: "{{ lookup('env','HOME') }}/.kube/config"
+    remote_src: yes
+    owner: "{{ lookup('env','USER') }}"
+    group: "{{ lookup('env','USER') }}"
+
