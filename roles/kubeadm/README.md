@@ -1,7 +1,7 @@
 Role Name
 =========
 
-This a tool to deploy KUBEADM. iIt follows the [install guide](https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm)
+This playbook deploys a single machine Kubernetes cluster (aka, all-in-one) using KUBEADM tool. It follows the [install guide](https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm)
 
 Requirements
 ------------
@@ -23,11 +23,11 @@ Dependencies
 How to use this Playbook
 ----------------
 
-// Deply KUBEADM with Flannel network plugin
-`$ ansible-playbook utils/deploy/kubeadm.yml -e k8s_network_plugin=FLANNEL -v`
+// Deploy standalone K8s cluster with Flannel network plugin
+`$ ansible-playbook utils/deploy/kubeadm.yml -e network_addon=FLANNEL -v`
 
-// Deply KUBEADM with Calico network plugin
-`$ ansible-playbook utils/deploy/kubeadm.yml -e k8s_network_plugin=CALICO -v`
+// Deploy standalone K8s cluster with Calico network plugin
+`$ ansible-playbook utils/deploy/kubeadm.yml -e network_addon=CALICO -v`
 
 
 Author Information

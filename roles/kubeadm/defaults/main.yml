@@ -1,6 +1,8 @@
 ---
 # defaults file for kubeadm
 
-k8s_network_plugin: ""
+ops: "CREATE"
+
+network_addon: ""
 k8s_network_flannel_plugin: "10.244.0.0/16"
 k8s_network_calico_plugin: "192.168.0.0/16"

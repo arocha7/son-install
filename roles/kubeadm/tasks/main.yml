@@ -9,31 +9,35 @@
     state: started
     daemon_reload: yes
     enabled: yes
+  ignore_errors: true
 
 - name: get Docker Images
   shell: kubeadm config images pull
 
-# You can install only one pod network per cluster
+# NOTE: You can install only one pod network per cluster
 
 - name: initialize K8s "FLANNEL" network plugin
-  shell: kubeadm init --pod-network-cidr="{{ k8s_network_flannel_plugin }}" 
-  when: k8s_network_plugin == "FLANNEL"
+  shell: kubeadm init --pod-network-cidr="{{ k8s_network_flannel_plugin }}" #--ignore-preflight-errors=all
+  when: network_addon == "FLANNEL"
 
 - name: deploy K8s network "FLANNEL" plugin
   shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be0084506e4ec919aa1c114638878db11b/Documentation/kube-flannel.yml
-  when: k8s_network_plugin == "FLANNEL"
+  when: network_addon == "FLANNEL"
+  become: false
 
 - name: initialize K8s network "CALICO" plugin
   shell: kubeadm init --pod-network-cidr="{{ k8s_network_calico_plugin }}"
-  when: k8s_network_plugin == "CALICO"
+  when: network_addon == "CALICO"
 
 - name: deploy K8s network "CALICO" plugin
   shell: kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/hosted/rbac-kdd.yaml
-  when: k8s_network_plugin == "CALICO"
+  when: network_addon == "CALICO"
+  become: false
 
 - name: deploy K8s network "CALICO" plugin
   shell: kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml
-  when: k8s_network_plugin == "CALICO"
+  when: network_addon == "CALICO"
+  become: false
 
 #-  shell: "getent group ubuntu | awk -F: '{print $1}'"
 
@@ -44,6 +48,7 @@
     owner: "{{ lookup('env','USER') }}"
     group: "{{ lookup('env','USER') }}"
     mode: 0775
+  when: network_addon == "CALICO" or network_addon == "FLANNEL"
 
 - name: set config file
   copy:
@@ -52,4 +57,55 @@
     remote_src: yes
     owner: "{{ lookup('env','USER') }}"
     group: "{{ lookup('env','USER') }}"
+  when: network_addon == "CALICO" or network_addon == "FLANNEL"
 
+- name: to be able to schedule pods on the master (for a single-machine Kubernetes cluster for development)
+  shell: kubectl taint nodes --all node-role.kubernetes.io/master-
+  become: false
+  when: network_addon == "CALICO" or network_addon == "FLANNEL"
+
+# DESTROY (Tear Down) Operation
+
+#- name: set Hostname as a variable
+# set_fact:
+#   myhostname: "{{ lookup('env','HOSTNAME') }}"
+
+#- debug:
+#   var: myhostname
+
+#- name: Get the Node name
+#  shell: kubectl get nodes --all-namespaces
+#  become: false
+
+#- name: Node drain
+  #shell: kubectl drain master_node_name.stdout --delete-local-data --force --ignore-daemonsets
+#  shell: kubectl drain "{{ myhostname }}" --delete-local-data --force --ignore-daemonsets
+#  become: false
+#  when: ops == "RESET" #and myhostname != ""
+
+#- name: Node delete
+  #shell: kubectl delete node master_node_name.stdout
+# shell: kubectl delete node "{{ lookup('env','HOSTNAME') }}"
+# become: false
+# when: ops == "RESET" #and myhostname != ""
+
+#- name: Reset all Kubeadm installed state
+# shell: kubeadm reset
+# when: ops == "RESET" #and myhostname != ""
+
+# Clean previous environment
+
+#- name: remove ETCD key/value database
+# shell: rm -fr /var/lib/etcd && rm -fr /etc/kubernetes/
+
+#- name: uninstall Kubelet
+# apt:
+#   name: "{{ packages }}"
+#   state: absent
+# vars:
+#   packages:
+#   - kubelet
+#   - kubeadm
+
+# name: stop all running Docker containers
+# shell: docker stop `docker ps -a -q` && docker rm `docker ps -a -q`
