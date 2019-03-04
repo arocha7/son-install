@@ -3,13 +3,19 @@
 
 - include_tasks: "{{ ansible_os_family }}.yml"
 
-- name: (re)start Docker engine
-  systemd:
-    name: docker
-    state: started
-    daemon_reload: yes
-    enabled: yes
-  ignore_errors: true
+- name: install Docker engine
+  shell: "export VERSION=18.06 && curl -sSL get.docker.com | sh"
+
+  #- name: (re)start Docker engine
+  #systemd:
+  #  name: docker
+  #  state: started
+  #  daemon_reload: yes
+  #  enabled: yes
+  #ignore_errors: true
+
+- name: add user to Docker group
+  shell: usermod -aG docker `whoami`
 
 - name: get Docker Images
   shell: kubeadm config images pull
@@ -17,7 +23,8 @@
 # NOTE: You can install only one pod network per cluster
 
 - name: initialize K8s "FLANNEL" network plugin
-  shell: kubeadm init --pod-network-cidr="{{ k8s_network_flannel_plugin }}" #--ignore-preflight-errors=all
+  shell: 'kubeadm init --pod-network-cidr="{{ k8s_network_flannel_plugin }}"'
+  become: true
   when: network_addon == "FLANNEL"
 
 - name: initialize K8s network "CALICO" plugin
