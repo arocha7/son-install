@@ -1,0 +1,40 @@
+---
+
+# [Installer guide:](https://kubernetes.io/docs/setup/independent/install-kubeadm/)
+
+- name: Set SELinux in permissive mode (effectively disabling it)
+  shell: setenforce 0
+
+- shell: sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
+
+- name: issues with traffic being routed incorrectly due to iptables being bypassed
+  copy: src=k8s.conf dest=/etc/sysctl.d/k8s.conf
+
+- systemd:
+    scope: system
+
+- shell : modprobe br_netfilter
+
+- name: Install K8s YUM repo
+  copy: src="{{ lookup('env','PWD') }}/roles/kubeadm/files/kubernetes.repo" dest=/etc/yum.repos.d/kubernetes.repo
+
+- name: upgrade all packages
+  yum:
+    name: '*'
+    state: latest
+
+- name: Install KUBEADM
+  yum:
+    name: "{{ packages }}"
+    state: latest
+  vars:
+    packages:
+    - kubelet
+    - kubeadm
+    - kubectl
+
+- name: enable KUBELET service and ensure it is not masked
+  systemd:
+    name: kubelet
+    enabled: yes
+    masked: no
