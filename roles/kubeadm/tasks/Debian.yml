@@ -1,0 +1,43 @@
+---
+
+- name: Assure that APTITUDE is installed before running the upgrade
+  apt:
+    name: "aptitude"
+    state: latest
+
+- name: Upgrade all packages to the latest version
+  apt:
+    name: "*"
+    state: latest
+
+- name: add support for HTTPS transport in APT
+  apt:
+    name: "{{ packages }}"
+    update_cache: yes
+    state: latest
+  vars:
+    packages:
+    - apt-transport-https
+    - curl
+
+- name: add Google's APT key
+  shell: curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+
+- name: Install K8s APT repo
+  copy: src="{{ lookup('env','PWD') }}/roles/kubeadm/files/kubernetes.list" dest=/etc/apt/sources.list.d/kubernetes.list
+
+- name: Upgrade all packages to the latest version
+  apt:
+    update_cache: yes
+
+- name: Install KUBEADM
+  apt:
+    name: "{{ packages }}"
+    state: latest
+  vars:
+    packages:
+    - kubelet
+    - kubeadm
+    - kubectl
+
+- shell: apt-mark hold kubelet kubeadm kubectl
