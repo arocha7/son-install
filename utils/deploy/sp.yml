@@ -5,14 +5,14 @@
   vars:
     plat_hostname: "{{ lookup('env','HOSTNAME') }}"
     DOCKER_HOST: "--insecure-registry registry.sonata-nfv.eu:5000"
-  pre_tasks:
-    - file:
-        path: "{{ lookup('env','PWD') }}/ansible.log"
-        state: touch
-        owner: "{{ lookup('env','USER') }}"
-        group: "{{ lookup('env','USER') }}"
-        mode: "u=rw,g=rw,o=rw"
+#  pre_tasks:
+#    - file:
+#        path: "{{ lookup('env','PWD') }}/ansible.log"
+#        state: touch
+#        owner: "{{ lookup('env','USER') }}"
+#        group: "{{ lookup('env','USER') }}"
+#        mode: "u=rw,g=rw,o=rw"
   roles:
-    - { role: pip, become: true }
-    - { role: docker, become: true }
+#    - { role: pip, become: true }
+#    - { role: docker, become: true }
     - sp
