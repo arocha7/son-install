@@ -217,5 +217,7 @@ Ggalaxy_info:
     # alphanumeric characters. Maximum 20 tags per role.
 
 dependencies:
-  - pip
-  - docker
+  - role: pip
+    become: true
+  - role: docker
+    become: true
