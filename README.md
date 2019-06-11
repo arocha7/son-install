@@ -157,8 +157,7 @@ NOTE: depending on the performance of your infrastructure deployment and the dow
 #### Example to CREATE a new SONATA Service Platform from the scratch
 
 To deploy the latest SP version running on top of CentOS 7, to the Demo tenant on Altice Labs Openstack VIM: 
- $ ansible-playbook son-cmud.yml -e 'ops=create plat=sp pop=alabs proj=demo distro=Core sp_ver=latest'
-
+ $ ansible-playbook son-cmud.yml -e "ops=create plat=sp pop=alb proj=tango distro=xenial ver=latest" -vvv
 
 ### Example to MANAGE the life-cycle of a platform
 
