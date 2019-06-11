@@ -1,2 +1,4 @@
 ---
 # vars file for sp
+public_ip: '172.31.8.135'
+plat_hostname: sp-alb-tango-xenial-01-1560247424

@@ -24,5 +24,5 @@
       become: true
   roles:
 #    - { role: common, become: true }
-#    - { role: openstackclients, become: true }
+#    - { role: osc, become: true }
     - vm

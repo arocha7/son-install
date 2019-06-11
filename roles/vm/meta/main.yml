@@ -219,5 +219,5 @@ galaxy_info:
 
 dependencies:
   - { role: common, become: true }
-  - { role: openstackclients, become: true }
+  - { role: osc, become: true }
 

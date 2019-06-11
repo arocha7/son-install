@@ -1,3 +1,2 @@
-[vnv]
 [sp]
-sp-alabs-tng-xenial-01-1536763106 ansible_connection=ssh ansible_user=ubuntu ansible_ssh_private_key_file=/home/ubuntu/.ssh/tng-infra.pem ansible_host=172.31.8.103 
+sp-alb-tango-xenial-01-1560247424 ansible_connection=ssh ansible_user=ubuntu ansible_ssh_private_key_file=/home/ubuntu/.ssh/tng-infra.pem ansible_host=172.31.8.135 

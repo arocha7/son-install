@@ -61,7 +61,8 @@
 
 # deploy postgreSQL database engine for monitoring
 - import_tasks: pgsql-monitoring.yml
-  when: (component == 'database') or 
+  when: (component == 'monitoring') or
+        (component == 'database') or 
         (component == 'all')
 
 # deploy Influxdb
@@ -125,16 +126,6 @@
 
 # deploy Policy Manager
 - import_tasks: tng-policy-mngr.yml
-  when: (component == 'policy-manager') or
-        (component == 'all')
-
-# deploy nexus repository
-- import_tasks: nexus.yml
-  when: (component == 'policy-manager') or
-        (component == 'all')
-
-# deploy Policy Manager
-- import_tasks: tng-dpolicy-mngr.yml
   when: (component == 'policy-manager') or
         (component == 'all')
 
@@ -256,6 +247,12 @@
         (component == 'monitoring-snmp') or
         (component == 'all')
 
+# deploy Monitoring grafana
+- import_tasks: grafana.yml
+  when: (component == 'monitoring') or
+        (component == 'monitoring-grafana') or
+        (component == 'all')
+
 # deploy Monitoring Probe
 - import_tasks: probe.yml
   when: (component == 'monitoring') or
@@ -322,6 +319,7 @@
 - import_tasks: add-aveiro-pop2-vim-wim.yml
   ignore_errors: True
   when: target == 'sta-sp-ave'
+
 
 - name: log out of private Registry
   docker_login:

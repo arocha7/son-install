@@ -3,7 +3,7 @@
 nbofvms: 1
 plat: sp
 #flv: sp.3_6_30
-flv: m1.medium
+flv: m1.large
 clean: false
 platform: sp
 
