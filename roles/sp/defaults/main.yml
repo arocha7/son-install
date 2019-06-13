@@ -6,6 +6,7 @@ plat: sp
 flv: m1.large
 clean: false
 platform: sp
+gk_base_domain: qual-sp-ave.5gtango.eu:32002
 
 # Docker network segment
 docker_network_name: tango
