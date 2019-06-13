@@ -37,7 +37,6 @@
     remote_src: yes
   become: true
 
-
 # HARD RESET
 # cleaning databases
 - import_tasks: clean_db.yml
@@ -320,11 +319,10 @@
   ignore_errors: True
   when: target == 'sta-sp-ave'
 
-
+# Logoff from private Registry
 - name: log out of private Registry
   docker_login:
     state: absent
-
 
 # Installation Start
 - name: Installation Finished
