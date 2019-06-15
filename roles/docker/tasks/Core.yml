@@ -1,40 +1,26 @@
 ---
 
-- name: uninstall previous Docker releases
-  yum:
-    name: [docker-client, docker-client-latest, docker-common, docker-latest, docker-latest-logrotate, docker-logrotate, docker-selinux, docker-engine-selinux, docker-engine, docker-python]
-    state: absent
-    update_cache: yes
-  ignore_errors: yes
+# INSTALL LATEST STABLE RELEASE
 
+- name: install script for quickly installing the latest Docker-CE releases
+  shell: wget -qO- https://get.docker.com/ | sh
+  #ignore_errors: yes
 
-### INSTALL REQUIRED LIBRARIES
+# INSTALL DOCKER SDK
 
-- name: upgrade all packages
-  yum:
-    name: '*'
-    state: latest
-    update_cache: yes
-
-- name: install EPEL
-  yum:
-    name: epel-release
-    state: latest
-
-- name: install PIP
-  yum:
-    name: python-pip
-    state: latest
-
-- name: upgrade PIP
+- name: install Docker SDK
   pip:
-    name: pip
-    extra_args: --upgrade
+    name: docker-py
     state: present
-    #version: 18.0
+  when: py_ver == '2'
 
+- name: install Docker SDK
+  pip:
+    name: docker
+    state: present
+  when: py_ver == '3'
 
-#### CREATE USER AND GROUP
+# CREATE USER AND GROUP
 
 - name: create Docker group
   group:
@@ -43,11 +29,12 @@
 
 - name: set default username
   set_fact:
-    vm_user: centos
+    vm_user: "{{ lookup('env','USER') }}"
 
 - name: add Docker group to default user
   user:
-    name: "{{ vm_user }}"
+    #name: "{{ vm_user }}"
+    name: "{{ lookup('env','USER') }}"
     shell: /bin/bash
     groups: docker
     append: yes
@@ -56,70 +43,8 @@
   file:
     path: /var/log/docker
     state: directory
-    owner: '{{ vm_user }}'
+    #owner: '{{ vm_user }}'
+    owner: "{{ lookup('env','USER') }}"
     group: docker
     mode: 0775
-
-
-#### INSTALL LATEST STABLE RELEASE
-
-- name: install required packages 
-  yum:
-    name: [ device-mapper-persistent-data, lvm2 ]
-    state: present
-
-- name: uninstall 'docker-py' (DEPRECATED)
-  pip:
-    name: docker-py
-    state: absent
-  ignore_errors: true
-
-- name: install Docker SDK (v3.4.x)
-  pip:
-    name: docker
-    state: present
-
-- name: Import Docker CE repository gpg key
-  rpm_key:
-    key: https://download.docker.com/linux/centos/gpg
-    #id: 060A61C51B558A7F742B77AAC52FEB6B621E9F35
-    state: present
-
-- name: set up the stable repository
-  yum_repository:
-    name: docker-ce
-    description: Docker CE repo
-    file: docker-ce
-    baseurl: https://download.docker.com/linux/centos/$releasever/x86_64/stable/
-    enabled: yes
-    gpgcheck: yes
-    state: present
-
-#- name: install Docker on CentOS7
-#  yum: name=docker-ce state=present update_cache=yes
-
-### https://lonelycoding.com/how-to-get-remote-access-to-a-private-docker-registry/
-
-#- name: create a directory for Docker reconfiguration file
-#  file:
-#    path: "/etc/systemd/system/docker.service.d"
-#    state: directory
-#    owner: root
-#    group: root
-#    mode: 0755
-
-#- name: override Docker config to support Insecure Registry
-#  copy:
-#    src: "override.conf"
-#    dest: "/etc/systemd/system/docker.service.d/override.conf"
-#    owner: root
-#    group: root
-#    mode: 0644
-
-#- name: start Docker engine
-#  systemd:
-#    name: docker
-#    state: started
-#    daemon_reload: yes
-#    enabled: yes
 
