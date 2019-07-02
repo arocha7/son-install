@@ -1,6 +1,8 @@
 ---
 # Running the Sonata GTK-KPI (Docker container)
+
 - debug: msg="##### SP GTK-KPI DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
+
 - name: GATEKEEPER KEY PERFORMANCE INDICATORS (GTKKPI) (Docker container)
   docker_container:
     name: son-gtkkpi
@@ -8,7 +10,7 @@
     state: started
     recreate: yes
     pull: true
-    restart_policy: "always"
+    restart_policy: always
     env:
       PUSHGATEWAY_HOST: "pushgateway"
       PUSHGATEWAY_PORT: "9091"

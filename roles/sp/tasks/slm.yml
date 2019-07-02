@@ -1,6 +1,8 @@
 ---
 # Running the Sonata SP  MANO Service Life-cycle Management (Docker container)
+
 - debug: msg="##### SP  MANO Service Life-cycle Management DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
+
 - name: MANO Service Life-cycle Management (SLM) (Docker container)
   docker_container:
     name: servicelifecyclemanagement
@@ -10,8 +12,9 @@
       repo_path: "http://tng-rep:4012"
       nsr_collection: nsrs
       vnfr_collection: vnfrs
-      monitoring_path: http://son-monitor-manager:8000/api/v2
-      broker_host: amqp://guest:guest@son-broker:5672/%2F
+      monitoring_path: "http://son-monitor-manager:8000/api/v2"
+      broker_host: "amqp://guest:guest@son-broker:5672/%2F"
+      json_logger: True
     network_mode: bridge
     networks:
       - name: "{{ docker_network_name }}"

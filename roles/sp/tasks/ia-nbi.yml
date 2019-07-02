@@ -1,11 +1,13 @@
 ---
 # Running the Sonata Infrastructure Abstractor NBI (Docker container)
+
 - debug: msg="##### SP Infrastructure Abstractor NBI DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H%M') }}"
+
 - name: deploying Infrastructure Abstractor NBI (Docker container)
   docker_container:
     name: ia-nbi
     image: "{{ repository }}/ia-nbi:{{ version }}"
-    restart_policy: "always"
+    restart_policy: always
     state: started
     recreate: yes
     pull: true

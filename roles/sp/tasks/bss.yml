@@ -1,6 +1,8 @@
 ---
 # Running the Sonata GK BSS Docker Image
+
 - debug: msg="##### SP BSS DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
+
 - name: deploying GATEKEEPER BSS (as a Docker container)
   docker_container:
     name: son-bss
@@ -17,4 +19,4 @@
     published_ports:
       - "25001:1337"
       - "25002:1338"
-    restart_policy: "always"
+    restart_policy: always

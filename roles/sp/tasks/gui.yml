@@ -1,6 +1,8 @@
 ---
 # Running the Sonata GK GUI (Docker container)
+
 - debug: msg="##### SP GUI DEPLOYMENT {{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
+
 - name: GATEKEEPER GUI - running Docker containers
   docker_container:
     name: son-gui
@@ -16,4 +18,4 @@
       - name: "{{ docker_network_name }}"
         aliases:
           - son-gui
-    restart_policy: "always"
+    restart_policy: always
