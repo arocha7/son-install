@@ -8,7 +8,7 @@
     name: placementplugin
     image: "{{ repository }}/placementplugin:{{ version }}"
     env:
-      json_logger: true
+      json_logger: "true"
       broker_host: "amqp://guest:guest@son-broker:5672/%2F"
     restart_policy: "always"
     network_mode: bridge
