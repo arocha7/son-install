@@ -10,7 +10,7 @@
     env:
       broker_host: "amqp://guest:guest@son-broker:5672/%2F"
       broker_name: son-broker,broker
-      json_logger: True
+      json_logger: true
     network_mode: bridge
     networks:
       - name: "{{ docker_network_name }}"
@@ -18,7 +18,7 @@
           - specificmanagerregistry
         links:
           - son-broker
-    restart_policy: "always"
+    restart_policy: always
     state: started
     recreate: yes
     pull: true
