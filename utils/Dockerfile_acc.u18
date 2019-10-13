@@ -1,0 +1,9 @@
+FROM ubuntu:latest
+MAINTAINER arocha@ptinovacao.pt
+RUN apt update -y && \
+    apt upgrade -y && \
+    apt install software-properties-common -y && \
+    apt-add-repository ppa:ansible/ansible -y && \
+    apt update -y && \
+    apt install ansible -y 
+CMD ["sh", "-c", "tail -f /dev/null"]

@@ -1,0 +1,8 @@
+FROM centos:7
+MAINTAINER arocha@ptinovacao.pt
+RUN yum update -y && \
+    yum upgrade -y && \
+    yum install epel-release -y && \
+    yum update -y && \
+    yum install ansible -y 
+CMD ["sh", "-c", "tail -f /dev/null"]

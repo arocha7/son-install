@@ -1,29 +1,42 @@
-A set of useful roles:
-* NTP
-* Apache
-* NGINX
-* OTRS 5
-* Jenkins (CI engine)
-* KeyCloak (IdMgmt)
-* Odoo (OpenERP Community Edition)
+# What's on this folder 
+This directory contains useful tools like:
+* a shell script to install Ansible to Ubuntu or Centos
+* a Dockerfile to create a Docker image with Ansible 
+* an Ansible playbook to update your local machine packages
 
-===
-How to invoke:
-# NTP
-$ ansible-playbook utils/deploy-ntp.yml -e "target=localhost"
-# Apache
-$ ansible-playbook utils/deploy-apache.yml -e "target=localhost"
-# NGINX
-$ ansible-playbook utils/deploy-nginx.yml -e "target=localhost"
-# OTRS
-$ ansible-playbook utils/deploy-otrs.yml -e "target=localhost"
-# Jenkins
-$ ansible-playbook utils/deploy-jenkins.yml -e "target=localhost"
-# Keycloak
-$ ansible-playbook utils/deploy-keycloak.yml -e "target=localhost"
-# Odoo
-$ ansible-playbook utils/deploy-odoo.yml -e "target=localhost"
+# How to use
 
-===
-Report feedback to: 
-'Alberto Rocha <arocha@ptinovacao.pt>'
+## Install Ansible to your local machine
+
+* CentOS 7
+```
+$ ./ansible-install-centos.sh
+```
+
+* Ubuntu 16.04 or 18.04
+```
+$ ./ansible-install-ubuntu.sh
+```
+
+
+## Run a Docker container with Ansible installed
+
+
+* for CentOS 7 base operating system 
+```
+$ docker build -t acc:ce7 -f .\Dockerfile_acc.ce7 .
+
+$ docker run --rm --name ACC -d acc:ce7
+
+$ docker exec -it --name ACC bash
+```
+
+
+* for Ubuntu base operating system 
+```
+$ docker build -t acc:u18 -f .\Dockerfile_acc.u18 .
+
+$ docker run --rm --name ACC -d acc:u18
+
+$ docker exec -it --name ACC bash
+```
