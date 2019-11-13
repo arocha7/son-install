@@ -1,2 +1,4 @@
 ---
 # vars file for openvpn
+public_ip: '172.31.8.144'
+plat_hostname: openvpn-alb-tango-Core-01-1566311163

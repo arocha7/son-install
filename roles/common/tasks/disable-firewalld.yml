@@ -1,0 +1,19 @@
+---
+- name: be sure firewalld is installed
+  systemd: name=firewalld state=installed
+  become: true
+  tags:
+   - firewalld
+
+- name: be sure firewalld is disabled
+  systemd: name=firewalld enabled=no
+  become: true
+  tags:
+   - firewalld
+
+- name: be sure firewalld is stopped
+  systemd: name=firewalld state=stopped
+  ignore_errors: yes
+  become: true
+  tags:
+   - firewalld

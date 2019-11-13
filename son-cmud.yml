@@ -20,7 +20,7 @@
   tasks:
 
 # STEP 1 - DEPLOY A NEW INSTANCE
-- import_playbook: "utils/deploy/vm.yml"
+- import_playbook: "utils/deploy/vm/vm.yml"
 
 # STEP 2 - DEPLOY SPECIFIC SOFTWARE
 - import_playbook: "{{ ops }}/{{ plat }}/main.yml"

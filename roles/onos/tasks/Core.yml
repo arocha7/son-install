@@ -1,0 +1,27 @@
+---
+
+- name: Add the user 'sdn' with 'system' priveleges 
+  user:
+    name: sdn
+    comment: ´SDN system user'
+    system: true
+
+- name: Unarchive a file that needs to be downloaded (added in 2.0)
+  unarchive:
+    src: http://repo1.maven.org/maven2/org/onosproject/onos-releases/2.2.0/onos-2.2.0.tar.gz
+    dest: /opt
+    remote_src: yes
+
+- name: Ansible copy files remote to remote
+  copy:
+    src: /opt/onos-2.2.0
+    dest: /opt/onos/
+    remote_src: yes
+
+- name: Recursively change ownership of a directory
+  file:
+    path: /opt/onos
+    state: directory
+    recurse: yes
+    owner: sdn
+    group: sdn

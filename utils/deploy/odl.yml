@@ -8,7 +8,7 @@
     PATH: "/usr/lib/jvm/jre-openjdk:{{ ansible_env.PATH }}"
 
   pre_tasks:
-    - debug: msg="##### DEPLOYING OpenDaylight {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
+    - debug: msg="##### starting OpenDaylight deployment {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
 
     - file:
         path: "{{ lookup('env','HOME') }}/ansible.log"
@@ -19,8 +19,8 @@
 
   roles:
     - openjdk
-    - opendaylight
+    - odl
 
   post_tasks:
-    - debug: msg="##### END-OF-DEPLOYING OpenDaylight {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
+    - debug: msg="##### ending OpenDaylight deployment {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
 
