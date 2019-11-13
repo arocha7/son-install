@@ -6,6 +6,8 @@
   environment:
     JAVA_HOME: "/usr/lib/jvm/jre-openjdk"
     PATH: "/usr/lib/jvm/jre-openjdk:{{ ansible_env.PATH }}"
+    ONOS_USER: sdn
+    ONOS_APPS: drivers,openflow
 
   pre_tasks:
     - debug: msg="##### start ONOS deployment {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"
