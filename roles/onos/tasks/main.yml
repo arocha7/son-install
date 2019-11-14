@@ -2,11 +2,11 @@
 # tasks file for ONOS
 
 - name: disable SElinux
-  include_tasks: "{{ lookup('env','PWD') }}/roles/common/tasks/disable-selinux.yml"
+  include_tasks: "{{ lookup('env','PWD') }}/roles/common/tasks/disable-selinux-{{ ansible_os_family }}.yml"
 
 - name: disable Firewall and SElinux
-  include_tasks: "{{ lookup('env','PWD') }}/roles/common/tasks/disable-firewalld.yml"
+  include_tasks: "{{ lookup('env','PWD') }}/roles/common/tasks/disable-fw-{{ ansible_os_family }}.yml"
 
 - name: installing ONOS
-  include_tasks: "{{ ansible_distribution_release }}.yml"
+  include_tasks: "{{ ansible_os_family }}.yml"
 
