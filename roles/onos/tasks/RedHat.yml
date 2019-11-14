@@ -18,14 +18,14 @@
     dest: /opt/
     remote_src: yes
 
-- name: create directory
+- name: create directory for ONOS
   file:
     path: /opt/onos
     state: directory
   ignore_errors: true
 
 - name: "As of Ansible 2.2.1.0, copying directories in the remote servers are not supported"
-  shell: "sudo mv /opt/onos-{{ ONOS_VERSION }}/* /opt/onos/"
+  shell: "sudo rm -fr /opt/onos/* && sudo mv /opt/onos-{{ ONOS_VERSION }}/* /opt/onos/"
 
 - name: Recursively change ownership of a directory
   file:
