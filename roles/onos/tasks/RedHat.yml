@@ -19,7 +19,7 @@
     remote_src: yes
 
 - name: "As of Ansible 2.2.1.0, copying directories in the remote servers are not supported"
-  command: "mv /opt/onos-{{ ONOS_VERSION }}/ /opt/onos/"
+  command: "rm -fr /opt/onos && mv /opt/onos-{{ ONOS_VERSION }}/ /opt/onos/"
 
 - name: Recursively change ownership of a directory
   file:
