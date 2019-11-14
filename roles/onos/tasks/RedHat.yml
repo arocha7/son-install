@@ -14,12 +14,12 @@
 
 - name: Unarchive a file that needs to be downloaded (added in 2.0)
   unarchive:
-    src: http://repo1.maven.org/maven2/org/onosproject/onos-releases/2.2.0/onos-2.2.0.tar.gz
+    src: "http://repo1.maven.org/maven2/org/onosproject/onos-releases/{{ ONOS_VERSION }}/onos-{{ ONOS_VERSION }}.tar.gz"
     dest: /opt
     remote_src: yes
 
 - name: "As of Ansible 2.2.1.0, copying directories in the remote servers are not supported"
-  command: mv /opt/onos-2.2.0/ /opt/onos/
+  command: "mv /opt/onos-{{ ONOS_VERSION }}/ /opt/onos/"
 
 - name: Recursively change ownership of a directory
   file:
