@@ -8,6 +8,7 @@
     PATH: "/usr/lib/jvm/jre-openjdk:{{ ansible_env.PATH }}"
     ONOS_USER: sdn
     ONOS_APPS: drivers,openflow
+    PYTHONHTTPSVERIFY: 0
 
   pre_tasks:
     - debug: msg="##### start ONOS deployment {{ lookup('pipe', 'date +%Y%m%d-%H:%M:%S') }}"

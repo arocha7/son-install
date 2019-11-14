@@ -1,2 +1,28 @@
 ---
 
+- name: Ensure group 'sdn' exists
+  group:
+    name: sdn
+    state: present
+
+- name: Add the user 'sdn' with 'system' priveleges
+  user:
+    name: sdn
+    state: present
+    comment: ´SDN system user'
+    system: true
+
+#- name: import CA root certificates
+#  apt:
+#    name: libnss3-tools
+#    state: present
+
+- name: Unarchive a file that needs to be downloaded (added in 2.0)
+  unarchive:
+    src: "http://repo1.maven.org/maven2/org/onosproject/onos-releases/{{ ONOS_VERSION }}/onos-{{ ONOS_VERSION }}.tar.gz"
+    dest: /opt
+    remote_src: yes
+
+- name: "As of Ansible 2.2.1.0, copying directories in the remote servers are not supported"
+  command: "mv /opt/onos-{{ ONOS_VERSION }}/ /opt/onos/"
+

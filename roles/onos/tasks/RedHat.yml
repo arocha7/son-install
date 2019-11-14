@@ -1,8 +1,14 @@
 ---
 
-- name: Add the user 'sdn' with 'system' priveleges 
+- name: Ensure group 'sdn' exists
+  group:
+    name: sdn
+    state: present
+
+- name: Add the user 'sdn' with 'system' priveleges
   user:
     name: sdn
+    state: present
     comment: ´SDN system user'
     system: true
 
